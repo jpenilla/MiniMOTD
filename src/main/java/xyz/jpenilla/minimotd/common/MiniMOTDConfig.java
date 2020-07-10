@@ -5,10 +5,18 @@ import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 
 import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.Random;
 
 @FieldNameConstants
 public abstract class MiniMOTDConfig {
+    public final String MOTDS = "motd." + Fields.motds;
+    public final String MOTD_ENABLED = "motd." + Fields.motdEnabled;
+    public final String MAX_PLAYERS_ENABLED = Fields.maxPlayers + "." + Fields.maxPlayersEnabled;
+    public final String JUST_X_MORE_ENABLED = Fields.maxPlayers + "." + Fields.justXMoreEnabled;
+    public final String MAX_PLAYERS = Fields.maxPlayers + "." + Fields.maxPlayers;
+    public final String X_VALUE = Fields.maxPlayers + "." + Fields.xValue;
+    public final String FAKE_PLAYERS_ENABLED = "bungeeOnly." + Fields.fakePlayersEnabled;
+    public final String FAKE_PLAYERS = "bungeeOnly." + Fields.fakePlayers;
     @Getter private final ArrayList<String> motds = new ArrayList<>();
     @Getter @Setter private boolean motdEnabled;
     @Getter @Setter private boolean maxPlayersEnabled;
@@ -18,22 +26,13 @@ public abstract class MiniMOTDConfig {
     @Getter @Setter private int maxPlayers;
     @Getter @Setter private String fakePlayers;
 
-    public final String MOTDS = "motd." + Fields.motds;
-    public final String MOTD_ENABLED = "motd." + Fields.motdEnabled;
-    public final String MAX_PLAYERS_ENABLED = Fields.maxPlayers + "." + Fields.maxPlayersEnabled;
-    public final String JUST_X_MORE_ENABLED = Fields.maxPlayers + "." + Fields.justXMoreEnabled;
-    public final String MAX_PLAYERS = Fields.maxPlayers + "." + Fields.maxPlayers;
-    public final String X_VALUE = Fields.maxPlayers + "." + Fields.xValue;
-    public final String FAKE_PLAYERS_ENABLED = "bungeeOnly." + Fields.fakePlayersEnabled;
-    public final String FAKE_PLAYERS = "bungeeOnly." + Fields.fakePlayers;
-
     public abstract void reload();
 
     public String getMOTD(int onlinePlayers, int maxPlayers) {
         if (motds.size() == 1) {
             return motds.get(0);
         } else {
-            return motds.get(ThreadLocalRandom.current().nextInt(motds.size()))
+            return motds.get(new Random().nextInt(motds.size()))
                     .replace("{onlinePlayers}", String.valueOf(onlinePlayers))
                     .replace("{maxPlayers}", String.valueOf(maxPlayers));
         }
