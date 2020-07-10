@@ -140,7 +140,7 @@
         <dependency>
             <groupId>com.github.DiamondDagger590</groupId>
             <artifactId>Prisma</artifactId>
-            <version>a622d01b80</version>
+            <version>1.0-RELEASE</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
