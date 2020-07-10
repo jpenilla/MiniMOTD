@@ -20,3 +20,16 @@ maxPlayers:
   # Example: 16/19 players online.
   justXMoreEnabled: false
   xValue: 3
+
+bungeeOnly:
+  # Do you want to enable this feature?
+  fakePlayersEnabled: false
+
+  # Modes: static, random, percent
+  #   static: This many fake players will be added
+  #     ex: fakePlayers: "3"
+  #   random: A random number of fake players in this range will be added
+  #     ex: fakePlayers: "3:6"
+  #   percent: The player count will be inflated by this much, rounding up
+  #     ex: fakePlayers: "25%"
+  fakePlayers: "25%"

@@ -1,8 +1,9 @@
 package xyz.jpenilla.minimotd.spigot;
 
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.configuration.file.FileConfiguration;
 import xyz.jpenilla.minimotd.common.MiniMOTDConfig;
-import xyz.jpenilla.minimotd.common.MiniMessageUtil;
 
 public class SpigotConfig extends MiniMOTDConfig {
     private final MiniMOTD miniMOTD;
@@ -25,12 +26,16 @@ public class SpigotConfig extends MiniMOTDConfig {
             } else {
                 temp = motd;
             }
-            getMotds().add(MiniMessageUtil.miniMessageToLegacy(temp.replace("{br}", "\n")));
+            getMotds().add(miniMessageToLegacy(temp.replace("{br}", "\n")));
         }
         setMotdEnabled(config.getBoolean(MOTD_ENABLED));
         setMaxPlayersEnabled(config.getBoolean(MAX_PLAYERS_ENABLED));
         setJustXMoreEnabled(config.getBoolean(JUST_X_MORE_ENABLED));
         setMaxPlayers(config.getInt(MAX_PLAYERS));
         setXValue(config.getInt(X_VALUE));
+    }
+
+    private String miniMessageToLegacy(String message) {
+        return LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build().serialize(MiniMessage.get().parse(message));
     }
 }

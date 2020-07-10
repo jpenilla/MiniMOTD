@@ -3,7 +3,6 @@ package xyz.jpenilla.minimotd.bungee;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.connection.ConnectedPlayer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 

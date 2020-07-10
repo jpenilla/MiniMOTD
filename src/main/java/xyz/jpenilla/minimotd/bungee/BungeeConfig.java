@@ -30,6 +30,8 @@ public class BungeeConfig extends MiniMOTDConfig {
         setJustXMoreEnabled(config.getBoolean(JUST_X_MORE_ENABLED));
         setMaxPlayers(config.getInt(MAX_PLAYERS));
         setXValue(config.getInt(X_VALUE));
+        setFakePlayersEnabled(config.getBoolean(FAKE_PLAYERS_ENABLED));
+        setFakePlayers(config.getString(FAKE_PLAYERS));
     }
 
     private Configuration loadFromDisk() {
