@@ -25,6 +25,10 @@ public class BungeeConfig extends MiniMOTDConfig {
         for (String motd : config.getStringList(MOTDS)) {
             getMotds().add(motd.replace("{br}", "\n"));
         }
+        getMotdsOld().clear();
+        for (String motdOld : config.getStringList(MOTDSOLD)) {
+            getMotdsOld().add(motdOld.replace("{br}", "\n"));
+        }
         setMotdEnabled(config.getBoolean(MOTD_ENABLED));
         setMaxPlayersEnabled(config.getBoolean(MAX_PLAYERS_ENABLED));
         setJustXMoreEnabled(config.getBoolean(JUST_X_MORE_ENABLED));

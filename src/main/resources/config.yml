@@ -8,6 +8,10 @@ motd:
   motds:
     - "<bold><gradient:black:white>----====[</gradient> <gradient:green:blue>UltraCraft <gradient:red:yellow></bold><italic>Official</gradient></italic><bold> <gradient:white:black>]=====----</gradient></bold>{br}<bold>    <gradient:#EEFF4A:#F7FFAE>Custom <italic>Survival</italic></gradient>    <color:#0092FF>Discord</bold><gray>:</gray> <gradient:#5FDAFF:#B8A6FF><italic>Ab3d5f"
     - "<rainbow>|||||||||||||||||||||||||||||||||||||||||||||||||||||||||</rainbow>{br}<white>Hello <blue>{onlinePlayers} <gray>/</gray> {maxPlayers}</blue> Players Online"
+  motdsOld:
+    - "<red>This server requires version 1.16+"
+    - "<green>Sample motd displayed on version 1.15.2 and below"
+    - "<red>This function only works on bungeecord/waterfall servers!"
 
 maxPlayers:
   # Do you want to enable this feature?
