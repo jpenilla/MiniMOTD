@@ -26,7 +26,10 @@ public class SpigotConfig extends MiniMOTDConfig {
             } else {
                 temp = motd;
             }
-            getMotds().add(miniMessageToLegacy(temp.replace("{br}", "\n")));
+            getMotds().add(miniMessageToLegacy(temp));
+        }
+        for (String motd : config.getStringList(MOTDS_LEGACY)) {
+            getMotdsLegacy().add(miniMessageToLegacy(motd));
         }
         setMotdEnabled(config.getBoolean(MOTD_ENABLED));
         setMaxPlayersEnabled(config.getBoolean(MAX_PLAYERS_ENABLED));
