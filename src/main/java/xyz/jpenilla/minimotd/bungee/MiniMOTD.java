@@ -7,6 +7,10 @@ import org.bstats.bungeecord.Metrics;
 public class MiniMOTD extends Plugin {
     @Getter private BungeeConfig cfg;
 
+    public BungeeConfig getCfg() {
+        return this.cfg;
+    }
+
     @Override
     public void onEnable() {
         this.cfg = new BungeeConfig(this);

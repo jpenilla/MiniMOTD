@@ -51,10 +51,12 @@ public class PingListener implements Listener {
             players.setMax(maxPlayers);
 
             if (cfg.isMotdEnabled()) {
-                Component motd = MiniMessage.get().parse(cfg.getMOTD(onlinePlayers, maxPlayers));
-                BaseComponent component = ComponentSerializer.parse(GsonComponentSerializer.builder().build().serialize(motd))[0];
-                response.setDescriptionComponent(component);
-                //response.setDescriptionComponent(BungeeCordComponentSerializer.get().serialize(motd)[0]);
+                if (e.getConnection().getVersion() >= 735) {
+                    Component motd = MiniMessage.get().parse(cfg.getMOTD(onlinePlayers, maxPlayers));
+                    BaseComponent component = ComponentSerializer.parse(GsonComponentSerializer.builder().build().serialize(motd))[0];
+                    response.setDescriptionComponent(component);
+                }
+
             }
 
             response.setPlayers(players);
