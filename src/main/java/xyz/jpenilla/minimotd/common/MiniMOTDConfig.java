@@ -144,14 +144,18 @@ public abstract class MiniMOTDConfig {
 
     public String getMOTD(int onlinePlayers, int maxPlayers) {
         if (this.motds.size() == 1)
-            return this.motds.get(0);
+            return this.motds.get(0)
+                    .replace("{onlinePlayers}", String.valueOf(onlinePlayers))
+                    .replace("{maxPlayers}", String.valueOf(maxPlayers));
         return ((String)this.motds.get((new Random()).nextInt(this.motds.size())))
                 .replace("{onlinePlayers}", String.valueOf(onlinePlayers))
                 .replace("{maxPlayers}", String.valueOf(maxPlayers));
     }
     public String getMOTDOld(int onlinePlayers, int maxPlayers) {
         if (this.motdsOld.size() == 1)
-            return this.motdsOld.get(0);
+            return this.motdsOld.get(0)
+                    .replace("{onlinePlayers}", String.valueOf(onlinePlayers))
+                    .replace("{maxPlayers}", String.valueOf(maxPlayers));
         return ((String)this.motdsOld.get((new Random()).nextInt(this.motdsOld.size())))
                 .replace("{onlinePlayers}", String.valueOf(onlinePlayers))
                 .replace("{maxPlayers}", String.valueOf(maxPlayers));
