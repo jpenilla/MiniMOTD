@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 
+import static xyz.jpenilla.minimotd.common.MiniMOTDConfig.Fields.MOTDSOLD;
+
 public class BungeeConfig extends MiniMOTDConfig {
     private final MiniMOTD miniMOTD;
 
@@ -25,6 +27,9 @@ public class BungeeConfig extends MiniMOTDConfig {
         for (String motd : config.getStringList(MOTDS)) {
             getMotds().add(motd.replace("{br}", "\n"));
         }
+        for (String motdOld : config.getStringList(MOTDSOLD)) {
+            getMotdsOld().add(motdOld.replace("{br}", "\n"));
+        }
         setMotdEnabled(config.getBoolean(MOTD_ENABLED));
         setMaxPlayersEnabled(config.getBoolean(MAX_PLAYERS_ENABLED));
         setJustXMoreEnabled(config.getBoolean(JUST_X_MORE_ENABLED));
@@ -33,6 +38,7 @@ public class BungeeConfig extends MiniMOTDConfig {
         setFakePlayersEnabled(config.getBoolean(FAKE_PLAYERS_ENABLED));
         setFakePlayers(config.getString(FAKE_PLAYERS));
     }
+
 
     private Configuration loadFromDisk() {
         if (!miniMOTD.getDataFolder().exists()) {

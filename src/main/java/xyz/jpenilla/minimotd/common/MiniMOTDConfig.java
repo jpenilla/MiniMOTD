@@ -7,6 +7,8 @@ public abstract class MiniMOTDConfig {
     public static final class Fields {
         public static final String MOTDS = "MOTDS";
 
+        public static final String MOTDSOLD = "MOTDSOLD";
+
         public static final String MOTD_ENABLED = "MOTD_ENABLED";
 
         public static final String MAX_PLAYERS_ENABLED = "MAX_PLAYERS_ENABLED";
@@ -22,6 +24,8 @@ public abstract class MiniMOTDConfig {
         public static final String FAKE_PLAYERS = "FAKE_PLAYERS";
 
         public static final String motds = "motds";
+
+        public static final String motdsOld = "motdsOld";
 
         public static final String motdEnabled = "motdEnabled";
 
@@ -40,6 +44,8 @@ public abstract class MiniMOTDConfig {
 
     public final String MOTDS = "motd.motds";
 
+    public final String MOTDSOLD = "motd.motdsOld";
+
     public final String MOTD_ENABLED = "motd.motdEnabled";
 
     public final String MAX_PLAYERS_ENABLED = "maxPlayers.maxPlayersEnabled";
@@ -55,6 +61,9 @@ public abstract class MiniMOTDConfig {
     public final String FAKE_PLAYERS = "bungeeOnly.fakePlayers";
 
     private final ArrayList<String> motds = new ArrayList<>();
+
+    private final ArrayList<String> motdsOld = new ArrayList<>();
+
 
     private boolean motdEnabled;
 
@@ -72,6 +81,9 @@ public abstract class MiniMOTDConfig {
 
     public ArrayList<String> getMotds() {
         return this.motds;
+    }
+    public ArrayList<String> getMotdsOld() {
+        return this.motdsOld;
     }
 
     public boolean isMotdEnabled() {
@@ -134,6 +146,13 @@ public abstract class MiniMOTDConfig {
         if (this.motds.size() == 1)
             return this.motds.get(0);
         return ((String)this.motds.get((new Random()).nextInt(this.motds.size())))
+                .replace("{onlinePlayers}", String.valueOf(onlinePlayers))
+                .replace("{maxPlayers}", String.valueOf(maxPlayers));
+    }
+    public String getMOTDOld(int onlinePlayers, int maxPlayers) {
+        if (this.motdsOld.size() == 1)
+            return this.motdsOld.get(0);
+        return ((String)this.motdsOld.get((new Random()).nextInt(this.motdsOld.size())))
                 .replace("{onlinePlayers}", String.valueOf(onlinePlayers))
                 .replace("{maxPlayers}", String.valueOf(maxPlayers));
     }

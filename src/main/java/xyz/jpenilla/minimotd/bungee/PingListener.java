@@ -55,6 +55,10 @@ public class PingListener implements Listener {
                     Component motd = MiniMessage.get().parse(cfg.getMOTD(onlinePlayers, maxPlayers));
                     BaseComponent component = ComponentSerializer.parse(GsonComponentSerializer.builder().build().serialize(motd))[0];
                     response.setDescriptionComponent(component);
+                }else {
+                    Component motdOld = MiniMessage.get().parse(cfg.getMOTDOld(onlinePlayers, maxPlayers));
+                    BaseComponent component = ComponentSerializer.parse(GsonComponentSerializer.builder().build().serialize(motdOld))[0];
+                    response.setDescriptionComponent(component);
                 }
 
             }
