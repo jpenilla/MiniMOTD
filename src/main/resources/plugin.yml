@@ -1,10 +1,9 @@
 name: MiniMOTD
 version: ${project.version}
 main: xyz.jpenilla.minimotd.spigot.MiniMOTD
-load: STARTUP
 softdepend: [Prisma]
 authors: [jmp]
-description: Set the server MOTD using MiniMessage!
+description: Set the server list MOTD using MiniMessage!
 website: https://www.spigotmc.org/resources/minimotd.81254/
 commands:
   minimotd:

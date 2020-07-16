@@ -6,12 +6,12 @@
 
     <groupId>xyz.jpenilla</groupId>
     <artifactId>MiniMOTD</artifactId>
-    <version>1.1.3</version>
+    <version>1.1.4</version>
     <packaging>jar</packaging>
 
     <name>MiniMOTD</name>
 
-    <description>Set the server MOTD using MiniMessage!</description>
+    <description>Set the server list MOTD using MiniMessage!</description>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

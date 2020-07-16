@@ -2,4 +2,4 @@ name: MiniMOTD
 version: ${project.version}
 main: xyz.jpenilla.minimotd.bungee.MiniMOTD
 author: jmp
-description: Set the MOTD using MiniMessage!
+description: Set the server list MOTD using MiniMessage!
