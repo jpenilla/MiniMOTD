@@ -9,14 +9,6 @@ motd:
     - "<bold><gradient:black:white>----====[</gradient> <gradient:green:blue>UltraCraft <gradient:red:yellow></bold><italic>Official</gradient></italic><bold> <gradient:white:black>]=====----</gradient></bold>{br}<bold>    <gradient:#EEFF4A:#F7FFAE>Custom <italic>Survival</italic></gradient>    <color:#0092FF>Discord</bold><gray>:</gray> <gradient:#5FDAFF:#B8A6FF><italic>Ab3d5f"
     - "<rainbow>|||||||||||||||||||||||||||||||||||||||||||||||||||||||||</rainbow>{br}<white>Hello <blue>{onlinePlayers} <gray>/</gray> {maxPlayers}</blue> Players Online"
 
-  # Only works on bungee. Will be added for Spigot in a future update
-  # These motds will be shown to pre-1.16 clients
-  # If this list is empty, the normal motd list above will be used.
-  motdsLegacy:
-    - "<red>This server requires version 1.16+</red>{br}<yellow>For you to see our cool RGB messages!"
-    - "<green>Sample motd displayed on version 1.15.2 and below"
-    - "<red>This function only works on bungeecord based platforms for now!"
-
 maxPlayers:
   # Do you want to enable this feature?
   maxPlayersEnabled: true

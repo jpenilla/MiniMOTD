@@ -3,8 +3,8 @@ package xyz.jpenilla.minimotd.bungee;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ServerPing;
-import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.chat.ComponentSerializer;
@@ -15,6 +15,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class PingListener implements Listener {
     private final BungeeConfig cfg;
+    private final MiniMessage miniMessage = MiniMessage.get();
+    private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.builder().build();
+    private final GsonComponentSerializer gsonSerializer = GsonComponentSerializer.builder().build();
 
     public PingListener(MiniMOTD miniMOTD) {
         this.cfg = miniMOTD.getCfg();
@@ -51,15 +54,12 @@ public class PingListener implements Listener {
             players.setMax(maxPlayers);
 
             if (cfg.isMotdEnabled()) {
-                final String temp;
-                if (e.getConnection().getVersion() >= 735 || cfg.getMotdsLegacy().size() == 0) {
-                    temp = cfg.getMOTD(onlinePlayers, maxPlayers);
-                } else {
-                    temp = cfg.getLegacyMOTD(onlinePlayers, maxPlayers);
+                Component motd = miniMessage.parse(cfg.getMOTD(onlinePlayers, maxPlayers));
+                if (e.getConnection().getVersion() < 735) {
+                    motd = legacySerializer.deserialize(legacySerializer.serialize(motd));
                 }
-                final Component motd = MiniMessage.get().parse(temp);
-                final BaseComponent component = ComponentSerializer.parse(GsonComponentSerializer.builder().build().serialize(motd))[0];
-                response.setDescriptionComponent(component);
+
+                response.setDescriptionComponent(ComponentSerializer.parse(gsonSerializer.serialize(motd))[0]);
                 //response.setDescriptionComponent(BungeeCordComponentSerializer.get().serialize(motd)[0]);
             }
 

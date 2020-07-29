@@ -7,6 +7,8 @@ import xyz.jpenilla.minimotd.common.MiniMOTDConfig;
 
 public class SpigotConfig extends MiniMOTDConfig {
     private final MiniMOTD miniMOTD;
+    private final LegacyComponentSerializer serializer = LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build();
+    private final MiniMessage miniMessage = MiniMessage.get();
 
     public SpigotConfig(MiniMOTD miniMOTD) {
         this.miniMOTD = miniMOTD;
@@ -26,19 +28,12 @@ public class SpigotConfig extends MiniMOTDConfig {
             } else {
                 temp = motd;
             }
-            getMotds().add(miniMessageToLegacy(temp));
-        }
-        for (String motd : config.getStringList(MOTDS_LEGACY)) {
-            getMotdsLegacy().add(miniMessageToLegacy(motd));
+            getMotds().add(serializer.serialize(miniMessage.parse(temp)));
         }
         setMotdEnabled(config.getBoolean(MOTD_ENABLED));
         setMaxPlayersEnabled(config.getBoolean(MAX_PLAYERS_ENABLED));
         setJustXMoreEnabled(config.getBoolean(JUST_X_MORE_ENABLED));
         setMaxPlayers(config.getInt(MAX_PLAYERS));
         setXValue(config.getInt(X_VALUE));
-    }
-
-    private String miniMessageToLegacy(String message) {
-        return LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build().serialize(MiniMessage.get().parse(message));
     }
 }
