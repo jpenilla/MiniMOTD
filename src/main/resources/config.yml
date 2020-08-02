@@ -21,6 +21,9 @@ maxPlayers:
   justXMoreEnabled: false
   xValue: 3
 
+# These options work on Paper Servers as well as BungeeCord or Waterfall based proxies
+# These options do not work on pure Spigot Servers as the API methods are missing
+# Get Paper here: https://papermc.io/downloads
 bungeeOnly:
   # Do you want to enable this feature?
   fakePlayersEnabled: false
