@@ -11,12 +11,14 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class PaperPingListener implements Listener {
     private final SpigotConfig cfg;
+    private final MiniMOTD miniMOTD;
     private final LegacyComponentSerializer serializer = LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build();
     private final MiniMessage miniMessage = MiniMessage.get();
     private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.builder().build();
 
     public PaperPingListener(MiniMOTD miniMOTD) {
         this.cfg = miniMOTD.getCfg();
+        this.miniMOTD = miniMOTD;
     }
 
     @EventHandler
@@ -47,7 +49,7 @@ public class PaperPingListener implements Listener {
 
         if (cfg.isMotdEnabled()) {
             final Component motd = miniMessage.parse(cfg.getMOTD(onlinePlayers, maxPlayers));
-            if (e.getClient().getProtocolVersion() < 735) {
+            if (e.getClient().getProtocolVersion() < 735 || miniMOTD.getMajorMinecraftVersion() < 16) {
                 e.setMotd(legacySerializer.serialize(motd));
             } else {
                 e.setMotd(serializer.serialize(motd));

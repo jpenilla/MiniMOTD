@@ -1,17 +1,21 @@
 package xyz.jpenilla.minimotd.spigot;
 
+import com.google.common.collect.ImmutableList;
 import lombok.NonNull;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class SpigotCommand implements CommandExecutor {
+public class SpigotCommand implements CommandExecutor, TabCompleter {
     private final MiniMOTD miniMOTD;
     private final BukkitAudiences audience;
     private final MiniMessage miniMessage;
@@ -94,5 +98,17 @@ public class SpigotCommand implements CommandExecutor {
         for (String message : messages) {
             send(sender, message);
         }
+    }
+
+    private static final List<String> COMMANDS = ImmutableList.of("about", "reload", "help");
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        final List<String> completions = new ArrayList<>();
+        if (args.length < 2 && sender.hasPermission("minimotd.admin")) {
+            StringUtil.copyPartialMatches(args[0], COMMANDS, completions);
+            Collections.sort(completions);
+        }
+        return completions;
     }
 }

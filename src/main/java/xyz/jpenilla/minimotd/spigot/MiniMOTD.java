@@ -11,11 +11,18 @@ public final class MiniMOTD extends JavaPlugin {
     @Getter private SpigotConfig cfg;
     @Getter private PrismaHook prisma;
     @Getter private boolean isPaperServer;
+    @Getter private String serverPackageName;
+    @Getter private String serverApiVersion;
+    @Getter private int majorMinecraftVersion;
 
     @Override
     public void onEnable() {
+        serverPackageName = this.getServer().getClass().getPackage().getName();
+        serverApiVersion = serverPackageName.substring(serverPackageName.lastIndexOf('.') + 1);
+        majorMinecraftVersion = Integer.parseInt(serverApiVersion.split("_")[1]);
+
         try {
-            Class.forName("com.destroystokyo.paper.PaperConfig");
+            Class.forName("com.destroystokyo.paper.event.server.PaperServerListPingEvent");
             isPaperServer = true;
         } catch (ClassNotFoundException e) {
             isPaperServer = false;
@@ -29,10 +36,15 @@ public final class MiniMOTD extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new PaperPingListener(this), this);
         } else {
             getServer().getPluginManager().registerEvents(new PingListener(this), this);
+            if (majorMinecraftVersion > 11) {
+                getLogger().info("This server is not using Paper, and therefore some features may be limited or disabled.");
+                getLogger().info("Get Paper from https://papermc.io/downloads");
+            }
         }
         final PluginCommand command = getCommand("minimotd");
         if (command != null) {
             command.setExecutor(new SpigotCommand(this));
+            command.setTabCompleter(new SpigotCommand(this));
         }
 
         Metrics metrics = new Metrics(this, 8132);

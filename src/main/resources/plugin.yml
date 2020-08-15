@@ -3,6 +3,7 @@ version: ${project.version}
 main: xyz.jpenilla.minimotd.spigot.MiniMOTD
 softdepend: [Prisma]
 authors: [jmp]
+api-version: 1.13
 description: Set the server list MOTD using MiniMessage!
 website: https://www.spigotmc.org/resources/minimotd.81254/
 commands:

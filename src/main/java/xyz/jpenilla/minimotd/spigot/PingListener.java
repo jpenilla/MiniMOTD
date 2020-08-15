@@ -8,11 +8,14 @@ import org.bukkit.event.server.ServerListPingEvent;
 
 public class PingListener implements Listener {
     private final SpigotConfig cfg;
+    private final MiniMOTD miniMOTD;
     private final LegacyComponentSerializer serializer = LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build();
+    private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.builder().build();
     private final MiniMessage miniMessage = MiniMessage.get();
 
     public PingListener(MiniMOTD miniMOTD) {
         this.cfg = miniMOTD.getCfg();
+        this.miniMOTD = miniMOTD;
     }
 
     @EventHandler
@@ -24,7 +27,11 @@ public class PingListener implements Listener {
         e.setMaxPlayers(maxPlayers);
 
         if (cfg.isMotdEnabled()) {
-            e.setMotd(serializer.serialize(miniMessage.parse(cfg.getMOTD(onlinePlayers, maxPlayers))));
+            if (miniMOTD.getMajorMinecraftVersion() > 15) {
+                e.setMotd(serializer.serialize(miniMessage.parse(cfg.getMOTD(onlinePlayers, maxPlayers))));
+            } else {
+                e.setMotd(legacySerializer.serialize(miniMessage.parse(cfg.getMOTD(onlinePlayers, maxPlayers))));
+            }
         }
     }
 }
