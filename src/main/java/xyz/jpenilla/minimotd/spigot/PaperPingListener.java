@@ -6,6 +6,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.util.CachedServerIcon;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -54,6 +55,10 @@ public class PaperPingListener implements Listener {
             } else {
                 e.setMotd(serializer.serialize(motd));
             }
+        }
+        final CachedServerIcon favicon = cfg.getRandomIcon();
+        if (favicon != null) {
+            e.setServerIcon(favicon);
         }
     }
 }

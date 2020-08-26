@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.md_5.bungee.api.Favicon;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -64,6 +65,10 @@ public class PingListener implements Listener {
             }
 
             response.setPlayers(players);
+            final Favicon favicon = cfg.getRandomIcon();
+            if (favicon != null) {
+                response.setFavicon(favicon);
+            }
             e.setResponse(response);
         }
     }

@@ -5,6 +5,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerListPingEvent;
+import org.bukkit.util.CachedServerIcon;
 
 public class PingListener implements Listener {
     private final SpigotConfig cfg;
@@ -32,6 +33,10 @@ public class PingListener implements Listener {
             } else {
                 e.setMotd(legacySerializer.serialize(miniMessage.parse(cfg.getMOTD(onlinePlayers, maxPlayers))));
             }
+        }
+        final CachedServerIcon favicon = cfg.getRandomIcon();
+        if (favicon != null) {
+            e.setServerIcon(favicon);
         }
     }
 }
