@@ -1,0 +1,13 @@
+name: MiniMOTD
+version: ${project.version}
+main: xyz.jpenilla.minimotd.paper.MiniMOTD
+softdepend: [Prisma]
+authors: [jmp]
+api-version: 1.13
+description: Set the server list MOTD using MiniMessage!
+website: https://github.com/jmanpenilla/MiniMOTD/
+commands:
+  minimotd:
+    description: MiniMOTD command
+    permission-message: No permission
+    usage: /minimotd help
