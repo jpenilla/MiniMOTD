@@ -1,0 +1,15 @@
+pipeline {
+    agent any
+    stages {
+        stage('Maven Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+    }
+    post {
+        always {
+            step(artifacts: '**/target/MiniMOTD*.jar', followSymlinks: false, excludes: 'MiniMOTD-common/target/*', $class: 'ArtifactArchiver')
+        }
+    }
+}
