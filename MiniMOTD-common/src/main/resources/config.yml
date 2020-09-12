@@ -1,4 +1,4 @@
-# Do you want the plugin to check for updated on GitHub on launch?
+# Do you want the plugin to check for updates on GitHub at launch?
 # https://github.com/jmanpenilla/MiniMOTD
 updateChecker: true
 

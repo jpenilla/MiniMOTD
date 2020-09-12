@@ -79,13 +79,7 @@ public class BungeeCommand extends Command {
     }
 
     private void send(CommandSender sender, String message) {
-        final String finalMessage;
-        if (sender instanceof ProxiedPlayer) {
-            finalMessage = message;
-        } else {
-            finalMessage = miniMessage.stripTokens(message);
-        }
-        sender.sendMessage(BungeeCordComponentSerializer.get().serialize(miniMessage.parse(finalMessage)));
+        sender.sendMessage(BungeeCordComponentSerializer.get().serialize(miniMessage.parse(message)));
     }
 
     private void send(CommandSender sender, List<String> messages) {

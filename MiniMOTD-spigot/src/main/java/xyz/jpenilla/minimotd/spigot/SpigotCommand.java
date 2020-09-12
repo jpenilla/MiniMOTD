@@ -87,7 +87,7 @@ public class SpigotCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             miniMOTD.getAudiences().player((Player) sender).sendMessage(miniMessage.parse(message));
         } else {
-            miniMOTD.getAudiences().console().sendMessage(miniMessage.parse(miniMessage.stripTokens(message)));
+            miniMOTD.getAudiences().console().sendMessage(miniMessage.parse(message));
         }
     }
 
