@@ -37,7 +37,7 @@ public class VelocityCommand implements SimpleCommand {
     }
 
     private void onInvalidUse(Invocation invocation) {
-        sendMessages(invocation, ImmutableList.of("<hover:show_text:'<green>Click for <yellow>/minimotd help'><click:run_command:/minimotd help><italic><gradient:red:gold>Invalid usage.</gradient> <blue>Try <yellow>/minimotd help</yellow> or click here"));
+        sendMessages(invocation, ImmutableList.of("<hover:show_text:'<green>Click for <yellow>/minimotdvelocity help'><click:run_command:/minimotdvelocity help><italic><gradient:red:gold>Invalid usage.</gradient> <blue>Try <yellow>/minimotdvelocity help</yellow> or click here"));
     }
 
     private void onReload(Invocation invocation) {
@@ -48,9 +48,9 @@ public class VelocityCommand implements SimpleCommand {
     private void onHelp(Invocation invocation) {
         sendMessages(invocation, ImmutableList.of(
                 "<gradient:blue:green>MiniMOTD Commands:",
-                " <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotd about'><click:run_command:/minimotd about><yellow>/minimotd about",
-                " <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotd reload'><click:run_command:/minimotd reload><yellow>/minimotd reload",
-                " <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotd help'><click:run_command:/minimotd help><yellow>/minimotd help"
+                " <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotdvelocity about'><click:run_command:/minimotd about><yellow>/minimotdvelocity about",
+                " <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotdvelocity reload'><click:run_command:/minimotd reload><yellow>/minimotdvelocity reload",
+                " <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotdvelocity help'><click:run_command:/minimotd help><yellow>/minimotdvelocity help"
         ));
     }
 
