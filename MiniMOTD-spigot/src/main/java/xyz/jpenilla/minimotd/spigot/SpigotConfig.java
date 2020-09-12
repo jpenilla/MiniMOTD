@@ -1,4 +1,4 @@
-package xyz.jpenilla.minimotd.paper;
+package xyz.jpenilla.minimotd.spigot;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -50,6 +50,7 @@ public class SpigotConfig extends MiniMOTDConfig {
         setXValue(config.getInt(X_VALUE));
         setFakePlayersEnabled(config.getBoolean(FAKE_PLAYERS_ENABLED));
         setFakePlayers(config.getString(FAKE_PLAYERS));
+        setUpdateChecker(config.getBoolean(UPDATE_CHECKER));
 
         final File iconFolder = new File(miniMOTD.getDataFolder() + File.separator + "icons");
         if (!iconFolder.exists()) {

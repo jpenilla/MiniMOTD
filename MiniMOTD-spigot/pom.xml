@@ -9,13 +9,13 @@
     <parent>
         <groupId>xyz.jpenilla</groupId>
         <artifactId>MiniMOTD</artifactId>
-        <version>1.2.0</version>
+        <version>1.2.1</version>
     </parent>
 
-    <artifactId>MiniMOTD-paper</artifactId>
+    <artifactId>MiniMOTD-spigot</artifactId>
     <packaging>jar</packaging>
 
-    <name>MiniMOTD Paper</name>
+    <name>MiniMOTD Spigot</name>
 
     <build>
         <plugins>

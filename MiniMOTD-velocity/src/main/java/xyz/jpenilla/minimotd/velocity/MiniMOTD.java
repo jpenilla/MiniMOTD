@@ -1,10 +1,12 @@
 package xyz.jpenilla.minimotd.velocity;
 
 import com.google.inject.Inject;
+import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 import com.velocitypowered.api.plugin.Plugin;
+import com.velocitypowered.api.plugin.PluginDescription;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.ServerPing;
@@ -14,14 +16,16 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.slf4j.Logger;
+import xyz.jpenilla.minimotd.common.UpdateChecker;
 
 import java.nio.file.Path;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Plugin(
         id = "minimotd-velocity",
         name = "MiniMOTD",
-        version = "1.2.0",
+        version = "1.2.1",
         description = "Set the server list MOTD using MiniMessage!",
         url = "https://github.com/jmanpenilla/MiniMOTD/",
         authors = {"jmp"}
@@ -29,9 +33,12 @@ import java.util.concurrent.ThreadLocalRandom;
 public class MiniMOTD {
     @Getter private final ProxyServer server;
     @Getter private final Logger logger;
-    private final MiniMessage miniMessage = MiniMessage.get();
+    @Getter private final MiniMessage miniMessage = MiniMessage.get();
+    @Getter private PluginDescription pluginDescription;
+    @Getter private VelocityConfig cfg;
     private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.builder().build();
-    private VelocityConfig cfg;
+
+    @Inject private CommandManager commandManager;
 
     @Getter
     @Inject
@@ -46,8 +53,16 @@ public class MiniMOTD {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
+        this.server.getPluginManager().fromInstance(this).ifPresent(container -> this.pluginDescription = container.getDescription());
         this.cfg = new VelocityConfig(this);
+        this.commandManager.register(this.commandManager.metaBuilder("minimotdvelocity").build(), new VelocityCommand(this));
         this.cfg.reload();
+
+        try {
+            new UpdateChecker(this.getPluginDescription().getVersion().orElse("")).checkVersion().get().forEach(this.logger::info);
+        } catch (InterruptedException | ExecutionException e) {
+            this.logger.info("failed to check for update: " + e.getMessage());
+        }
     }
 
 

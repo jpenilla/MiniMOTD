@@ -1,4 +1,4 @@
-package xyz.jpenilla.minimotd.paper;
+package xyz.jpenilla.minimotd.spigot;
 
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
 import net.kyori.adventure.text.Component;

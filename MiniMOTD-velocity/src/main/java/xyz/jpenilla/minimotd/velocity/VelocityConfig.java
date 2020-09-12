@@ -55,6 +55,7 @@ public class VelocityConfig extends MiniMOTDConfig {
         final ConfigurationNode motd = node.getNode("motd");
         final ConfigurationNode maxPlayers = node.getNode("maxPlayers");
         final ConfigurationNode bungeeOnly = node.getNode("bungeeOnly");
+        final ConfigurationNode updateChecker = node.getNode(UPDATE_CHECKER);
 
         try {
             getMotds().clear();
@@ -66,6 +67,7 @@ public class VelocityConfig extends MiniMOTDConfig {
             setXValue(maxPlayers.getNode("xValue").getInt());
             setFakePlayersEnabled(bungeeOnly.getNode("fakePlayersEnabled").getBoolean());
             setFakePlayers(bungeeOnly.getNode("fakePlayers").getString());
+            setUpdateChecker(updateChecker.getBoolean());
         } catch (ObjectMappingException e) {
             miniMOTD.getLogger().warn("unable to load config.");
         }

@@ -1,6 +1,6 @@
 name: MiniMOTD
 version: ${project.version}
-main: xyz.jpenilla.minimotd.paper.MiniMOTD
+main: xyz.jpenilla.minimotd.spigot.MiniMOTD
 softdepend: [Prisma]
 authors: [jmp]
 api-version: 1.13

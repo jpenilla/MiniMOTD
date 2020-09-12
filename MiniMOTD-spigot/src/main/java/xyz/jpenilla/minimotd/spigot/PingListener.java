@@ -1,4 +1,4 @@
-package xyz.jpenilla.minimotd.paper;
+package xyz.jpenilla.minimotd.spigot;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;

@@ -17,6 +17,7 @@ public abstract class MiniMOTDConfig {
     public final String X_VALUE = Fields.maxPlayers + "." + Fields.xValue;
     public final String FAKE_PLAYERS_ENABLED = "bungeeOnly." + Fields.fakePlayersEnabled;
     public final String FAKE_PLAYERS = "bungeeOnly." + Fields.fakePlayers;
+    public final String UPDATE_CHECKER = Fields.updateChecker;
     @Getter private final ArrayList<String> motds = new ArrayList<>();
     @Getter @Setter private boolean motdEnabled;
     @Getter @Setter private boolean maxPlayersEnabled;
@@ -25,6 +26,7 @@ public abstract class MiniMOTDConfig {
     @Getter @Setter private int xValue;
     @Getter @Setter private int maxPlayers;
     @Getter @Setter private String fakePlayers;
+    @Getter @Setter private boolean updateChecker;
 
     public abstract void reload();
 

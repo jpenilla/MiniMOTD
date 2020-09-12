@@ -1,4 +1,4 @@
-package xyz.jpenilla.minimotd.paper;
+package xyz.jpenilla.minimotd.spigot;
 
 import lombok.NonNull;
 import us.eunoians.prisma.ColorProvider;

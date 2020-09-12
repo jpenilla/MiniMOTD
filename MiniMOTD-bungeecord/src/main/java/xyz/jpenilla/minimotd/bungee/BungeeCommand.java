@@ -11,10 +11,12 @@ import java.util.List;
 
 public class BungeeCommand extends Command {
     private final MiniMOTD miniMOTD;
+    private final MiniMessage miniMessage;
 
     public BungeeCommand(MiniMOTD miniMOTD) {
         super("minimotdbungee");
         this.miniMOTD = miniMOTD;
+        this.miniMessage = MiniMessage.get();
     }
 
     @Override
@@ -47,9 +49,9 @@ public class BungeeCommand extends Command {
     private void onHelp(CommandSender sender, String[] args) {
         final List<String> messages = new ArrayList<>();
         messages.add("<gradient:blue:green>MiniMOTD Commands:");
-        messages.add(" <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotd about'><click:run_command:/minimotd about><yellow>/minimotd about");
-        messages.add(" <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotd reload'><click:run_command:/minimotd reload><yellow>/minimotd reload");
-        messages.add(" <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotd help'><click:run_command:/minimotd help><yellow>/minimotd help");
+        messages.add(" <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotd about'><click:run_command:/minimotdbungee about><yellow>/minimotdbungee about");
+        messages.add(" <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotd reload'><click:run_command:/minimotdbungee reload><yellow>/minimotdbungee reload");
+        messages.add(" <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotd help'><click:run_command:/minimotdbungee help><yellow>/minimotdbungee help");
         send(sender, messages);
     }
 
@@ -62,14 +64,14 @@ public class BungeeCommand extends Command {
         final ArrayList<String> messages = new ArrayList<>();
         final String header = "<gradient:white:black>=============</gradient><gradient:black:white>=============";
         messages.add(header);
-        messages.add("<hover:show_text:'<rainbow>click me!'><click:open_url:https://www.spigotmc.org/resources/minimotd.81254/>" + miniMOTD.getDescription().getName() + " <gradient:red:yellow>" + miniMOTD.getDescription().getVersion());
+        messages.add("<hover:show_text:'<rainbow>click me!'><click:open_url:https://github.com/jmanpenilla/MiniMOTD/>" + miniMOTD.getDescription().getName() + " <gradient:red:yellow>" + miniMOTD.getDescription().getVersion());
         messages.add("<yellow>By</yellow><gray>:</gray> <gradient:blue:green>jmp");
         messages.add(header);
         send(sender, messages);
     }
 
     private void onInvalidUse(CommandSender sender, String[] args) {
-        send(sender, "<hover:show_text:'<green>Click for <yellow>/minimotd help'><click:run_command:/minimotd help><italic><gradient:red:gold>Invalid usage.</gradient> <blue>Try <yellow>/minimotd help</yellow> or click here");
+        send(sender, "<hover:show_text:'<green>Click for <yellow>/minimotdbungee help'><click:run_command:/minimotdbungee help><italic><gradient:red:gold>Invalid usage.</gradient> <blue>Try <yellow>/minimotdbungee help</yellow> or click here");
     }
 
     private void onNoPermission(CommandSender sender, String[] args) {
@@ -81,9 +83,9 @@ public class BungeeCommand extends Command {
         if (sender instanceof ProxiedPlayer) {
             finalMessage = message;
         } else {
-            finalMessage = MiniMessage.get().stripTokens(message);
+            finalMessage = miniMessage.stripTokens(message);
         }
-        sender.sendMessage(BungeeCordComponentSerializer.get().serialize(MiniMessage.get().parse(finalMessage)));
+        sender.sendMessage(BungeeCordComponentSerializer.get().serialize(miniMessage.parse(finalMessage)));
     }
 
     private void send(CommandSender sender, List<String> messages) {

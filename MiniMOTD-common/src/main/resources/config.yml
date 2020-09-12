@@ -1,3 +1,7 @@
+# Do you want the plugin to check for updated on GitHub on launch?
+# https://github.com/jmanpenilla/MiniMOTD
+updateChecker: true
+
 motd:
   # Do you want to enable this feature?
   motdEnabled: true

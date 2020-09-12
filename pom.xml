@@ -6,7 +6,7 @@
 
     <groupId>xyz.jpenilla</groupId>
     <artifactId>MiniMOTD</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
     <packaging>pom</packaging>
 
     <name>MiniMOTD Parent</name>
@@ -32,7 +32,7 @@
 
     <modules>
         <module>MiniMOTD-common</module>
-        <module>MiniMOTD-paper</module>
+        <module>MiniMOTD-spigot</module>
         <module>MiniMOTD-bungeecord</module>
         <module>MiniMOTD-velocity</module>
         <module>MiniMOTD-universal</module>

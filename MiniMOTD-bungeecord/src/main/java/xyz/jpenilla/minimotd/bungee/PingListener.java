@@ -2,13 +2,13 @@ package xyz.jpenilla.minimotd.bungee;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeCordComponentSerializer;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.Favicon;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.chat.ComponentSerializer;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 
@@ -18,7 +18,6 @@ public class PingListener implements Listener {
     private final BungeeConfig cfg;
     private final MiniMessage miniMessage = MiniMessage.get();
     private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.builder().build();
-    private final GsonComponentSerializer gsonSerializer = GsonComponentSerializer.builder().build();
 
     public PingListener(MiniMOTD miniMOTD) {
         this.cfg = miniMOTD.getCfg();
@@ -59,9 +58,7 @@ public class PingListener implements Listener {
                 if (e.getConnection().getVersion() < 735) {
                     motd = legacySerializer.deserialize(legacySerializer.serialize(motd));
                 }
-
-                response.setDescriptionComponent(ComponentSerializer.parse(gsonSerializer.serialize(motd))[0]);
-                //response.setDescriptionComponent(BungeeCordComponentSerializer.get().serialize(motd)[0]);
+                response.setDescriptionComponent(BungeeCordComponentSerializer.get().serialize(motd)[0]);
             }
 
             response.setPlayers(players);
