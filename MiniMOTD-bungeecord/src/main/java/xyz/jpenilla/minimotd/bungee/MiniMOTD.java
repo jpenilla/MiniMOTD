@@ -6,8 +6,6 @@ import net.md_5.bungee.api.plugin.Plugin;
 import org.bstats.bungeecord.Metrics;
 import xyz.jpenilla.minimotd.common.UpdateChecker;
 
-import java.util.concurrent.ExecutionException;
-
 public class MiniMOTD extends Plugin {
     @Getter private BungeeConfig cfg;
     @Getter private BungeeAudiences audiences;
@@ -20,10 +18,6 @@ public class MiniMOTD extends Plugin {
         getProxy().getPluginManager().registerCommand(this, new BungeeCommand(this));
         Metrics metrics = new Metrics(this, 8137);
 
-        try {
-            new UpdateChecker(this.getDescription().getVersion()).checkVersion().get().forEach(message -> getLogger().info(message));
-        } catch (InterruptedException | ExecutionException e) {
-            getLogger().info("failed to check for update: " + e.getMessage());
-        }
+        new UpdateChecker(this.getDescription().getVersion()).checkVersion().whenCompleteAsync((messages, t) -> messages.forEach(message -> getLogger().info(message)));
     }
 }

@@ -8,8 +8,6 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.jpenilla.minimotd.common.UpdateChecker;
 
-import java.util.concurrent.ExecutionException;
-
 public final class MiniMOTD extends JavaPlugin {
     @Getter private static MiniMOTD instance;
     @Getter private SpigotConfig cfg;
@@ -55,10 +53,6 @@ public final class MiniMOTD extends JavaPlugin {
 
         Metrics metrics = new Metrics(this, 8132);
 
-        try {
-            new UpdateChecker(this.getDescription().getVersion()).checkVersion().get().forEach(message -> getLogger().info(message));
-        } catch (InterruptedException | ExecutionException e) {
-            getLogger().info("failed to check for update: " + e.getMessage());
-        }
+        new UpdateChecker(this.getDescription().getVersion()).checkVersion().whenCompleteAsync((messages, m) -> messages.forEach(message -> getLogger().info(message)));
     }
 }

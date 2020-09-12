@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import xyz.jpenilla.minimotd.common.UpdateChecker;
 
 import java.nio.file.Path;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Plugin(
@@ -58,11 +57,7 @@ public class MiniMOTD {
         this.commandManager.register(this.commandManager.metaBuilder("minimotdvelocity").build(), new VelocityCommand(this));
         this.cfg.reload();
 
-        try {
-            new UpdateChecker(this.getPluginDescription().getVersion().orElse("")).checkVersion().get().forEach(this.logger::info);
-        } catch (InterruptedException | ExecutionException e) {
-            this.logger.info("failed to check for update: " + e.getMessage());
-        }
+        new UpdateChecker(this.getPluginDescription().getVersion().orElse("")).checkVersion().whenCompleteAsync((messages, t) -> messages.forEach(this.logger::info));
     }
 
 
