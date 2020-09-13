@@ -53,6 +53,8 @@ public final class MiniMOTD extends JavaPlugin {
 
         Metrics metrics = new Metrics(this, 8132);
 
-        new UpdateChecker(this.getDescription().getVersion()).checkVersion().whenCompleteAsync((messages, m) -> messages.forEach(message -> getLogger().info(message)));
+        if (cfg.isUpdateChecker()) {
+            new UpdateChecker(this.getDescription().getVersion()).checkVersion().whenCompleteAsync((messages, m) -> messages.forEach(message -> getLogger().info(message)));
+        }
     }
 }

@@ -57,7 +57,9 @@ public class MiniMOTD {
         this.commandManager.register(this.commandManager.metaBuilder("minimotdvelocity").build(), new VelocityCommand(this));
         this.cfg.reload();
 
-        new UpdateChecker(this.getPluginDescription().getVersion().orElse("")).checkVersion().whenCompleteAsync((messages, t) -> messages.forEach(this.logger::info));
+        if (cfg.isUpdateChecker()) {
+            new UpdateChecker(this.getPluginDescription().getVersion().orElse("")).checkVersion().whenCompleteAsync((messages, t) -> messages.forEach(this.logger::info));
+        }
     }
 
 

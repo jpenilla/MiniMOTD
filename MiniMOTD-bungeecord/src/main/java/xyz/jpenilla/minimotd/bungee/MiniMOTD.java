@@ -18,6 +18,8 @@ public class MiniMOTD extends Plugin {
         getProxy().getPluginManager().registerCommand(this, new BungeeCommand(this));
         Metrics metrics = new Metrics(this, 8137);
 
-        new UpdateChecker(this.getDescription().getVersion()).checkVersion().whenCompleteAsync((messages, t) -> messages.forEach(message -> getLogger().info(message)));
+        if (cfg.isUpdateChecker()) {
+            new UpdateChecker(this.getDescription().getVersion()).checkVersion().whenCompleteAsync((messages, t) -> messages.forEach(message -> getLogger().info(message)));
+        }
     }
 }
