@@ -24,7 +24,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Plugin(
         id = "minimotd-velocity",
         name = "MiniMOTD",
-        version = "1.2.1",
+        version = "1.2.2",
         description = "Set the server list MOTD using MiniMessage!",
         url = "https://github.com/jmanpenilla/MiniMOTD/",
         authors = {"jmp"}

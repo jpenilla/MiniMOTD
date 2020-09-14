@@ -5,7 +5,7 @@
     <parent>
         <artifactId>MiniMOTD</artifactId>
         <groupId>xyz.jpenilla</groupId>
-        <version>1.2.1</version>
+        <version>1.2.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,19 +16,19 @@
         <dependency>
             <groupId>xyz.jpenilla</groupId>
             <artifactId>MiniMOTD-spigot</artifactId>
-            <version>1.2.1</version>
+            <version>1.2.2</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>xyz.jpenilla</groupId>
             <artifactId>MiniMOTD-bungeecord</artifactId>
-            <version>1.2.1</version>
+            <version>1.2.2</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>xyz.jpenilla</groupId>
             <artifactId>MiniMOTD-velocity</artifactId>
-            <version>1.2.1</version>
+            <version>1.2.2</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
