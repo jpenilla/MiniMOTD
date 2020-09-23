@@ -5,7 +5,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.util.CachedServerIcon;
 
@@ -23,7 +22,7 @@ public class PaperPingListener implements Listener {
         this.miniMOTD = miniMOTD;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler
     public void onPing(PaperServerListPingEvent e) {
         int onlinePlayers = e.getNumPlayers();
         if (cfg.isFakePlayersEnabled()) {
