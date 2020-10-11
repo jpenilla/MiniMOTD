@@ -8,9 +8,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.util.StringUtil;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -101,11 +99,9 @@ public class SpigotCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        final List<String> completions = new ArrayList<>();
         if (args.length < 2 && sender.hasPermission("minimotd.admin")) {
-            StringUtil.copyPartialMatches(args[0], COMMANDS, completions);
-            Collections.sort(completions);
+            return COMMANDS;
         }
-        return completions;
+        return Collections.emptyList();
     }
 }

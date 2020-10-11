@@ -54,7 +54,7 @@
         <dependency>
             <groupId>com.github.jmanpenilla</groupId>
             <artifactId>adventure-text-minimessage</artifactId>
-            <version>571d2f4408</version>
+            <version>918595ff89</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

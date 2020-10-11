@@ -1,9 +1,7 @@
 package xyz.jpenilla.minimotd.bungee;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.bungeecord.BungeeCordComponentSerializer;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
 import java.util.ArrayList;
@@ -79,7 +77,7 @@ public class BungeeCommand extends Command {
     }
 
     private void send(CommandSender sender, String message) {
-        sender.sendMessage(BungeeCordComponentSerializer.get().serialize(miniMessage.parse(message)));
+        miniMOTD.getAudiences().sender(sender).sendMessage(miniMessage.parse(message));
     }
 
     private void send(CommandSender sender, List<String> messages) {

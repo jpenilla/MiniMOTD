@@ -2,8 +2,7 @@ package xyz.jpenilla.minimotd.bungee;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.bungeecord.BungeeCordComponentSerializer;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.Favicon;
 import net.md_5.bungee.api.ServerPing;
@@ -58,7 +57,7 @@ public class PingListener implements Listener {
                 if (e.getConnection().getVersion() < 735) {
                     motd = legacySerializer.deserialize(legacySerializer.serialize(motd));
                 }
-                response.setDescriptionComponent(BungeeCordComponentSerializer.get().serialize(motd)[0]);
+                response.setDescriptionComponent(BungeeComponentSerializer.get().serialize(motd)[0]);
             }
 
             response.setPlayers(players);
