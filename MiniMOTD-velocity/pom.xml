@@ -149,7 +149,7 @@
                             <relocations>
                                 <relocation>
                                     <pattern>net.kyori.adventure.text.minimessage</pattern>
-                                    <shadedPattern>xyz.jpenilla.minimotd.lib.kyori.adventure.text.minimessage-unshaded</shadedPattern>
+                                    <shadedPattern>xyz.jpenilla.minimotd.lib.kyori.adventure.text.minimessage-unrelocated</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
@@ -206,7 +206,7 @@
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-api</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>4.0.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

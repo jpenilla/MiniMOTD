@@ -1,6 +1,6 @@
 package xyz.jpenilla.minimotd.spigot;
 
-import lombok.NonNull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import us.eunoians.prisma.ColorProvider;
 
 public class PrismaHook {

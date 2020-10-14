@@ -2,6 +2,7 @@ package xyz.jpenilla.minimotd.velocity;
 
 import com.google.common.collect.ImmutableList;
 import com.velocitypowered.api.command.SimpleCommand;
+import net.kyori.adventure.identity.Identity;
 
 import java.util.List;
 
@@ -65,7 +66,7 @@ public class VelocityCommand implements SimpleCommand {
     }
 
     private void sendMessages(Invocation invocation, List<String> messages) {
-        messages.forEach(message -> invocation.source().sendMessage(miniMOTD.getMiniMessage().parse(message)));
+        messages.forEach(message -> invocation.source().sendMessage(Identity.nil(), miniMOTD.getMiniMessage().parse(message)));
     }
 
     private static final List<String> COMMANDS = ImmutableList.of("about", "reload", "help");

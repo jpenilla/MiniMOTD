@@ -1,13 +1,14 @@
 package xyz.jpenilla.minimotd.spigot;
 
 import com.google.common.collect.ImmutableList;
-import lombok.NonNull;
+import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +23,10 @@ public class SpigotCommand implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender,
+                             @NonNull Command command,
+                             @NonNull String label,
+                             @NonNull String[] args) {
         if (!sender.hasPermission("minimotd.admin")) {
             onNoPermission(sender, args);
             return true;
@@ -83,9 +87,9 @@ public class SpigotCommand implements CommandExecutor, TabCompleter {
 
     private void send(@NonNull CommandSender sender, @NonNull String message) {
         if (sender instanceof Player) {
-            miniMOTD.getAudiences().player((Player) sender).sendMessage(miniMessage.parse(message));
+            miniMOTD.getAudiences().player((Player) sender).sendMessage(Identity.nil(), miniMessage.parse(message));
         } else {
-            miniMOTD.getAudiences().console().sendMessage(miniMessage.parse(message));
+            miniMOTD.getAudiences().console().sendMessage(Identity.nil(), miniMessage.parse(message));
         }
     }
 
@@ -98,7 +102,9 @@ public class SpigotCommand implements CommandExecutor, TabCompleter {
     private static final List<String> COMMANDS = ImmutableList.of("about", "reload", "help");
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> onTabComplete(final @NonNull CommandSender sender,
+                                      final @NonNull Command command,
+                                      final @NonNull String alias, String[] args) {
         if (args.length < 2 && sender.hasPermission("minimotd.admin")) {
             return COMMANDS;
         }
