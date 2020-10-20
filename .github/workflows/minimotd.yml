@@ -20,7 +20,7 @@ jobs:
     - name: Build with Maven
       run: mvn clean package
     - run: mkdir staging && cp MiniMOTD-universal/target/MiniMOTD*.jar staging && cp MiniMOTD-spigot/target/MiniMOTD*.jar staging && cp MiniMOTD-bungeecord/target/MiniMOTD*.jar staging && cp MiniMOTD-velocity/target/MiniMOTD*.jar staging
-    - uses: actions/upload-artifact@v1
+    - uses: actions/upload-artifact@v2
       with:
         name: Package
         path: staging
