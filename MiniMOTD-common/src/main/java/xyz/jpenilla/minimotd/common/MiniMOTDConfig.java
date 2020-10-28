@@ -40,7 +40,7 @@ public abstract class MiniMOTDConfig {
         return motd
                 .replace("{onlinePlayers}", String.valueOf(onlinePlayers))
                 .replace("{maxPlayers}", String.valueOf(maxPlayers))
-                .replace("{br}", "\n");
+                .replace("{br}", System.lineSeparator());
     }
 
     public int getAdjustedMaxPlayers(int onlinePlayers, int actualMaxPlayers) {
