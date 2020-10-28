@@ -58,7 +58,9 @@ public class MiniMOTD {
         this.cfg.reload();
 
         if (cfg.isUpdateChecker()) {
-            new UpdateChecker(this.getPluginDescription().getVersion().orElse("")).checkVersion().whenCompleteAsync((messages, t) -> messages.forEach(this.logger::info));
+            this.server.getScheduler().buildTask(this, () ->
+                    new UpdateChecker(this.getPluginDescription().getVersion().orElse("")).checkVersion().forEach(this.logger::info))
+                    .schedule();
         }
     }
 
