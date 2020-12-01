@@ -54,6 +54,10 @@ public class PingListener implements Listener {
             final int maxPlayers = cfg.getAdjustedMaxPlayers(onlinePlayers, players.getMax());
             players.setMax(maxPlayers);
 
+            if (cfg.isDisablePlayerListHover()) {
+                players.setSample(new ServerPing.PlayerInfo[]{});
+            }
+
             if (cfg.isMotdEnabled()) {
                 Component motd = miniMessage.parse(cfg.getMOTD(onlinePlayers, maxPlayers));
                 if (e.getConnection().getVersion() < 735) {
