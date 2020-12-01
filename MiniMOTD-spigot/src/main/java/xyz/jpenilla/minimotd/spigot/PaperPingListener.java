@@ -40,7 +40,7 @@ public class PaperPingListener implements Listener {
                     onlinePlayers = onlinePlayers + addedPlayers;
                 }
             } catch (NumberFormatException ex) {
-                System.out.println("[MiniMOTD] fakePlayers config incorrect");
+                miniMOTD.getLogger().warning("fakePlayers config invalid");
             }
         }
         e.setNumPlayers(onlinePlayers);
@@ -59,6 +59,9 @@ public class PaperPingListener implements Listener {
         final CachedServerIcon favicon = cfg.getRandomIcon();
         if (favicon != null) {
             e.setServerIcon(favicon);
+        }
+        if (cfg.isDisablePlayerListHover()) {
+            e.getPlayerSample().clear();
         }
     }
 }

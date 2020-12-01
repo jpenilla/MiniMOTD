@@ -33,7 +33,7 @@ public class SpigotConfig extends MiniMOTDConfig {
         miniMOTD.reloadConfig();
         final FileConfiguration config = miniMOTD.getConfig();
 
-        getMotds().clear();
+        motds.clear();
         for (String motd : config.getStringList(MOTDS)) {
             final String temp;
             if (miniMOTD.getPrisma() != null) {
@@ -41,16 +41,17 @@ public class SpigotConfig extends MiniMOTDConfig {
             } else {
                 temp = motd;
             }
-            getMotds().add(temp);
+            motds.add(temp);
         }
-        setMotdEnabled(config.getBoolean(MOTD_ENABLED));
-        setMaxPlayersEnabled(config.getBoolean(MAX_PLAYERS_ENABLED));
-        setJustXMoreEnabled(config.getBoolean(JUST_X_MORE_ENABLED));
-        setMaxPlayers(config.getInt(MAX_PLAYERS));
-        setXValue(config.getInt(X_VALUE));
-        setFakePlayersEnabled(config.getBoolean(FAKE_PLAYERS_ENABLED));
-        setFakePlayers(config.getString(FAKE_PLAYERS));
-        setUpdateChecker(config.getBoolean(UPDATE_CHECKER));
+        motdEnabled = config.getBoolean(MOTD_ENABLED);
+        maxPlayersEnabled = config.getBoolean(MAX_PLAYERS_ENABLED);
+        justXMoreEnabled = config.getBoolean(JUST_X_MORE_ENABLED);
+        maxPlayers = config.getInt(MAX_PLAYERS);
+        xValue = config.getInt(X_VALUE);
+        fakePlayersEnabled = config.getBoolean(FAKE_PLAYERS_ENABLED);
+        fakePlayers = config.getString(FAKE_PLAYERS);
+        updateChecker = config.getBoolean(UPDATE_CHECKER);
+        disablePlayerListHover = config.getBoolean(DISABLE_PLAYER_LIST_HOVER);
 
         final File iconFolder = new File(miniMOTD.getDataFolder() + File.separator + "icons");
         if (!iconFolder.exists()) {

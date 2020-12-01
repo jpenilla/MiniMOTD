@@ -106,6 +106,10 @@ public class MiniMOTD {
             pong.favicon(favicon);
         }
 
+        if (cfg.isDisablePlayerListHover()) {
+            pong.clearSamplePlayers();
+        }
+
         ping.setPing(pong.build());
     }
 }

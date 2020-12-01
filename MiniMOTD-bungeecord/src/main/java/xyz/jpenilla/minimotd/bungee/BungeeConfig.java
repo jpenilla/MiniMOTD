@@ -14,7 +14,9 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Level;
 
 public class BungeeConfig extends MiniMOTDConfig {
     private final MiniMOTD miniMOTD;
@@ -33,18 +35,19 @@ public class BungeeConfig extends MiniMOTDConfig {
     }
 
     public void reload() {
-        final Configuration config = loadFromDisk();
+        final Configuration config = Objects.requireNonNull(this.loadFromDisk());
 
-        getMotds().clear();
-        getMotds().addAll(config.getStringList(MOTDS));
-        setMotdEnabled(config.getBoolean(MOTD_ENABLED));
-        setMaxPlayersEnabled(config.getBoolean(MAX_PLAYERS_ENABLED));
-        setJustXMoreEnabled(config.getBoolean(JUST_X_MORE_ENABLED));
-        setMaxPlayers(config.getInt(MAX_PLAYERS));
-        setXValue(config.getInt(X_VALUE));
-        setFakePlayersEnabled(config.getBoolean(FAKE_PLAYERS_ENABLED));
-        setFakePlayers(config.getString(FAKE_PLAYERS));
-        setUpdateChecker(config.getBoolean(UPDATE_CHECKER));
+        motds.clear();
+        motds.addAll(config.getStringList(MOTDS));
+        motdEnabled = config.getBoolean(MOTD_ENABLED);
+        maxPlayersEnabled = config.getBoolean(MAX_PLAYERS_ENABLED);
+        justXMoreEnabled = config.getBoolean(JUST_X_MORE_ENABLED);
+        maxPlayers = config.getInt(MAX_PLAYERS);
+        xValue = config.getInt(X_VALUE);
+        fakePlayersEnabled = config.getBoolean(FAKE_PLAYERS_ENABLED);
+        fakePlayers = config.getString(FAKE_PLAYERS);
+        updateChecker = config.getBoolean(UPDATE_CHECKER);
+        disablePlayerListHover = config.getBoolean(DISABLE_PLAYER_LIST_HOVER);
 
         final File iconFolder = new File(miniMOTD.getDataFolder() + File.separator + "icons");
         if (!iconFolder.exists()) {
@@ -78,13 +81,13 @@ public class BungeeConfig extends MiniMOTDConfig {
             try (InputStream in = miniMOTD.getResourceAsStream("config.yml")) {
                 Files.copy(in, file.toPath());
             } catch (IOException e) {
-                e.printStackTrace();
+                miniMOTD.getLogger().log(Level.WARNING, "Failed to copy default config", e);
             }
         }
         try {
             return ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(miniMOTD.getDataFolder(), "config.yml"));
         } catch (IOException e) {
-            e.printStackTrace();
+            miniMOTD.getLogger().log(Level.WARNING, "Failed to read config", e);
             return null;
         }
     }

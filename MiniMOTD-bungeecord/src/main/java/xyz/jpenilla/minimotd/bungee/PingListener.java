@@ -16,9 +16,11 @@ import java.util.concurrent.ThreadLocalRandom;
 public class PingListener implements Listener {
     private final BungeeConfig cfg;
     private final MiniMessage miniMessage = MiniMessage.get();
+    private final MiniMOTD miniMOTD;
     private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.builder().build();
 
     public PingListener(MiniMOTD miniMOTD) {
+        this.miniMOTD = miniMOTD;
         this.cfg = miniMOTD.getCfg();
     }
 
@@ -44,7 +46,7 @@ public class PingListener implements Listener {
                         onlinePlayers = onlinePlayers + addedPlayers;
                     }
                 } catch (NumberFormatException ex) {
-                    System.out.println("[MiniMOTD] fakePlayers config incorrect");
+                    miniMOTD.getLogger().warning("fakePlayers config invalid");
                 }
             }
             players.setOnline(onlinePlayers);

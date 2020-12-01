@@ -1,7 +1,6 @@
 package xyz.jpenilla.minimotd.common;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 
 import java.util.ArrayList;
@@ -9,24 +8,26 @@ import java.util.Random;
 
 @FieldNameConstants
 public abstract class MiniMOTDConfig {
-    public final String MOTDS = "motd." + Fields.motds;
-    public final String MOTD_ENABLED = "motd." + Fields.motdEnabled;
-    public final String MAX_PLAYERS_ENABLED = Fields.maxPlayers + "." + Fields.maxPlayersEnabled;
-    public final String JUST_X_MORE_ENABLED = Fields.maxPlayers + "." + Fields.justXMoreEnabled;
-    public final String MAX_PLAYERS = Fields.maxPlayers + "." + Fields.maxPlayers;
-    public final String X_VALUE = Fields.maxPlayers + "." + Fields.xValue;
-    public final String FAKE_PLAYERS_ENABLED = "bungeeOnly." + Fields.fakePlayersEnabled;
-    public final String FAKE_PLAYERS = "bungeeOnly." + Fields.fakePlayers;
-    public final String UPDATE_CHECKER = Fields.updateChecker;
-    @Getter private final ArrayList<String> motds = new ArrayList<>();
-    @Getter @Setter private boolean motdEnabled;
-    @Getter @Setter private boolean maxPlayersEnabled;
-    @Getter @Setter private boolean justXMoreEnabled;
-    @Getter @Setter private boolean fakePlayersEnabled;
-    @Getter @Setter private int xValue;
-    @Getter @Setter private int maxPlayers;
-    @Getter @Setter private String fakePlayers;
-    @Getter @Setter private boolean updateChecker;
+    public static final String MOTDS = "motd." + Fields.motds;
+    public static final String MOTD_ENABLED = "motd." + Fields.motdEnabled;
+    public static final String MAX_PLAYERS_ENABLED = Fields.maxPlayers + "." + Fields.maxPlayersEnabled;
+    public static final String JUST_X_MORE_ENABLED = Fields.maxPlayers + "." + Fields.justXMoreEnabled;
+    public static final String MAX_PLAYERS = Fields.maxPlayers + "." + Fields.maxPlayers;
+    public static final String X_VALUE = Fields.maxPlayers + "." + Fields.xValue;
+    public static final String FAKE_PLAYERS_ENABLED = "bungeeOnly." + Fields.fakePlayersEnabled;
+    public static final String FAKE_PLAYERS = "bungeeOnly." + Fields.fakePlayers;
+    public static final String UPDATE_CHECKER = Fields.updateChecker;
+    public static final String DISABLE_PLAYER_LIST_HOVER = "bungeeOnly." + Fields.disablePlayerListHover;
+    @Getter protected final ArrayList<String> motds = new ArrayList<>();
+    @Getter protected boolean motdEnabled;
+    @Getter protected boolean maxPlayersEnabled;
+    @Getter protected boolean justXMoreEnabled;
+    @Getter protected boolean fakePlayersEnabled;
+    @Getter protected int xValue;
+    @Getter protected int maxPlayers;
+    @Getter protected String fakePlayers;
+    @Getter protected boolean updateChecker;
+    @Getter protected boolean disablePlayerListHover;
 
     public abstract void reload();
 

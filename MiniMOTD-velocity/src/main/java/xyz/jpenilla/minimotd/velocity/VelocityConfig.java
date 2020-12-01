@@ -30,7 +30,7 @@ public class VelocityConfig extends MiniMOTDConfig {
         try {
             Files.createDirectories(miniMOTD.getDataDirectory());
         } catch (IOException e) {
-            miniMOTD.getLogger().warn("unable to create config directory");
+            miniMOTD.getLogger().warn("unable to create config directory", e);
         }
 
         final File file = new File(miniMOTD.getDataDirectory().toFile().getPath() + File.separator + "config.yml");
@@ -38,7 +38,7 @@ public class VelocityConfig extends MiniMOTDConfig {
             try (InputStream in = miniMOTD.getClass().getClassLoader().getResourceAsStream("config.yml")) {
                 Files.copy(in, file.toPath());
             } catch (IOException e) {
-                e.printStackTrace();
+                miniMOTD.getLogger().warn("unable to copy default config file.", e);
             }
         }
 
@@ -48,28 +48,28 @@ public class VelocityConfig extends MiniMOTDConfig {
         try {
             node = loader.load();
         } catch (IOException e) {
-            miniMOTD.getLogger().warn("unable to load config file.");
+            miniMOTD.getLogger().warn("unable to load config file.", e);
             return;
         }
 
         final ConfigurationNode motd = node.getNode("motd");
-        final ConfigurationNode maxPlayers = node.getNode("maxPlayers");
+        final ConfigurationNode maxPlayersNode = node.getNode("maxPlayers");
         final ConfigurationNode bungeeOnly = node.getNode("bungeeOnly");
-        final ConfigurationNode updateChecker = node.getNode(UPDATE_CHECKER);
 
         try {
-            getMotds().clear();
-            getMotds().addAll(motd.getNode("motds").getList(TypeToken.of(String.class)));
-            setMotdEnabled(motd.getNode("motdEnabled").getBoolean());
-            setMaxPlayersEnabled(maxPlayers.getNode("maxPlayersEnabled").getBoolean());
-            setJustXMoreEnabled(maxPlayers.getNode("justXMoreEnabled").getBoolean());
-            setMaxPlayers(maxPlayers.getNode("maxPlayers").getInt());
-            setXValue(maxPlayers.getNode("xValue").getInt());
-            setFakePlayersEnabled(bungeeOnly.getNode("fakePlayersEnabled").getBoolean());
-            setFakePlayers(bungeeOnly.getNode("fakePlayers").getString());
-            setUpdateChecker(updateChecker.getBoolean());
+            motds.clear();
+            motds.addAll(motd.getNode("motds").getList(TypeToken.of(String.class)));
+            motdEnabled = motd.getNode("motdEnabled").getBoolean();
+            maxPlayersEnabled = maxPlayersNode.getNode("maxPlayersEnabled").getBoolean();
+            justXMoreEnabled = maxPlayersNode.getNode("justXMoreEnabled").getBoolean();
+            maxPlayers = maxPlayersNode.getNode("maxPlayers").getInt();
+            xValue = maxPlayersNode.getNode("xValue").getInt();
+            fakePlayersEnabled = bungeeOnly.getNode("fakePlayersEnabled").getBoolean();
+            fakePlayers = bungeeOnly.getNode("fakePlayers").getString();
+            updateChecker = node.getNode(UPDATE_CHECKER).getBoolean();
+            disablePlayerListHover = bungeeOnly.getNode("disablePlayerListHover").getBoolean();
         } catch (ObjectMappingException e) {
-            miniMOTD.getLogger().warn("unable to load config.");
+            miniMOTD.getLogger().warn("unable to load config.", e);
         }
 
         final File iconFolder = new File(miniMOTD.getDataDirectory().toFile().getPath() + File.separator + "icons");
@@ -88,8 +88,7 @@ public class VelocityConfig extends MiniMOTDConfig {
                         miniMOTD.getLogger().info("Could not load " + icon.getName() + ": image must be 64x64px");
                     }
                 } catch (Exception e) {
-                    miniMOTD.getLogger().info("Could not load " + icon.getName() + ": invalid image file");
-                    e.printStackTrace();
+                    miniMOTD.getLogger().info("Could not load " + icon.getName() + ": invalid image file", e);
                 }
             }
         }

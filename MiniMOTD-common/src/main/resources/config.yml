@@ -41,3 +41,6 @@ bungeeOnly:
   #   percent: The player count will be inflated by this much, rounding up
   #     ex: fakePlayers: "25%"
   fakePlayers: "25%"
+
+  # Setting this to true will disable the hover text showing online player usernames
+  disablePlayerListHover: false
