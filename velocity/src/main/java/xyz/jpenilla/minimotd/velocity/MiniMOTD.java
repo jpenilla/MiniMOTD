@@ -22,11 +22,11 @@ import java.nio.file.Path;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Plugin(
-        id = "minimotd-velocity",
-        name = "MiniMOTD",
-        version = "1.2.2",
-        description = "Set the server list MOTD using MiniMessage!",
-        url = "https://github.com/jmanpenilla/MiniMOTD/",
+        id = "{project.name}",
+        name = "{rootProject.name}",
+        version = "{version}",
+        description = "{description}",
+        url = "{url}",
         authors = {"jmp"}
 )
 public class MiniMOTD {

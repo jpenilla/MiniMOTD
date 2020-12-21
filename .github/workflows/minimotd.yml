@@ -17,9 +17,9 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-    - name: Build with Maven
-      run: mvn clean package
-    - run: mkdir staging && cp MiniMOTD-universal/target/MiniMOTD*.jar staging && cp MiniMOTD-spigot/target/MiniMOTD*.jar staging && cp MiniMOTD-bungeecord/target/MiniMOTD*.jar staging && cp MiniMOTD-velocity/target/MiniMOTD*.jar staging
+    - name: Build with Gradle
+      run: ./gradlew clean build
+    - run: mkdir staging && cp universal/build/libs/minimotd*.jar staging && cp spigot/build/libs/minimotd*.jar staging && cp bungee/build/libs/minimotd*.jar staging && cp velocity/build/libs/minimotd*.jar staging
     - uses: actions/upload-artifact@v2
       with:
         name: Package
