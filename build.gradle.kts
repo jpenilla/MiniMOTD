@@ -21,14 +21,15 @@ subprojects {
     }
 
     repositories {
-        mavenLocal()
         mavenCentral()
         maven("https://papermc.io/repo/repository/maven-public/")
+        maven("https://nexus.velocitypowered.com/repository/maven-public/")
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
         maven("https://oss.sonatype.org/content/groups/public/")
         maven("https://repo.jpenilla.xyz/snapshots/")
         maven("https://repo.codemc.org/repository/maven-public")
         maven("https://jitpack.io")
+        mavenLocal()
     }
 
     dependencies {
