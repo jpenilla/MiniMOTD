@@ -16,6 +16,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.slf4j.Logger;
+import xyz.jpenilla.minimotd.common.MiniMOTDConfig;
 import xyz.jpenilla.minimotd.common.UpdateChecker;
 
 import java.nio.file.Path;
@@ -93,15 +94,17 @@ public class MiniMOTD {
         int maxPlayers = cfg.getAdjustedMaxPlayers(onlinePlayers, pong.getMaximumPlayers());
         pong.maximumPlayers(maxPlayers);
 
-        if (cfg.isMotdEnabled()) {
-            Component motd = miniMessage.parse(cfg.getMOTD(onlinePlayers, maxPlayers));
+        final MiniMOTDConfig<Favicon>.MOTD motd = cfg.getMOTD(onlinePlayers, maxPlayers);
+        final String motdString = motd.motd();
+        if (motdString != null) {
+            Component motdComponent = miniMessage.parse(motdString);
             if (pong.getVersion().getProtocol() < 735) {
-                motd = legacySerializer.deserialize(legacySerializer.serialize(motd));
+                motdComponent = legacySerializer.deserialize(legacySerializer.serialize(motdComponent));
             }
-            pong.description(motd);
+            pong.description(motdComponent);
         }
 
-        final Favicon favicon = cfg.getRandomIcon();
+        final Favicon favicon = motd.icon();
         if (favicon != null) {
             pong.favicon(favicon);
         }

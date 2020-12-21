@@ -9,6 +9,8 @@ motd:
   # Placeholders: {onlinePlayers} {maxPlayers}
   # Use {br} to separate lines.
   # Putting more than one will cause one to be randomly chosen each refresh
+  #
+  # Tip: If you want to set a certain icon for each MOTD, check out this page: https://github.com/jmanpenilla/MiniMOTD/wiki/Assigning-specific-icons-per-MOTD
   motds:
     - "<bold><gradient:black:white>----====[</gradient> <gradient:green:blue>UltraCraft <gradient:red:yellow></bold><italic>Official</gradient></italic><bold> <gradient:white:black>]=====----</gradient></bold>{br}<bold>    <gradient:#EEFF4A:#F7FFAE>Custom <italic>Survival</italic></gradient>    <color:#0092FF>Discord</bold><gray>:</gray> <gradient:#5FDAFF:#B8A6FF><italic>Ab3d5f"
     - "<rainbow>|||||||||||||||||||||||||||||||||||||||||||||||||||||||||</rainbow>{br}<white>Hello <blue>{onlinePlayers} <gray>/</gray> {maxPlayers}</blue> Players Online"

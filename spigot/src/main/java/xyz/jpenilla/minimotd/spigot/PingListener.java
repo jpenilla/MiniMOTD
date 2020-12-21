@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.util.CachedServerIcon;
+import xyz.jpenilla.minimotd.common.MiniMOTDConfig;
 
 public class PingListener implements Listener {
     private final SpigotConfig cfg;
@@ -27,14 +28,16 @@ public class PingListener implements Listener {
         final int maxPlayers = cfg.getAdjustedMaxPlayers(onlinePlayers, actualMaxPlayers);
         e.setMaxPlayers(maxPlayers);
 
-        if (cfg.isMotdEnabled()) {
+        final MiniMOTDConfig<CachedServerIcon>.MOTD motd = cfg.getMOTD(onlinePlayers, maxPlayers);
+        final String motdString = motd.motd();
+        if (motdString != null) {
             if (miniMOTD.getMajorMinecraftVersion() > 15) {
-                e.setMotd(serializer.serialize(miniMessage.parse(cfg.getMOTD(onlinePlayers, maxPlayers))));
+                e.setMotd(serializer.serialize(miniMessage.parse(motdString)));
             } else {
-                e.setMotd(legacySerializer.serialize(miniMessage.parse(cfg.getMOTD(onlinePlayers, maxPlayers))));
+                e.setMotd(legacySerializer.serialize(miniMessage.parse(motdString)));
             }
         }
-        final CachedServerIcon favicon = cfg.getRandomIcon();
+        final CachedServerIcon favicon = motd.icon();
         if (favicon != null) {
             e.setServerIcon(favicon);
         }

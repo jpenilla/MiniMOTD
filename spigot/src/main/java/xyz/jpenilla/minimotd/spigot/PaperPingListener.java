@@ -7,6 +7,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.util.CachedServerIcon;
+import xyz.jpenilla.minimotd.common.MiniMOTDConfig;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -48,15 +49,17 @@ public class PaperPingListener implements Listener {
         final int maxPlayers = cfg.getAdjustedMaxPlayers(onlinePlayers, e.getMaxPlayers());
         e.setMaxPlayers(maxPlayers);
 
-        if (cfg.isMotdEnabled()) {
-            final Component motd = miniMessage.parse(cfg.getMOTD(onlinePlayers, maxPlayers));
+        final MiniMOTDConfig<CachedServerIcon>.MOTD motd = cfg.getMOTD(onlinePlayers, maxPlayers);
+        final String motdString = motd.motd();
+        if (motdString != null) {
+            final Component motdComponent = miniMessage.parse(motdString);
             if (e.getClient().getProtocolVersion() < 735 || miniMOTD.getMajorMinecraftVersion() < 16) {
-                e.setMotd(legacySerializer.serialize(motd));
+                e.setMotd(legacySerializer.serialize(motdComponent));
             } else {
-                e.setMotd(serializer.serialize(motd));
+                e.setMotd(serializer.serialize(motdComponent));
             }
         }
-        final CachedServerIcon favicon = cfg.getRandomIcon();
+        final CachedServerIcon favicon = motd.icon();
         if (favicon != null) {
             e.setServerIcon(favicon);
         }

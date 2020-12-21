@@ -3,30 +3,19 @@ package xyz.jpenilla.minimotd.spigot;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.util.CachedServerIcon;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.minimotd.common.MiniMOTDConfig;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
-public class SpigotConfig extends MiniMOTDConfig {
+public class SpigotConfig extends MiniMOTDConfig<CachedServerIcon> {
     private final MiniMOTD miniMOTD;
-    private final List<CachedServerIcon> icons = new ArrayList<>();
 
     public SpigotConfig(MiniMOTD miniMOTD) {
         this.miniMOTD = miniMOTD;
         miniMOTD.saveDefaultConfig();
         reload();
-    }
-
-    public CachedServerIcon getRandomIcon() {
-        if (icons.isEmpty()) {
-            return null;
-        }
-        return icons.get(ThreadLocalRandom.current().nextInt(icons.size()));
     }
 
     public void reload() {
@@ -43,7 +32,7 @@ public class SpigotConfig extends MiniMOTDConfig {
             }
             motds.add(temp);
         }
-        motdEnabled = config.getBoolean(MOTD_ENABLED);
+        motdEnabled = config.getBoolean(MOTD_ENABLED) && !motds.isEmpty();
         maxPlayersEnabled = config.getBoolean(MAX_PLAYERS_ENABLED);
         justXMoreEnabled = config.getBoolean(JUST_X_MORE_ENABLED);
         maxPlayers = config.getInt(MAX_PLAYERS);
@@ -54,25 +43,11 @@ public class SpigotConfig extends MiniMOTDConfig {
         disablePlayerListHover = config.getBoolean(DISABLE_PLAYER_LIST_HOVER);
 
         final File iconFolder = new File(miniMOTD.getDataFolder() + File.separator + "icons");
-        if (!iconFolder.exists()) {
-            iconFolder.mkdir();
-        }
-        this.icons.clear();
-        final File[] icons = iconFolder.listFiles(i -> i.getName().endsWith(".png"));
-        if (icons != null) {
-            for (File icon : icons) {
-                try {
-                    BufferedImage bufferedImage = ImageIO.read(icon);
-                    if (bufferedImage.getHeight() == 64 && bufferedImage.getWidth() == 64) {
-                        this.icons.add(Bukkit.loadServerIcon(bufferedImage));
-                    } else {
-                        miniMOTD.getLogger().info("Could not load " + icon.getName() + ": image must be 64x64px");
-                    }
-                } catch (Exception e) {
-                    miniMOTD.getLogger().info("Could not load " + icon.getName() + ": invalid image file");
-                    e.printStackTrace();
-                }
-            }
-        }
+        this.loadIcons(iconFolder).forEach(miniMOTD.getLogger()::info);
+    }
+
+    @Override
+    protected @NonNull CachedServerIcon createIcon(final @NonNull BufferedImage bufferedImage) throws Exception {
+        return Bukkit.loadServerIcon(bufferedImage);
     }
 }

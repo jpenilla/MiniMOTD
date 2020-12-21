@@ -10,6 +10,7 @@ import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
+import xyz.jpenilla.minimotd.common.MiniMOTDConfig;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -58,16 +59,18 @@ public class PingListener implements Listener {
                 players.setSample(new ServerPing.PlayerInfo[]{});
             }
 
-            if (cfg.isMotdEnabled()) {
-                Component motd = miniMessage.parse(cfg.getMOTD(onlinePlayers, maxPlayers));
+            final MiniMOTDConfig<Favicon>.MOTD motd = cfg.getMOTD(onlinePlayers, maxPlayers);
+            final String motdString = motd.motd();
+            if (motdString != null) {
+                Component motdComponent = miniMessage.parse(motdString);
                 if (e.getConnection().getVersion() < 735) {
-                    motd = legacySerializer.deserialize(legacySerializer.serialize(motd));
+                    motdComponent = legacySerializer.deserialize(legacySerializer.serialize(motdComponent));
                 }
-                response.setDescriptionComponent(BungeeComponentSerializer.get().serialize(motd)[0]);
+                response.setDescriptionComponent(BungeeComponentSerializer.get().serialize(motdComponent)[0]);
             }
 
             response.setPlayers(players);
-            final Favicon favicon = cfg.getRandomIcon();
+            final Favicon favicon = motd.icon();
             if (favicon != null) {
                 response.setFavicon(favicon);
             }

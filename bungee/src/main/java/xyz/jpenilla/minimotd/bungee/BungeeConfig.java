@@ -4,34 +4,23 @@ import net.md_5.bungee.api.Favicon;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.minimotd.common.MiniMOTDConfig;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 
-public class BungeeConfig extends MiniMOTDConfig {
+public class BungeeConfig extends MiniMOTDConfig<Favicon> {
     private final MiniMOTD miniMOTD;
-    private final List<Favicon> icons = new ArrayList<>();
 
     public BungeeConfig(MiniMOTD miniMOTD) {
         this.miniMOTD = miniMOTD;
         reload();
-    }
-
-    public Favicon getRandomIcon() {
-        if (icons.isEmpty()) {
-            return null;
-        }
-        return icons.get(ThreadLocalRandom.current().nextInt(icons.size()));
     }
 
     public void reload() {
@@ -39,7 +28,7 @@ public class BungeeConfig extends MiniMOTDConfig {
 
         motds.clear();
         motds.addAll(config.getStringList(MOTDS));
-        motdEnabled = config.getBoolean(MOTD_ENABLED);
+        motdEnabled = config.getBoolean(MOTD_ENABLED) && !motds.isEmpty();
         maxPlayersEnabled = config.getBoolean(MAX_PLAYERS_ENABLED);
         justXMoreEnabled = config.getBoolean(JUST_X_MORE_ENABLED);
         maxPlayers = config.getInt(MAX_PLAYERS);
@@ -50,26 +39,12 @@ public class BungeeConfig extends MiniMOTDConfig {
         disablePlayerListHover = config.getBoolean(DISABLE_PLAYER_LIST_HOVER);
 
         final File iconFolder = new File(miniMOTD.getDataFolder() + File.separator + "icons");
-        if (!iconFolder.exists()) {
-            iconFolder.mkdir();
-        }
-        this.icons.clear();
-        final File[] icons = iconFolder.listFiles(i -> i.getName().endsWith(".png"));
-        if (icons != null) {
-            for (File icon : icons) {
-                try {
-                    BufferedImage bufferedImage = ImageIO.read(icon);
-                    if (bufferedImage.getHeight() == 64 && bufferedImage.getWidth() == 64) {
-                        this.icons.add(Favicon.create(bufferedImage));
-                    } else {
-                        miniMOTD.getLogger().info("Could not load " + icon.getName() + ": image must be 64x64px");
-                    }
-                } catch (Exception e) {
-                    miniMOTD.getLogger().info("Could not load " + icon.getName() + ": invalid image file");
-                    e.printStackTrace();
-                }
-            }
-        }
+        this.loadIcons(iconFolder).forEach(miniMOTD.getLogger()::info);
+    }
+
+    @Override
+    protected @NonNull Favicon createIcon(final @NonNull BufferedImage bufferedImage) {
+        return Favicon.create(bufferedImage);
     }
 
     private Configuration loadFromDisk() {
