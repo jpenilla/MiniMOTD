@@ -1,7 +1,9 @@
+import com.github.jengelman.gradle.plugins.shadow.ShadowPlugin
 import java.io.ByteArrayOutputStream
 
 plugins {
     `java-library`
+    id("com.github.johnrengelman.shadow") version "6.1.0"
 }
 
 allprojects {
@@ -14,11 +16,7 @@ ext["url"] = "https://github.com/jmanpenilla/MiniMOTD/"
 
 subprojects {
     apply<JavaLibraryPlugin>()
-
-    java {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
+    apply<ShadowPlugin>()
 
     repositories {
         mavenCentral()
@@ -35,6 +33,43 @@ subprojects {
     dependencies {
         annotationProcessor("org.projectlombok", "lombok", "1.18.16")
         compileOnly("org.projectlombok", "lombok", "1.18.16")
+    }
+
+    tasks {
+        shadowJar {
+            minimize()
+            archiveClassifier.set("")
+        }
+    }
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+}
+
+configurations.archives {
+    artifacts.removeAll { true }
+}
+
+tasks {
+    val aggregate = create("aggregateJars") {
+        val artifacts = arrayListOf<File>()
+        dependsOn(project(":minimotd-universal").tasks.getByName("build"))
+        arrayOf("spigot", "bungeecord", "velocity").forEach {
+            val subProject = project(":minimotd-$it")
+            val shadow = subProject.tasks.getByName("shadowJar")
+            artifacts.add(shadow.outputs.files.singleFile)
+        }
+        doLast {
+            artifacts.add(project(":minimotd-universal").project.tasks.getByName("universal").outputs.files.singleFile)
+            val libs = rootProject.buildDir.resolve("libs")
+            libs.listFiles()?.forEach { it.delete() }
+            artifacts.forEach { it.copyTo(libs.resolve(it.name)) }
+        }
+    }
+    build {
+        dependsOn(aggregate)
     }
 }
 

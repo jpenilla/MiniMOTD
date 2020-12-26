@@ -1,5 +1,4 @@
 plugins {
-    id("com.github.johnrengelman.shadow") version "6.1.0"
     id("kr.entree.spigradle.bungee") version "2.2.3"
 }
 
@@ -12,8 +11,6 @@ dependencies {
 
 tasks {
     shadowJar {
-        minimize()
-        archiveClassifier.set("")
         relocate("net.kyori", "xyz.jpenilla.minimotd.lib.kyori")
         relocate("org.checkerframework", "xyz.jpenilla.minimotd.lib.checkerframework")
         relocate("org.bstats", "xyz.jpenilla.minimotd.lib.bstats")

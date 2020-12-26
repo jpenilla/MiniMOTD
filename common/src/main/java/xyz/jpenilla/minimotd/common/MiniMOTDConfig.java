@@ -59,7 +59,7 @@ public abstract class MiniMOTDConfig<I> {
         }
     }
 
-    public List<String> loadIcons(File iconFolder) {
+    protected List<String> loadIcons(File iconFolder) {
         final List<String> logOutput = new ArrayList<>();
         if (!iconFolder.exists()) {
             iconFolder.mkdir();
