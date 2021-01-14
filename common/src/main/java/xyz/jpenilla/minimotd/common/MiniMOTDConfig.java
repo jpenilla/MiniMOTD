@@ -109,7 +109,7 @@ public abstract class MiniMOTDConfig<I> {
             index = motds.size() == 1 ? 0 : ThreadLocalRandom.current().nextInt(motds.size());
             motd = motds.get(index).replace("{onlinePlayers}", String.valueOf(onlinePlayers))
                     .replace("{maxPlayers}", String.valueOf(maxPlayers))
-                    .replace("{br}", System.lineSeparator());
+                    .replace("{br}", "\n");
         } else {
             motd = null;
             index = 0;
