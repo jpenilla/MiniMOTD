@@ -1,61 +1,50 @@
+/*
+ * This file is part of MiniMOTD, licensed under the MIT License.
+ *
+ * Copyright (c) 2021 Jason Penilla
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package xyz.jpenilla.minimotd.spigot;
 
-import lombok.Getter;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.plugin.java.JavaPlugin;
-import xyz.jpenilla.minimotd.common.UpdateChecker;
+import org.bukkit.util.CachedServerIcon;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.slf4j.LoggerFactory;
+import xyz.jpenilla.minimotd.common.IconManager;
 
-public final class MiniMOTD extends JavaPlugin {
-    @Getter private static MiniMOTD instance;
-    @Getter private SpigotConfig cfg;
-    @Getter private PrismaHook prisma;
-    @Getter private boolean isPaperServer;
-    @Getter private String serverPackageName;
-    @Getter private String serverApiVersion;
-    @Getter private int majorMinecraftVersion;
-    @Getter private BukkitAudiences audiences;
+public class MiniMOTD extends xyz.jpenilla.minimotd.common.MiniMOTD<CachedServerIcon> {
+  private final MiniMOTDPlugin plugin;
+  private final IconManager<CachedServerIcon> iconManager;
 
-    @Override
-    public void onEnable() {
-        serverPackageName = this.getServer().getClass().getPackage().getName();
-        serverApiVersion = serverPackageName.substring(serverPackageName.lastIndexOf('.') + 1);
-        majorMinecraftVersion = Integer.parseInt(serverApiVersion.split("_")[1]);
+  public MiniMOTD(final @NonNull MiniMOTDPlugin plugin) {
+    super(plugin.getDataFolder().toPath(), LoggerFactory.getLogger(plugin.getName()));
+    this.plugin = plugin;
+    this.iconManager = new IconManager<>(
+      this,
+      Bukkit::loadServerIcon
+    );
+  }
 
-        try {
-            Class.forName("com.destroystokyo.paper.event.server.PaperServerListPingEvent");
-            isPaperServer = true;
-        } catch (ClassNotFoundException e) {
-            isPaperServer = false;
-        }
-        instance = this;
-        if (Bukkit.getPluginManager().isPluginEnabled("Prisma")) {
-            prisma = new PrismaHook();
-        }
-        this.cfg = new SpigotConfig(this);
-        if (isPaperServer) {
-            getServer().getPluginManager().registerEvents(new PaperPingListener(this), this);
-        } else {
-            getServer().getPluginManager().registerEvents(new PingListener(this), this);
-            if (majorMinecraftVersion > 11) {
-                getLogger().info("This server is not using Paper, and therefore some features may be limited or disabled.");
-                getLogger().info("Get Paper from https://papermc.io/downloads");
-            }
-        }
-        this.audiences = BukkitAudiences.create(this);
-        final PluginCommand command = getCommand("minimotd");
-        if (command != null) {
-            command.setExecutor(new SpigotCommand(this));
-            command.setTabCompleter(new SpigotCommand(this));
-        }
+  @Override
+  public @NonNull IconManager<CachedServerIcon> iconManager() {
+    return this.iconManager;
+  }
 
-        Metrics metrics = new Metrics(this, 8132);
-
-        if (cfg.isUpdateChecker()) {
-            Bukkit.getScheduler().runTaskAsynchronously(this, () ->
-                    new UpdateChecker(this.getDescription().getVersion()).checkVersion().forEach(getLogger()::info));
-        }
-    }
 }

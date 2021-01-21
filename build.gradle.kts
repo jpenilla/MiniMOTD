@@ -1,83 +1,118 @@
 import com.github.jengelman.gradle.plugins.shadow.ShadowPlugin
+import net.kyori.indra.IndraCheckstylePlugin
+import net.kyori.indra.IndraLicenseHeaderPlugin
+import net.kyori.indra.IndraPlugin
+import net.kyori.indra.sonatypeSnapshots
 import java.io.ByteArrayOutputStream
 
 plugins {
-    `java-library`
-    id("com.github.johnrengelman.shadow") version "6.1.0"
+  `java-library`
+  id("net.kyori.indra") version "1.2.1"
+  id("com.github.johnrengelman.shadow") version "6.1.0"
 }
 
 allprojects {
-    group = "xyz.jpenilla"
-    version = "1.2.5+${latestCommitHash()}-SNAPSHOT"
-    description = "Use MiniMessage text formatting in your servers MOTD."
+  group = "xyz.jpenilla"
+  version = "1.2.5+${latestCommitHash()}-SNAPSHOT"
+  description = "Use MiniMessage text formatting in your servers MOTD."
 }
 
 ext["url"] = "https://github.com/jmanpenilla/MiniMOTD/"
 
 subprojects {
-    apply<JavaLibraryPlugin>()
-    apply<ShadowPlugin>()
+  apply<JavaLibraryPlugin>()
+  apply<ShadowPlugin>()
+  apply<IndraPlugin>()
+  apply<IndraCheckstylePlugin>()
+  apply<IndraLicenseHeaderPlugin>()
 
-    repositories {
-        mavenCentral()
-        maven("https://papermc.io/repo/repository/maven-public/")
-        maven("https://nexus.velocitypowered.com/repository/maven-public/")
-        maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-        maven("https://oss.sonatype.org/content/groups/public/")
-        maven("https://repo.jpenilla.xyz/snapshots/")
-        maven("https://repo.codemc.org/repository/maven-public")
-        maven("https://jitpack.io")
-        mavenLocal()
-    }
+  repositories {
+    mavenCentral()
+    sonatypeSnapshots()
+    maven("https://papermc.io/repo/repository/maven-public/")
+    maven("https://nexus.velocitypowered.com/repository/maven-public/")
+    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+    maven("https://oss.sonatype.org/content/groups/public/")
+    maven("https://repo.jpenilla.xyz/snapshots/")
+    maven("https://repo.codemc.org/repository/maven-public")
+    maven("https://maven.aura-dev.team/repository/auradev-releases/")
+    maven("https://jitpack.io")
+    mavenLocal()
+  }
 
-    dependencies {
-        annotationProcessor("org.projectlombok", "lombok", "1.18.16")
-        compileOnly("org.projectlombok", "lombok", "1.18.16")
+  indra {
+    javaVersions.target.set(8)
+    github("jpenilla", "MiniMOTD") {
+      issues = true
     }
+    mitLicense()
+  }
 
-    tasks {
-        shadowJar {
-            minimize()
-            archiveClassifier.set("")
-        }
-    }
+  dependencies {
+    annotationProcessor("org.projectlombok", "lombok", "1.18.16")
+    compileOnly("org.projectlombok", "lombok", "1.18.16")
+  }
 
-    java {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+  tasks {
+    shadowJar {
+      minimize()
+      archiveClassifier.set("")
     }
+    withType<JavaCompile> {
+      options.compilerArgs.add("-Xlint:-processing")
+    }
+  }
+
+  java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+  }
+}
+
+allprojects {
+  tasks.withType<Jar> {
+    onlyIf {
+      val classifier = archiveClassifier.get()
+      classifier != "sources"
+        && classifier != "javadoc"
+        && project.name != rootProject.name
+    }
+  }
+  tasks.withType<Javadoc> {
+    onlyIf { false }
+  }
 }
 
 configurations.archives {
-    artifacts.removeAll { true }
+  artifacts.removeAll { true }
 }
 
 tasks {
-    val aggregate = create("aggregateJars") {
-        val artifacts = arrayListOf<File>()
-        dependsOn(project(":minimotd-universal").tasks.getByName("build"))
-        arrayOf("spigot", "bungeecord", "velocity").forEach {
-            val subProject = project(":minimotd-$it")
-            val shadow = subProject.tasks.getByName("shadowJar")
-            artifacts.add(shadow.outputs.files.singleFile)
-        }
-        doLast {
-            artifacts.add(project(":minimotd-universal").project.tasks.getByName("universal").outputs.files.singleFile)
-            val libs = rootProject.buildDir.resolve("libs")
-            libs.listFiles()?.forEach { it.delete() }
-            artifacts.forEach { it.copyTo(libs.resolve(it.name)) }
-        }
+  val aggregate = create("aggregateJars") {
+    val artifacts = arrayListOf<File>()
+    dependsOn(project(":minimotd-universal").tasks.getByName("build"))
+    arrayOf("spigot", "bungeecord", "velocity").forEach {
+      val subProject = project(":minimotd-$it")
+      val shadow = subProject.tasks.getByName("shadowJar")
+      artifacts.add(shadow.outputs.files.singleFile)
     }
-    build {
-        dependsOn(aggregate)
+    doLast {
+      artifacts.add(project(":minimotd-universal").project.tasks.getByName("universal").outputs.files.singleFile)
+      val libs = rootProject.buildDir.resolve("libs")
+      libs.listFiles()?.forEach { it.delete() }
+      artifacts.forEach { it.copyTo(libs.resolve(it.name)) }
     }
+  }
+  build {
+    dependsOn(aggregate)
+  }
 }
 
 fun latestCommitHash(): String {
-    val byteOut = ByteArrayOutputStream()
-    exec {
-        commandLine = listOf("git", "rev-parse", "--short", "HEAD")
-        standardOutput = byteOut
-    }
-    return byteOut.toString(Charsets.UTF_8.name()).trim()
+  val byteOut = ByteArrayOutputStream()
+  exec {
+    commandLine = listOf("git", "rev-parse", "--short", "HEAD")
+    standardOutput = byteOut
+  }
+  return byteOut.toString(Charsets.UTF_8.name()).trim()
 }

@@ -21,13 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package xyz.jpenilla.minimotd.spigot;
+package xyz.jpenilla.minimotd.common;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-import us.eunoians.prisma.ColorProvider;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-public final class PrismaHook {
-  public @NonNull String translate(final @NonNull String message) {
-    return ColorProvider.translatePrismaToHex(message);
+public final class Pair<L, R> {
+  private final L left;
+  private final R right;
+
+  public Pair(final @Nullable L left, final @Nullable R right) {
+    this.left = left;
+    this.right = right;
+  }
+
+  public @Nullable L left() {
+    return this.left;
+  }
+
+  public @Nullable R right() {
+    return this.right;
   }
 }

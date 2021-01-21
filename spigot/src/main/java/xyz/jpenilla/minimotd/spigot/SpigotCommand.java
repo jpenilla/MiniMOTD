@@ -1,3 +1,26 @@
+/*
+ * This file is part of MiniMOTD, licensed under the MIT License.
+ *
+ * Copyright (c) 2021 Jason Penilla
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package xyz.jpenilla.minimotd.spigot;
 
 import com.google.common.collect.ImmutableList;
@@ -14,100 +37,102 @@ import java.util.Collections;
 import java.util.List;
 
 public class SpigotCommand implements CommandExecutor, TabCompleter {
-    private final MiniMOTD miniMOTD;
-    private final MiniMessage miniMessage;
+  private final MiniMOTDPlugin plugin;
+  private final MiniMessage miniMessage;
 
-    public SpigotCommand(MiniMOTD miniMOTD) {
-        this.miniMOTD = miniMOTD;
-        miniMessage = MiniMessage.get();
+  public SpigotCommand(final @NonNull MiniMOTDPlugin plugin) {
+    this.plugin = plugin;
+    this.miniMessage = MiniMessage.get();
+  }
+
+  @Override
+  public boolean onCommand(final @NonNull CommandSender sender,
+                           final @NonNull Command command,
+                           final @NonNull String label,
+                           final @NonNull String[] args) {
+    if (!sender.hasPermission("minimotd.admin")) {
+      this.onNoPermission(sender, args);
+      return true;
     }
 
-    @Override
-    public boolean onCommand(@NonNull CommandSender sender,
-                             @NonNull Command command,
-                             @NonNull String label,
-                             @NonNull String[] args) {
-        if (!sender.hasPermission("minimotd.admin")) {
-            onNoPermission(sender, args);
-            return true;
-        }
+    if (args.length == 0) {
+      this.onInvalidUse(sender, args);
+      return true;
+    }
 
-        if (args.length == 0) {
-            onInvalidUse(sender, args);
-            return true;
-        }
-
-        switch (args[0]) {
-            case "about":
-                onAbout(sender, args);
-                return true;
-            case "help":
-                onHelp(sender, args);
-                return true;
-            case "reload":
-                onReload(sender, args);
-                return true;
-        }
-
-        onInvalidUse(sender, args);
+    switch (args[0]) {
+      case "about":
+        this.onAbout(sender, args);
+        return true;
+      case "help":
+        this.onHelp(sender, args);
+        return true;
+      case "reload":
+        this.onReload(sender, args);
         return true;
     }
 
-    private void onHelp(CommandSender sender, String[] args) {
-        send(sender, ImmutableList.of(
-                "<gradient:blue:green>MiniMOTD Commands:",
-                " <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotd about'><click:run_command:/minimotd about><yellow>/minimotd about",
-                " <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotd reload'><click:run_command:/minimotd reload><yellow>/minimotd reload",
-                " <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotd help'><click:run_command:/minimotd help><yellow>/minimotd help"
-        ));
-    }
+    this.onInvalidUse(sender, args);
+    return true;
+  }
 
-    private void onReload(CommandSender sender, String[] args) {
-        miniMOTD.getCfg().reload();
-        send(sender, "<green>Done reloading.");
-    }
+  private void onHelp(final @NonNull CommandSender sender, final @NonNull String[] args) {
+    this.send(sender, ImmutableList.of(
+      "<gradient:blue:green>MiniMOTD Commands:",
+      " <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotd about'><click:run_command:/minimotd about><yellow>/minimotd about",
+      " <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotd reload'><click:run_command:/minimotd reload><yellow>/minimotd reload",
+      " <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotd help'><click:run_command:/minimotd help><yellow>/minimotd help"
+    ));
+  }
 
-    private void onAbout(CommandSender sender, String[] args) {
-        final String header = "<gradient:white:black>=============</gradient><gradient:black:white>=============";
-        send(sender, ImmutableList.of(
-                header,
-                "<hover:show_text:'<rainbow>click me!'><click:open_url:" + miniMOTD.getDescription().getWebsite() + ">" + miniMOTD.getName() + " <gradient:red:yellow>" + miniMOTD.getDescription().getVersion(),
-                "<yellow>By</yellow><gray>:</gray> <gradient:blue:green>jmp",
-                header
-        ));
-    }
+  private void onReload(final @NonNull CommandSender sender, final @NonNull String[] args) {
+    this.plugin.miniMOTD().iconManager().loadIcons();
+    this.plugin.miniMOTD().configManager().loadConfigs();
+    this.send(sender, "<green>Done reloading.");
+  }
 
-    private void onInvalidUse(CommandSender sender, String[] args) {
-        send(sender, "<hover:show_text:'<green>Click for <yellow>/minimotd help'><click:run_command:/minimotd help><italic><gradient:red:gold>Invalid usage.</gradient> <blue>Try <yellow>/minimotd help</yellow> or click here");
-    }
+  private void onAbout(final @NonNull CommandSender sender, final @NonNull String[] args) {
+    final String header = "<gradient:white:black>=============</gradient><gradient:black:white>=============";
+    this.send(sender, ImmutableList.of(
+      header,
+      "<hover:show_text:'<rainbow>click me!'><click:open_url:" + this.plugin.getDescription().getWebsite() + ">" + this.plugin.getName() + " <gradient:red:yellow>" + this.plugin.getDescription().getVersion(),
+      "<yellow>By</yellow><gray>:</gray> <gradient:blue:green>jmp",
+      header
+    ));
+  }
 
-    private void onNoPermission(CommandSender sender, String[] args) {
-        send(sender, "<gradient:red:yellow>No permission.");
-    }
+  private void onInvalidUse(final @NonNull CommandSender sender, final @NonNull String[] args) {
+    this.send(sender, "<hover:show_text:'<green>Click for <yellow>/minimotd help'><click:run_command:/minimotd help><italic><gradient:red:gold>Invalid usage.</gradient> <blue>Try <yellow>/minimotd help</yellow> or click here");
+  }
 
-    private void send(@NonNull CommandSender sender, @NonNull String message) {
-        if (sender instanceof Player) {
-            miniMOTD.getAudiences().player((Player) sender).sendMessage(Identity.nil(), miniMessage.parse(message));
-        } else {
-            miniMOTD.getAudiences().console().sendMessage(Identity.nil(), miniMessage.parse(message));
-        }
-    }
+  private void onNoPermission(final @NonNull CommandSender sender, final @NonNull String[] args) {
+    this.send(sender, "<gradient:red:yellow>No permission.");
+  }
 
-    private void send(@NonNull CommandSender sender, @NonNull List<String> messages) {
-        for (String message : messages) {
-            send(sender, message);
-        }
+  private void send(final @NonNull CommandSender sender, final @NonNull String message) {
+    if (sender instanceof Player) {
+      this.plugin.getAudiences().player((Player) sender).sendMessage(Identity.nil(), this.miniMessage.parse(message));
+    } else {
+      this.plugin.getAudiences().console().sendMessage(Identity.nil(), this.miniMessage.parse(message));
     }
+  }
 
-    private static final List<String> COMMANDS = ImmutableList.of("about", "reload", "help");
-
-    @Override
-    public List<String> onTabComplete(final @NonNull CommandSender sender,
-                                      final @NonNull Command command,
-                                      final @NonNull String alias, String[] args) {
-        if (args.length < 2 && sender.hasPermission("minimotd.admin")) {
-            return COMMANDS;
-        }
-        return Collections.emptyList();
+  private void send(final @NonNull CommandSender sender, final @NonNull List<String> messages) {
+    for (final String message : messages) {
+      this.send(sender, message);
     }
+  }
+
+  private static final List<String> COMMANDS = ImmutableList.of("about", "reload", "help");
+
+  @Override
+  public List<String> onTabComplete(final @NonNull CommandSender sender,
+                                    final @NonNull Command command,
+                                    final @NonNull String alias,
+                                    final @NonNull String[] args) {
+    if (args.length < 2 && sender.hasPermission("minimotd.admin")) {
+      return COMMANDS;
+    }
+    return Collections.emptyList();
+  }
 }

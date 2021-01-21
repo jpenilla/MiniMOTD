@@ -21,13 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package xyz.jpenilla.minimotd.spigot;
+package xyz.jpenilla.minimotd.common.config;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
-import us.eunoians.prisma.ColorProvider;
+import org.spongepowered.configurate.ConfigurateException;
+import xyz.jpenilla.minimotd.common.MiniMOTD;
 
-public final class PrismaHook {
-  public @NonNull String translate(final @NonNull String message) {
-    return ColorProvider.translatePrismaToHex(message);
+public final class ConfigManager {
+
+  private final MiniMOTD<?> miniMOTD;
+  private final ConfigLoader<MiniMOTDConfig> configLoader;
+  private MiniMOTDConfig config;
+
+  public ConfigManager(final @NonNull MiniMOTD<?> miniMOTD) {
+    this.miniMOTD = miniMOTD;
+    this.configLoader = new ConfigLoader<>(
+      MiniMOTDConfig.class,
+      this.miniMOTD.dataDirectory().resolve("main.conf"),
+      options -> options.header("MiniMOTD Configuration")
+    );
   }
+
+  public void loadConfigs() {
+    try {
+      this.config = this.configLoader.load();
+      this.configLoader.save(this.config);
+    } catch (final ConfigurateException e) {
+      throw new IllegalStateException("Failed to load config", e);
+    }
+  }
+
+  public @NonNull MiniMOTDConfig config() {
+    if (this.config == null) {
+      throw new IllegalStateException("Config has not yet been loaded");
+    }
+    return this.config;
+  }
+
 }

@@ -21,13 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package xyz.jpenilla.minimotd.spigot;
+package xyz.jpenilla.minimotd.bungee;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-import us.eunoians.prisma.ColorProvider;
+import lombok.Getter;
+import lombok.NonNull;
+import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
+import net.md_5.bungee.api.plugin.Plugin;
+import org.bstats.bungeecord.Metrics;
+import xyz.jpenilla.minimotd.common.UpdateChecker;
 
-public final class PrismaHook {
-  public @NonNull String translate(final @NonNull String message) {
-    return ColorProvider.translatePrismaToHex(message);
+public class MiniMOTDPlugin extends Plugin {
+  @Getter private BungeeAudiences audiences;
+  private MiniMOTD miniMOTD;
+
+  public @NonNull MiniMOTD miniMOTD() {
+    return this.miniMOTD;
+  }
+
+  @Override
+  public void onEnable() {
+    this.miniMOTD = new MiniMOTD(this);
+    this.audiences = BungeeAudiences.create(this);
+    this.getProxy().getPluginManager().registerListener(this, new PingListener(this.miniMOTD));
+    this.getProxy().getPluginManager().registerCommand(this, new BungeeCommand(this));
+    final Metrics metrics = new Metrics(this, 8137);
+
+    if (this.miniMOTD.configManager().config().updateChecker()) {
+      this.getProxy().getScheduler().runAsync(this, () ->
+        new UpdateChecker(this.getDescription().getVersion()).checkVersion().forEach(getLogger()::info));
+    }
   }
 }
