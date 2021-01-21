@@ -17,7 +17,7 @@ tasks {
     relocate("org.spongepowered.configurate", "xyz.jpenilla.minimotd.lib.spongepowered.configurate")
     relocate("io.leangen.geantyref", "xyz.jpenilla.minimotd.lib.io.leangen.geantyref")
     relocate("com.typesafe.config", "xyz.jpenilla.minimotd.lib.typesafe.config")
-    relocate("net.kyori.adventure.text.minimessage", "xyz.jpenilla.minimotd.velocity.lib.minimessage")
+    relocate("net.kyori.adventure.text.minimessage", "xyz.jpenilla.minimotd.lib.kyori_native.minimessage")
     relocate("xyz.jpenilla.minimotd.common", "xyz.jpenilla.minimotd.velocity.lib.minimotd.common")
     relocate("org.checkerframework", "xyz.jpenilla.minimotd.lib.checkerframework")
     dependencies {

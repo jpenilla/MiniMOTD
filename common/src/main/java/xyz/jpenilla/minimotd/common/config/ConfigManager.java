@@ -27,35 +27,100 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.spongepowered.configurate.ConfigurateException;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 public final class ConfigManager {
 
   private final MiniMOTD<?> miniMOTD;
-  private final ConfigLoader<MiniMOTDConfig> configLoader;
-  private MiniMOTDConfig config;
+
+  private final ConfigLoader<MiniMOTDConfig> mainConfigLoader;
+  private MiniMOTDConfig mainConfig;
+
+  private final ConfigLoader<PluginSettings> pluginSettingsLoader;
+  private PluginSettings pluginSettings;
+
+  private final Map<String, MiniMOTDConfig> extraConfigs = new HashMap<>();
 
   public ConfigManager(final @NonNull MiniMOTD<?> miniMOTD) {
     this.miniMOTD = miniMOTD;
-    this.configLoader = new ConfigLoader<>(
+    this.mainConfigLoader = new ConfigLoader<>(
       MiniMOTDConfig.class,
       this.miniMOTD.dataDirectory().resolve("main.conf"),
-      options -> options.header("MiniMOTD Configuration")
+      options -> options.header("MiniMOTD Main Configuration")
+    );
+    this.pluginSettingsLoader = new ConfigLoader<>(
+      PluginSettings.class,
+      this.miniMOTD.dataDirectory().resolve("plugin_settings.conf"),
+      options -> options.header("MiniMOTD Plugin Configuration")
     );
   }
 
   public void loadConfigs() {
     try {
-      this.config = this.configLoader.load();
-      this.configLoader.save(this.config);
+      this.mainConfig = this.mainConfigLoader.load();
+      this.mainConfigLoader.save(this.mainConfig);
+
+      this.pluginSettings = this.pluginSettingsLoader.load();
+      this.pluginSettingsLoader.save(this.pluginSettings);
     } catch (final ConfigurateException e) {
       throw new IllegalStateException("Failed to load config", e);
     }
   }
 
-  public @NonNull MiniMOTDConfig config() {
-    if (this.config == null) {
+  public void loadExtraConfigs() {
+    this.extraConfigs.clear();
+    final Path extraConfigsDir = this.miniMOTD.dataDirectory().resolve("extra-configs");
+    try {
+      if (!Files.exists(extraConfigsDir)) {
+        Files.createDirectories(extraConfigsDir);
+      }
+      for (final Path path : Files.list(extraConfigsDir).collect(Collectors.toList())) {
+        if (path.toString().endsWith(".conf")) {
+          final String name = path.getFileName().toString().replace(".conf", "");
+          final ConfigLoader<MiniMOTDConfig> loader = new ConfigLoader<>(
+            MiniMOTDConfig.class,
+            path,
+            options -> options.header(String.format("Extra MiniMOTD config '%s'", name))
+          );
+          final MiniMOTDConfig config = loader.load();
+          loader.save(config);
+          this.extraConfigs.put(name, config);
+        }
+      }
+    } catch (final IOException e) {
+      throw new IllegalStateException("Failed to load virtual host configs", e);
+    }
+  }
+
+  public @NonNull MiniMOTDConfig mainConfig() {
+    if (this.mainConfig == null) {
       throw new IllegalStateException("Config has not yet been loaded");
     }
-    return this.config;
+    return this.mainConfig;
+  }
+
+  public @NonNull PluginSettings pluginSettings() {
+    if (this.pluginSettings == null) {
+      throw new IllegalStateException("Config has not yet been loaded");
+    }
+    return this.pluginSettings;
+  }
+
+  public @NonNull MiniMOTDConfig resolveConfig(final @NonNull String name) {
+    if ("default".equals(name)) {
+      return this.mainConfig();
+    }
+    final MiniMOTDConfig cfg = this.extraConfigs.get(name);
+    if (cfg != null) {
+      return cfg;
+    }
+    this.miniMOTD.logger().warn(String.format("Invalid extra-config name: '%s', falling back to main.conf", name));
+    return this.mainConfig();
   }
 
 }

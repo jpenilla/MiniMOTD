@@ -28,6 +28,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @ConfigSerializable
@@ -36,21 +37,19 @@ public final class MiniMOTDConfig {
   @Comment("The list of MOTDs to display\n"
     + "\n"
     + " - Supported placeholders: {onlinePlayers}, {maxPlayers}\n"
-    + " - Use {br} to separate lines\n"
     + " - Putting more than one will cause one to be randomly chosen each refresh\n"
     + "\n"
-    + "  Tip: If you want to set a certain icon for each MOTD, check out this page: https://github.com/jmanpenilla/MiniMOTD/wiki/Assigning-specific-icons-per-MOTD")
-  private final List<String> motds = new ArrayList<>();
+    + " Tip: If you want to set a certain icon for each MOTD, check out this page: https://github.com/jmanpenilla/MiniMOTD/wiki/Assigning-specific-icons-per-MOTD")
+  private final List<MOTD> motds = new ArrayList<>(Arrays.asList(
+    new MOTD(),
+    new MOTD("<blue>Another <bold><red>MOTD", "<italic><underlined><gradient:red:green>much wow")
+  ));
 
   @Comment("Enable MOTD-related features")
   private boolean motdEnabled = true;
 
   @Comment("Enable server list icon related features")
   private boolean iconEnabled = true;
-
-  @Comment("Do you want the plugin to check for updates on GitHub at launch?\n"
-    + "https://github.com/jpenilla/MiniMOTD")
-  private boolean updateChecker = true;
 
   private PlayerCountSettings playerCountSettings = new PlayerCountSettings();
 
@@ -60,6 +59,41 @@ public final class MiniMOTDConfig {
     } else {
       return actualMaxPlayers;
     }
+  }
+
+  @ConfigSerializable
+  public static final class MOTD {
+
+    public MOTD() {
+    }
+
+    public MOTD(final @NonNull String line1, final @NonNull String line2) {
+      this.line1 = line1;
+      this.line2 = line2;
+    }
+
+    private String line1 = "<rainbow>MiniMOTD Default";
+
+    private String line2 = "MiniMessage <gradient:blue:red>Gradients";
+
+    @Comment("Set the icon to use with this MOTD\n"
+      + "  Either use 'random' to randomly choose an icon, or use the name\n"
+      + "  of a file in the icons folder (excluding the '.png' extension)\n"
+      + "    ex: icon=\"myIconFile\"")
+    private String icon = "random";
+
+    public @NonNull String line1() {
+      return this.line1;
+    }
+
+    public @NonNull String line2() {
+      return this.line2;
+    }
+
+    public @NonNull String icon() {
+      return this.icon;
+    }
+
   }
 
   @ConfigSerializable
@@ -115,7 +149,7 @@ public final class MiniMOTDConfig {
     return this.iconEnabled;
   }
 
-  public @NonNull List<String> motds() {
+  public @NonNull List<MOTD> motds() {
     return this.motds;
   }
 
@@ -129,10 +163,6 @@ public final class MiniMOTDConfig {
 
   public @NonNull String fakePlayers() {
     return this.playerCountSettings.fakePlayers.fakePlayers;
-  }
-
-  public boolean updateChecker() {
-    return this.updateChecker;
   }
 
   public boolean disablePlayerListHover() {

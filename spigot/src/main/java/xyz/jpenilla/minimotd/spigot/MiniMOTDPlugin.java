@@ -79,7 +79,7 @@ public final class MiniMOTDPlugin extends JavaPlugin {
 
     final Metrics metrics = new Metrics(this, 8132);
 
-    if (this.miniMOTD.configManager().config().updateChecker()) {
+    if (this.miniMOTD.configManager().pluginSettings().updateChecker()) {
       Bukkit.getScheduler().runTaskAsynchronously(this, () ->
         new UpdateChecker(this.getDescription().getVersion()).checkVersion().forEach(getLogger()::info));
     }

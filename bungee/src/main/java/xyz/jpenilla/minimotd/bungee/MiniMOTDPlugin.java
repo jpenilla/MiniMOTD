@@ -46,7 +46,7 @@ public class MiniMOTDPlugin extends Plugin {
     this.getProxy().getPluginManager().registerCommand(this, new BungeeCommand(this));
     final Metrics metrics = new Metrics(this, 8137);
 
-    if (this.miniMOTD.configManager().config().updateChecker()) {
+    if (this.miniMOTD.configManager().pluginSettings().updateChecker()) {
       this.getProxy().getScheduler().runAsync(this, () ->
         new UpdateChecker(this.getDescription().getVersion()).checkVersion().forEach(getLogger()::info));
     }

@@ -67,6 +67,7 @@ public class VelocityCommand implements SimpleCommand {
 
   private void onReload(final @NonNull Invocation invocation) {
     this.plugin.miniMOTD().iconManager().loadIcons();
+    this.plugin.miniMOTD().configManager().loadExtraConfigs();
     this.plugin.miniMOTD().configManager().loadConfigs();
     this.sendMessages(invocation, ImmutableList.of("<green>Done reloading."));
   }

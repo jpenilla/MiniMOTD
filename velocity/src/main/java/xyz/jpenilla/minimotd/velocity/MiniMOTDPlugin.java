@@ -42,9 +42,10 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import xyz.jpenilla.minimotd.common.Pair;
 import xyz.jpenilla.minimotd.common.UpdateChecker;
+import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 
+import java.net.InetSocketAddress;
 import java.nio.file.Path;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Plugin(
   id = "{project.name}",
@@ -83,9 +84,9 @@ public class MiniMOTDPlugin {
   public void onProxyInitialization(final @NonNull ProxyInitializeEvent event) {
     this.miniMOTD = new MiniMOTD(this.dataDirectory, this.logger);
     this.server.getPluginManager().fromInstance(this).ifPresent(container -> this.pluginDescription = container.getDescription());
-    this.commandManager.register(this.commandManager.metaBuilder("minimotdvelocity").build(), new VelocityCommand(this));
+    this.commandManager.register(this.commandManager.metaBuilder("minimotd").build(), new VelocityCommand(this));
 
-    if (this.miniMOTD.configManager().config().updateChecker()) {
+    if (this.miniMOTD.configManager().pluginSettings().updateChecker()) {
       this.server.getScheduler().buildTask(this, () ->
         new UpdateChecker(this.getPluginDescription().getVersion().orElse("")).checkVersion().forEach(this.logger::info))
         .schedule();
@@ -94,34 +95,18 @@ public class MiniMOTDPlugin {
 
   @Subscribe
   public void onServerListPing(final @NonNull ProxyPingEvent ping) {
+    final String configString = this.miniMOTD.configManager().pluginSettings().configStringForHost(ping.getConnection().getVirtualHost().map(InetSocketAddress::toString).orElse("default")).orElse("default");
+    final MiniMOTDConfig config = this.miniMOTD.configManager().resolveConfig(configString);
+
     final ServerPing.Builder pong = ping.getPing().asBuilder();
 
-    int onlinePlayers = pong.getOnlinePlayers();
-    if (this.miniMOTD.configManager().config().fakePlayersEnabled()) {
-      try {
-        final String fakePlayersConfigString = this.miniMOTD.configManager().config().fakePlayers();
-        if (fakePlayersConfigString.contains(":")) {
-          final String[] fakePlayers = fakePlayersConfigString.split(":");
-          final int start = Integer.parseInt(fakePlayers[0]);
-          final int end = Integer.parseInt(fakePlayers[1]);
-          onlinePlayers = onlinePlayers + ThreadLocalRandom.current().nextInt(start, end);
-        } else if (fakePlayersConfigString.contains("%")) {
-          final double factor = 1 + (Double.parseDouble(fakePlayersConfigString.replace("%", "")) / 100);
-          onlinePlayers = (int) Math.ceil(factor * onlinePlayers);
-        } else {
-          final int addedPlayers = Integer.parseInt(fakePlayersConfigString);
-          onlinePlayers = onlinePlayers + addedPlayers;
-        }
-      } catch (final NumberFormatException ex) {
-        this.logger.info("fakePlayers config incorrect");
-      }
-    }
+    final int onlinePlayers = this.miniMOTD.calculateOnlinePlayers(config, pong.getOnlinePlayers());
     pong.onlinePlayers(onlinePlayers);
 
-    final int maxPlayers = this.miniMOTD.configManager().config().adjustedMaxPlayers(onlinePlayers, pong.getMaximumPlayers());
+    final int maxPlayers = config.adjustedMaxPlayers(onlinePlayers, pong.getMaximumPlayers());
     pong.maximumPlayers(maxPlayers);
 
-    final Pair<Favicon, String> pair = this.miniMOTD.createMOTD(onlinePlayers, maxPlayers);
+    final Pair<Favicon, String> pair = this.miniMOTD.createMOTD(config, onlinePlayers, maxPlayers);
     final Favicon favicon = pair.left();
     if (favicon != null) {
       pong.favicon(favicon);
@@ -136,7 +121,7 @@ public class MiniMOTDPlugin {
       pong.description(motdComponent);
     }
 
-    if (this.miniMOTD.configManager().config().disablePlayerListHover()) {
+    if (config.disablePlayerListHover()) {
       pong.clearSamplePlayers();
     }
 

@@ -37,8 +37,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.minimotd.common.Pair;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 public class PingListener implements Listener {
   private final MiniMessage miniMessage = MiniMessage.get();
   private final MiniMOTD miniMOTD;
@@ -53,28 +51,10 @@ public class PingListener implements Listener {
     final ServerPing response = e.getResponse();
 
     if (response != null) {
-      final MiniMOTDConfig cfg = this.miniMOTD.configManager().config();
-
+      final String configString = this.miniMOTD.configManager().pluginSettings().configStringForHost(e.getConnection().getVirtualHost().toString()).orElse("default");
+      final MiniMOTDConfig cfg = this.miniMOTD.configManager().resolveConfig(configString);
       final ServerPing.Players players = response.getPlayers();
-      int onlinePlayers = players.getOnline();
-      if (cfg.fakePlayersEnabled()) {
-        try {
-          if (cfg.fakePlayers().contains(":")) {
-            final String[] fakePlayers = cfg.fakePlayers().split(":");
-            final int start = Integer.parseInt(fakePlayers[0]);
-            final int end = Integer.parseInt(fakePlayers[1]);
-            onlinePlayers = onlinePlayers + ThreadLocalRandom.current().nextInt(start, end);
-          } else if (cfg.fakePlayers().contains("%")) {
-            final double factor = 1 + (Double.parseDouble(cfg.fakePlayers().replace("%", "")) / 100);
-            onlinePlayers = (int) Math.ceil(factor * onlinePlayers);
-          } else {
-            final int addedPlayers = Integer.parseInt(cfg.fakePlayers());
-            onlinePlayers = onlinePlayers + addedPlayers;
-          }
-        } catch (final NumberFormatException ex) {
-          this.miniMOTD.logger().warn("fakePlayers config invalid");
-        }
-      }
+      final int onlinePlayers = this.miniMOTD.calculateOnlinePlayers(cfg, players.getOnline());
       players.setOnline(onlinePlayers);
 
       final int maxPlayers = cfg.adjustedMaxPlayers(onlinePlayers, players.getMax());
@@ -84,7 +64,7 @@ public class PingListener implements Listener {
         players.setSample(new ServerPing.PlayerInfo[]{});
       }
 
-      final Pair<Favicon, String> pair = this.miniMOTD.createMOTD(onlinePlayers, maxPlayers);
+      final Pair<Favicon, String> pair = this.miniMOTD.createMOTD(cfg, onlinePlayers, maxPlayers);
 
       final String motdString = pair.right();
       if (motdString != null) {

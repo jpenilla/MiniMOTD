@@ -39,6 +39,7 @@ public class MiniMOTD extends xyz.jpenilla.minimotd.common.MiniMOTD<Favicon> {
       this,
       Favicon::create
     );
+    this.configManager().loadExtraConfigs();
   }
 
   @Override

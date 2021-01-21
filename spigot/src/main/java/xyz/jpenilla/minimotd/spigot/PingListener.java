@@ -47,14 +47,14 @@ public class PingListener implements Listener {
 
   @EventHandler
   public void onPing(final @NonNull ServerListPingEvent e) {
-    final MiniMOTDConfig cfg = this.miniMOTD.configManager().config();
+    final MiniMOTDConfig cfg = this.miniMOTD.configManager().mainConfig();
     final int onlinePlayers = e.getNumPlayers();
     final int actualMaxPlayers = e.getMaxPlayers();
 
     final int maxPlayers = cfg.adjustedMaxPlayers(onlinePlayers, actualMaxPlayers);
     e.setMaxPlayers(maxPlayers);
 
-    final Pair<CachedServerIcon, String> pair = this.miniMOTD.createMOTD(onlinePlayers, maxPlayers);
+    final Pair<CachedServerIcon, String> pair = this.miniMOTD.createMOTD(cfg, onlinePlayers, maxPlayers);
     final String motdString = pair.right();
     if (motdString != null) {
       if (this.plugin.getMajorMinecraftVersion() > 15) {

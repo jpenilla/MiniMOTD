@@ -37,7 +37,7 @@ public class BungeeCommand extends Command {
   private final MiniMessage miniMessage;
 
   public BungeeCommand(final @NonNull MiniMOTDPlugin plugin) {
-    super("minimotdbungee");
+    super("minimotd");
     this.plugin = plugin;
     this.miniMessage = MiniMessage.get();
   }
@@ -80,6 +80,7 @@ public class BungeeCommand extends Command {
 
   private void onReload(final @NonNull CommandSender sender, final @NonNull String[] args) {
     this.plugin.miniMOTD().configManager().loadConfigs();
+    this.plugin.miniMOTD().configManager().loadExtraConfigs();
     this.plugin.miniMOTD().iconManager().loadIcons();
     this.send(sender, "<green>Done reloading.");
   }

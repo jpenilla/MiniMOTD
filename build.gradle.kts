@@ -13,7 +13,7 @@ plugins {
 
 allprojects {
   group = "xyz.jpenilla"
-  version = "1.2.5+${latestCommitHash()}-SNAPSHOT"
+  version = "1.3.0+${latestCommitHash()}-SNAPSHOT"
   description = "Use MiniMessage text formatting in your servers MOTD."
 }
 
@@ -27,17 +27,17 @@ subprojects {
   apply<IndraLicenseHeaderPlugin>()
 
   repositories {
+    //mavenLocal()
     mavenCentral()
     sonatypeSnapshots()
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://nexus.velocitypowered.com/repository/maven-public/")
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://oss.sonatype.org/content/groups/public/")
+    //maven("https://repo-new.spongepowered.org/repository/maven-public/")
     maven("https://repo.jpenilla.xyz/snapshots/")
-    maven("https://repo.codemc.org/repository/maven-public")
-    maven("https://maven.aura-dev.team/repository/auradev-releases/")
     maven("https://jitpack.io")
-    mavenLocal()
+    maven("https://repo.codemc.org/repository/maven-public")
   }
 
   indra {
@@ -91,7 +91,7 @@ tasks {
   val aggregate = create("aggregateJars") {
     val artifacts = arrayListOf<File>()
     dependsOn(project(":minimotd-universal").tasks.getByName("build"))
-    arrayOf("spigot", "bungeecord", "velocity").forEach {
+    arrayOf("spigot", "bungeecord", "velocity"/*, "sponge8"*/).forEach {
       val subProject = project(":minimotd-$it")
       val shadow = subProject.tasks.getByName("shadowJar")
       artifacts.add(shadow.outputs.files.singleFile)

@@ -34,8 +34,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.minimotd.common.Pair;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 public class PaperPingListener implements Listener {
   private final MiniMOTDPlugin plugin;
   private final LegacyComponentSerializer serializer = LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build();
@@ -50,32 +48,14 @@ public class PaperPingListener implements Listener {
 
   @EventHandler
   public void onPing(final @NonNull PaperServerListPingEvent e) {
-    final MiniMOTDConfig cfg = this.miniMOTD.configManager().config();
-    int onlinePlayers = e.getNumPlayers();
-    if (cfg.fakePlayersEnabled()) {
-      try {
-        if (cfg.fakePlayers().contains(":")) {
-          final String[] fakePlayers = cfg.fakePlayers().split(":");
-          final int start = Integer.parseInt(fakePlayers[0]);
-          final int end = Integer.parseInt(fakePlayers[1]);
-          onlinePlayers = onlinePlayers + ThreadLocalRandom.current().nextInt(start, end);
-        } else if (cfg.fakePlayers().contains("%")) {
-          final double factor = 1 + (Double.parseDouble(cfg.fakePlayers().replace("%", "")) / 100);
-          onlinePlayers = (int) Math.ceil(factor * onlinePlayers);
-        } else {
-          final int addedPlayers = Integer.parseInt(cfg.fakePlayers());
-          onlinePlayers = onlinePlayers + addedPlayers;
-        }
-      } catch (final NumberFormatException ex) {
-        this.miniMOTD.logger().warn("fakePlayers config invalid");
-      }
-    }
+    final MiniMOTDConfig cfg = this.miniMOTD.configManager().mainConfig();
+    final int onlinePlayers = this.miniMOTD.calculateOnlinePlayers(cfg, e.getNumPlayers());
     e.setNumPlayers(onlinePlayers);
 
     final int maxPlayers = cfg.adjustedMaxPlayers(onlinePlayers, e.getMaxPlayers());
     e.setMaxPlayers(maxPlayers);
 
-    final Pair<CachedServerIcon, String> pair = this.miniMOTD.createMOTD(onlinePlayers, maxPlayers);
+    final Pair<CachedServerIcon, String> pair = this.miniMOTD.createMOTD(cfg, onlinePlayers, maxPlayers);
 
     final String motdString = pair.right();
     if (motdString != null) {

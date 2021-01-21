@@ -79,19 +79,21 @@ public final class IconManager<I> {
     @NonNull I loadIcon(@NonNull BufferedImage bufferedImage) throws Exception;
   }
 
-  public @Nullable I icon(final int index) {
+  public @Nullable I icon(final @Nullable String iconString) {
     if (this.icons.isEmpty()) {
       return null;
     }
-    if (this.icons.containsKey(String.valueOf(index))) {
-      return this.icons.get(String.valueOf(index));
+
+    if (iconString == null || "random".equals(iconString)) {
+      final int randomIndex = ThreadLocalRandom.current().nextInt(this.icons.size());
+      final Iterator<I> iterator = this.icons.values().iterator();
+      for (int i = 0; i < randomIndex; i++) {
+        iterator.next();
+      }
+      return iterator.next();
     }
-    final int randomIndex = ThreadLocalRandom.current().nextInt(this.icons.size());
-    final Iterator<I> iterator = this.icons.values().iterator();
-    for (int i = 0; i < randomIndex; i++) {
-      iterator.next();
-    }
-    return iterator.next();
+
+    return this.icons.get(iconString);
   }
 
 }

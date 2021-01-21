@@ -26,6 +26,7 @@ package xyz.jpenilla.minimotd.common;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import xyz.jpenilla.minimotd.common.config.ConfigManager;
+import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 
 import java.nio.file.Path;
 import java.util.concurrent.ThreadLocalRandom;
@@ -53,21 +54,49 @@ public abstract class MiniMOTD<I> {
     return this.logger;
   }
 
-  public final @NonNull Pair<I, String> createMOTD(final int onlinePlayers, final int maxPlayers) {
+  public final @NonNull Pair<I, String> createMOTD(final @NonNull MiniMOTDConfig config, final int onlinePlayers, final int maxPlayers) {
     I icon = null;
     String motd = null;
-    int index = 0;
-    if (this.configManager().config().motdEnabled()) {
-      index = this.configManager().config().motds().size() == 1 ? 0 : ThreadLocalRandom.current().nextInt(this.configManager().config().motds().size());
-      motd = this.configManager().config().motds().get(index)
+    String iconString = null;
+    if (config.motdEnabled()) {
+      final int index = config.motds().size() == 1 ? 0 : ThreadLocalRandom.current().nextInt(config.motds().size());
+      final MiniMOTDConfig.MOTD m = config.motds().get(index);
+      motd = String.format("%s<reset>\n%s", m.line1(), m.line2())
         .replace("{onlinePlayers}", String.valueOf(onlinePlayers))
         .replace("{maxPlayers}", String.valueOf(maxPlayers))
         .replace("{br}", "\n");
+      iconString = m.icon();
     }
-    if (this.configManager.config().iconEnabled()) {
-      icon = this.iconManager().icon(index);
+    if (config.iconEnabled()) {
+      icon = this.iconManager().icon(iconString);
     }
     return new Pair<>(icon, motd);
+  }
+
+  public final int calculateOnlinePlayers(final @NonNull MiniMOTDConfig config, final int realOnlinePlayers) {
+    if (config.fakePlayersEnabled()) {
+      try {
+        final String fakePlayersConfigString = config.fakePlayers();
+        if (fakePlayersConfigString.contains(":")) {
+          final String[] fakePlayers = fakePlayersConfigString.split(":");
+          final int start = Integer.parseInt(fakePlayers[0]);
+          final int end = Integer.parseInt(fakePlayers[1]);
+
+          return realOnlinePlayers + ThreadLocalRandom.current().nextInt(start, end);
+        } else if (fakePlayersConfigString.contains("%")) {
+          final double factor = 1 + (Double.parseDouble(fakePlayersConfigString.replace("%", "")) / 100);
+
+          return (int) Math.ceil(factor * realOnlinePlayers);
+        } else {
+          final int addedPlayers = Integer.parseInt(fakePlayersConfigString);
+
+          return realOnlinePlayers + addedPlayers;
+        }
+      } catch (final NumberFormatException ex) {
+        this.logger.info("fakePlayers config incorrect");
+      }
+    }
+    return realOnlinePlayers;
   }
 
   public @NonNull ConfigManager configManager() {
