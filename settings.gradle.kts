@@ -1,5 +1,13 @@
 rootProject.name = "MiniMOTD"
 
+pluginManagement {
+  repositories {
+    jcenter()
+    maven("https://maven.fabricmc.net/")
+    gradlePluginPortal()
+  }
+}
+
 setupSubproject("minimotd-common") {
   projectDir = file("common")
 }
@@ -14,6 +22,9 @@ setupSubproject("minimotd-bungeecord") {
 }
 setupSubproject("minimotd-velocity") {
   projectDir = file("velocity")
+}
+setupSubproject("minimotd-fabric") {
+  projectDir = file("fabric")
 }
 setupSubproject("minimotd-universal") {
   projectDir = file("universal")

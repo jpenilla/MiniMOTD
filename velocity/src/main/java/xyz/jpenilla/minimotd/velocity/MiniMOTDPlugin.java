@@ -88,8 +88,8 @@ public class MiniMOTDPlugin {
 
     if (this.miniMOTD.configManager().pluginSettings().updateChecker()) {
       this.server.getScheduler().buildTask(this, () ->
-        new UpdateChecker(this.getPluginDescription().getVersion().orElse("")).checkVersion().forEach(this.logger::info))
-        .schedule();
+        new UpdateChecker(this.getPluginDescription().getVersion().orElse("")).checkVersion().forEach(this.logger::info)
+      ).schedule();
     }
   }
 

@@ -8,7 +8,7 @@ dependencies {
 
 tasks {
   shadowJar {
-    relocate("org.slf4j", "xyz.jpenilla.minimotd.lib.sponge.slf4j")
+    relocate("org.slf4j", "xyz.jpenilla.minimotd.lib.slf4j")
     relocate("org.spongepowered.configurate", "xyz.jpenilla.minimotd.lib.spongepowered.configurate")
     relocate("io.leangen.geantyref", "xyz.jpenilla.minimotd.lib.io.leangen.geantyref")
     relocate("com.typesafe.config", "xyz.jpenilla.minimotd.lib.typesafe.config")

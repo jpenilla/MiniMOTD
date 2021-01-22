@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "{project.name}",
+  "version": "{version}",
+  "name": "{rootProject.name}",
+  "description": "{description}",
+  "authors": [
+    "jmp"
+  ],
+  "license": "MIT",
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      "xyz.jpenilla.minimotd.fabric.MiniMOTDFabric"
+    ]
+  },
+  "mixins": [
+    "minimotd-fabric.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.11.1",
+    "fabric": "*",
+    "minecraft": "1.16.x"
+  }
+}

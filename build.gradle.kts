@@ -30,6 +30,7 @@ subprojects {
     //mavenLocal()
     mavenCentral()
     sonatypeSnapshots()
+    jcenter()
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://nexus.velocitypowered.com/repository/maven-public/")
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
@@ -56,7 +57,9 @@ subprojects {
   tasks {
     shadowJar {
       minimize()
-      archiveClassifier.set("")
+      if (!project.name.contains("fabric")) {
+        archiveClassifier.set("")
+      }
     }
     withType<JavaCompile> {
       options.compilerArgs.add("-Xlint:-processing")
@@ -73,8 +76,7 @@ allprojects {
   tasks.withType<Jar> {
     onlyIf {
       val classifier = archiveClassifier.get()
-      classifier != "sources"
-        && classifier != "javadoc"
+      classifier != "javadoc"
         && project.name != rootProject.name
     }
   }
@@ -97,6 +99,7 @@ tasks {
       artifacts.add(shadow.outputs.files.singleFile)
     }
     doLast {
+      artifacts.add(project(":minimotd-fabric").tasks.getByName("remapJar").outputs.files.singleFile)
       artifacts.add(project(":minimotd-universal").project.tasks.getByName("universal").outputs.files.singleFile)
       val libs = rootProject.buildDir.resolve("libs")
       libs.listFiles()?.forEach { it.delete() }
