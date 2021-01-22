@@ -31,7 +31,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.util.CachedServerIcon;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import xyz.jpenilla.minimotd.common.Pair;
+import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 
 public class PaperPingListener implements Listener {
@@ -55,9 +55,9 @@ public class PaperPingListener implements Listener {
     final int maxPlayers = cfg.adjustedMaxPlayers(onlinePlayers, e.getMaxPlayers());
     e.setMaxPlayers(maxPlayers);
 
-    final Pair<CachedServerIcon, String> pair = this.miniMOTD.createMOTD(cfg, onlinePlayers, maxPlayers);
+    final MOTDIconPair<CachedServerIcon> pair = this.miniMOTD.createMOTD(cfg, onlinePlayers, maxPlayers);
 
-    final String motdString = pair.right();
+    final String motdString = pair.motd();
     if (motdString != null) {
       final Component motdComponent = this.miniMessage.parse(motdString);
       if (e.getClient().getProtocolVersion() < 735 || this.plugin.getMajorMinecraftVersion() < 16) {
@@ -67,7 +67,7 @@ public class PaperPingListener implements Listener {
       }
     }
 
-    final CachedServerIcon favicon = pair.left();
+    final CachedServerIcon favicon = pair.icon();
     if (favicon != null) {
       e.setServerIcon(favicon);
     }

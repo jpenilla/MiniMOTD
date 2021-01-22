@@ -27,24 +27,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.util.CachedServerIcon;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.LoggerFactory;
-import xyz.jpenilla.minimotd.common.IconManager;
 
 public class MiniMOTD extends xyz.jpenilla.minimotd.common.MiniMOTD<CachedServerIcon> {
   private final MiniMOTDPlugin plugin;
-  private final IconManager<CachedServerIcon> iconManager;
 
   public MiniMOTD(final @NonNull MiniMOTDPlugin plugin) {
-    super(plugin.getDataFolder().toPath(), LoggerFactory.getLogger(plugin.getName()));
-    this.plugin = plugin;
-    this.iconManager = new IconManager<>(
-      this,
+    super(
+      plugin.getDataFolder().toPath(),
+      LoggerFactory.getLogger(plugin.getName()),
       Bukkit::loadServerIcon
     );
-  }
-
-  @Override
-  public @NonNull IconManager<CachedServerIcon> iconManager() {
-    return this.iconManager;
+    this.plugin = plugin;
   }
 
 }

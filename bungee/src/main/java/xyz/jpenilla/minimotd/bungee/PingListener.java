@@ -34,8 +34,10 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import xyz.jpenilla.minimotd.common.Pair;
+import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
+
+import java.util.Optional;
 
 public class PingListener implements Listener {
   private final MiniMessage miniMessage = MiniMessage.get();
@@ -51,7 +53,11 @@ public class PingListener implements Listener {
     final ServerPing response = e.getResponse();
 
     if (response != null) {
-      final String configString = this.miniMOTD.configManager().pluginSettings().configStringForHost(e.getConnection().getVirtualHost().toString()).orElse("default");
+      final String configString = this.miniMOTD.configManager().pluginSettings().configStringForHost(
+        Optional.of(e.getConnection().getVirtualHost())
+          .map(inetSocketAddress -> String.format("%s:%s", inetSocketAddress.getHostName(), inetSocketAddress.getPort()))
+          .orElse("default")
+      ).orElse("default");
       final MiniMOTDConfig cfg = this.miniMOTD.configManager().resolveConfig(configString);
       final ServerPing.Players players = response.getPlayers();
       final int onlinePlayers = this.miniMOTD.calculateOnlinePlayers(cfg, players.getOnline());
@@ -64,9 +70,9 @@ public class PingListener implements Listener {
         players.setSample(new ServerPing.PlayerInfo[]{});
       }
 
-      final Pair<Favicon, String> pair = this.miniMOTD.createMOTD(cfg, onlinePlayers, maxPlayers);
+      final MOTDIconPair<Favicon> pair = this.miniMOTD.createMOTD(cfg, onlinePlayers, maxPlayers);
 
-      final String motdString = pair.right();
+      final String motdString = pair.motd();
       if (motdString != null) {
         Component motdComponent = this.miniMessage.parse(motdString);
         if (e.getConnection().getVersion() < 735) {
@@ -75,7 +81,7 @@ public class PingListener implements Listener {
         response.setDescriptionComponent(BungeeComponentSerializer.get().serialize(motdComponent)[0]);
       }
 
-      final Favicon favicon = pair.left();
+      final Favicon favicon = pair.icon();
       if (favicon != null) {
         response.setFavicon(favicon);
       }

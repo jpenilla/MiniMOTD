@@ -40,11 +40,10 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
-import xyz.jpenilla.minimotd.common.Pair;
+import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.UpdateChecker;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 
-import java.net.InetSocketAddress;
 import java.nio.file.Path;
 
 @Plugin(
@@ -56,7 +55,8 @@ import java.nio.file.Path;
   authors = {"jmp"}
 )
 public class MiniMOTDPlugin {
-  public @NonNull MiniMOTD miniMOTD() {
+  public @NonNull
+  MiniMOTD miniMOTD() {
     return this.miniMOTD;
   }
 
@@ -95,7 +95,11 @@ public class MiniMOTDPlugin {
 
   @Subscribe
   public void onServerListPing(final @NonNull ProxyPingEvent ping) {
-    final String configString = this.miniMOTD.configManager().pluginSettings().configStringForHost(ping.getConnection().getVirtualHost().map(InetSocketAddress::toString).orElse("default")).orElse("default");
+    final String configString = this.miniMOTD.configManager().pluginSettings().configStringForHost(
+      ping.getConnection().getVirtualHost()
+        .map(inetSocketAddress -> String.format("%s:%s", inetSocketAddress.getHostName(), inetSocketAddress.getPort()))
+        .orElse("default")
+    ).orElse("default");
     final MiniMOTDConfig config = this.miniMOTD.configManager().resolveConfig(configString);
 
     final ServerPing.Builder pong = ping.getPing().asBuilder();
@@ -106,13 +110,13 @@ public class MiniMOTDPlugin {
     final int maxPlayers = config.adjustedMaxPlayers(onlinePlayers, pong.getMaximumPlayers());
     pong.maximumPlayers(maxPlayers);
 
-    final Pair<Favicon, String> pair = this.miniMOTD.createMOTD(config, onlinePlayers, maxPlayers);
-    final Favicon favicon = pair.left();
+    final MOTDIconPair<Favicon> pair = this.miniMOTD.createMOTD(config, onlinePlayers, maxPlayers);
+    final Favicon favicon = pair.icon();
     if (favicon != null) {
       pong.favicon(favicon);
     }
 
-    final String motdString = pair.right();
+    final String motdString = pair.motd();
     if (motdString != null) {
       Component motdComponent = this.miniMessage.parse(motdString);
       if (pong.getVersion().getProtocol() < 735) {

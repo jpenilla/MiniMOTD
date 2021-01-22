@@ -45,13 +45,15 @@ public final class PluginSettings {
   public static final class ProxySettings {
 
     public ProxySettings() {
-      this.virtualHostConfigs.put("minigames.example.com", "default");
-      this.virtualHostConfigs.put("survival.example.com", "survival");
-      this.virtualHostConfigs.put("skyblock.example.com", "skyblock");
+      this.virtualHostConfigs.put("minigames.example.com:25565", "default");
+      this.virtualHostConfigs.put("survival.example.com:25565", "survival");
+      this.virtualHostConfigs.put("skyblock.example.com:25565", "skyblock");
     }
 
-    @Comment("Here you can assign configs in the 'extra-configs' folder to specific forced hosts\n"
-      + "Either use the name of the config in 'extra-configs', or use \"default\" to use the configuration in main.conf")
+    @Comment("Here you can assign configs in the 'extra-configs' folder to specific virtual hosts\n"
+      + "Either use the name of the config in 'extra-configs', or use \"default\" to use the configuration in main.conf\n"
+      + "\n"
+      + "Format is \"hostname:port\"=\"configName|default\"")
     private final Map<String, String> virtualHostConfigs = new HashMap<>();
 
   }

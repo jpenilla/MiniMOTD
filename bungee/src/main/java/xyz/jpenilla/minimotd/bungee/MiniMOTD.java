@@ -26,25 +26,18 @@ package xyz.jpenilla.minimotd.bungee;
 import net.md_5.bungee.api.Favicon;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.LoggerFactory;
-import xyz.jpenilla.minimotd.common.IconManager;
 
 public class MiniMOTD extends xyz.jpenilla.minimotd.common.MiniMOTD<Favicon> {
   private final MiniMOTDPlugin plugin;
-  private final IconManager<Favicon> iconManager;
 
   public MiniMOTD(final @NonNull MiniMOTDPlugin plugin) {
-    super(plugin.getDataFolder().toPath(), LoggerFactory.getLogger(plugin.getDescription().getName()));
-    this.plugin = plugin;
-    this.iconManager = new IconManager<>(
-      this,
+    super(
+      plugin.getDataFolder().toPath(),
+      LoggerFactory.getLogger(plugin.getDescription().getName()),
       Favicon::create
     );
+    this.plugin = plugin;
     this.configManager().loadExtraConfigs();
-  }
-
-  @Override
-  public @NonNull IconManager<Favicon> iconManager() {
-    return this.iconManager;
   }
 
 }

@@ -23,14 +23,17 @@
  */
 package xyz.jpenilla.minimotd.common.config;
 
+import com.google.common.collect.ImmutableList;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.spongepowered.configurate.ConfigurateException;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
+import xyz.jpenilla.minimotd.common.Pair;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -78,6 +81,7 @@ public final class ConfigManager {
     try {
       if (!Files.exists(extraConfigsDir)) {
         Files.createDirectories(extraConfigsDir);
+        this.createDefaultProxyConfigs(extraConfigsDir);
       }
       for (final Path path : Files.list(extraConfigsDir).collect(Collectors.toList())) {
         if (path.toString().endsWith(".conf")) {
@@ -94,6 +98,20 @@ public final class ConfigManager {
       }
     } catch (final IOException e) {
       throw new IllegalStateException("Failed to load virtual host configs", e);
+    }
+  }
+
+  private void createDefaultProxyConfigs(final @NonNull Path extraConfigsDir) throws ConfigurateException {
+    final List<Pair<Path, MiniMOTDConfig.MOTD>> defaults = ImmutableList.of(
+      Pair.of(extraConfigsDir.resolve("skyblock.conf"), new MiniMOTDConfig.MOTD("<green><italic>Skyblock</green>", "<bold><rainbow>MiniMOTD Skyblock Server")),
+      Pair.of(extraConfigsDir.resolve("survival.conf"), new MiniMOTDConfig.MOTD("<gradient:blue:red>Survival Mode Hardcore", "<green><bold>MiniMOTD Survival Server"))
+    );
+    for (final Pair<Path, MiniMOTDConfig.MOTD> pair : defaults) {
+      final ConfigLoader<MiniMOTDConfig> loader = new ConfigLoader<>(
+        MiniMOTDConfig.class,
+        pair.left()
+      );
+      loader.save(new MiniMOTDConfig(ImmutableList.of(pair.right())));
     }
   }
 

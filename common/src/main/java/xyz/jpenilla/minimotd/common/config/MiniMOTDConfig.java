@@ -34,16 +34,24 @@ import java.util.List;
 @ConfigSerializable
 public final class MiniMOTDConfig {
 
+  public MiniMOTDConfig() {
+    this(Arrays.asList(
+      new MOTD(),
+      new MOTD("<blue>Another <bold><red>MOTD", "<italic><underlined><gradient:red:green>much wow")
+    ));
+  }
+
+  public MiniMOTDConfig(final @NonNull List<MOTD> defaultMOTDs) {
+    this.motds.addAll(defaultMOTDs);
+  }
+
   @Comment("The list of MOTDs to display\n"
     + "\n"
     + " - Supported placeholders: {onlinePlayers}, {maxPlayers}\n"
     + " - Putting more than one will cause one to be randomly chosen each refresh\n"
     + "\n"
     + " Tip: If you want to set a certain icon for each MOTD, check out this page: https://github.com/jmanpenilla/MiniMOTD/wiki/Assigning-specific-icons-per-MOTD")
-  private final List<MOTD> motds = new ArrayList<>(Arrays.asList(
-    new MOTD(),
-    new MOTD("<blue>Another <bold><red>MOTD", "<italic><underlined><gradient:red:green>much wow")
-  ));
+  private final List<MOTD> motds = new ArrayList<>();
 
   @Comment("Enable MOTD-related features")
   private boolean motdEnabled = true;

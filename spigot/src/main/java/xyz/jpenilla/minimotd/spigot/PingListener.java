@@ -30,7 +30,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.util.CachedServerIcon;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import xyz.jpenilla.minimotd.common.Pair;
+import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 
 public class PingListener implements Listener {
@@ -54,8 +54,8 @@ public class PingListener implements Listener {
     final int maxPlayers = cfg.adjustedMaxPlayers(onlinePlayers, actualMaxPlayers);
     e.setMaxPlayers(maxPlayers);
 
-    final Pair<CachedServerIcon, String> pair = this.miniMOTD.createMOTD(cfg, onlinePlayers, maxPlayers);
-    final String motdString = pair.right();
+    final MOTDIconPair<CachedServerIcon> pair = this.miniMOTD.createMOTD(cfg, onlinePlayers, maxPlayers);
+    final String motdString = pair.motd();
     if (motdString != null) {
       if (this.plugin.getMajorMinecraftVersion() > 15) {
         e.setMotd(this.serializer.serialize(this.miniMessage.parse(motdString)));
@@ -64,7 +64,7 @@ public class PingListener implements Listener {
       }
     }
 
-    final CachedServerIcon favicon = pair.left();
+    final CachedServerIcon favicon = pair.icon();
     if (favicon != null) {
       e.setServerIcon(favicon);
     }

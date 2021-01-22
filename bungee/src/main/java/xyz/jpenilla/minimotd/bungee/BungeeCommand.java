@@ -72,9 +72,9 @@ public class BungeeCommand extends Command {
   private void onHelp(final @NonNull CommandSender sender, final @NonNull String[] args) {
     final List<String> messages = new ArrayList<>();
     messages.add("<gradient:blue:green>MiniMOTD Commands:");
-    messages.add(" <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotd about'><click:run_command:/minimotdbungee about><yellow>/minimotdbungee about");
-    messages.add(" <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotd reload'><click:run_command:/minimotdbungee reload><yellow>/minimotdbungee reload");
-    messages.add(" <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotd help'><click:run_command:/minimotdbungee help><yellow>/minimotdbungee help");
+    messages.add(" <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotd about'><click:run_command:/minimotd about><yellow>/minimotd about");
+    messages.add(" <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotd reload'><click:run_command:/minimotd reload><yellow>/minimotd reload");
+    messages.add(" <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotd help'><click:run_command:/minimotd help><yellow>/minimotd help");
     this.send(sender, messages);
   }
 
@@ -96,7 +96,7 @@ public class BungeeCommand extends Command {
   }
 
   private void onInvalidUse(final @NonNull CommandSender sender, final @NonNull String[] args) {
-    this.send(sender, "<hover:show_text:'<green>Click for <yellow>/minimotdbungee help'><click:run_command:/minimotdbungee help><italic><gradient:red:gold>Invalid usage.</gradient> <blue>Try <yellow>/minimotdbungee help</yellow> or click here");
+    this.send(sender, "<hover:show_text:'<green>Click for <yellow>/minimotd help'><click:run_command:/minimotd help><italic><gradient:red:gold>Invalid usage.</gradient> <blue>Try <yellow>/minimotd help</yellow> or click here");
   }
 
   private void onNoPermission(final @NonNull CommandSender sender, final @NonNull String[] args) {

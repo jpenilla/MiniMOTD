@@ -34,12 +34,17 @@ import java.util.concurrent.ThreadLocalRandom;
 public abstract class MiniMOTD<I> {
 
   private final ConfigManager configManager;
+  private final IconManager<I> iconManager;
   private final Path dataDirectory;
   private final Logger logger;
 
-  public MiniMOTD(final @NonNull Path dataDirectory, final @NonNull Logger logger) {
+  public MiniMOTD(final @NonNull Path dataDirectory, final @NonNull Logger logger, final IconManager.@NonNull IconLoader<I> iconLoaderFunction) {
     this.dataDirectory = dataDirectory;
     this.logger = logger;
+    this.iconManager = new IconManager<>(
+      this,
+      iconLoaderFunction
+    );
     this.configManager = new ConfigManager(this);
     this.configManager.loadConfigs();
   }
@@ -48,13 +53,19 @@ public abstract class MiniMOTD<I> {
     return this.dataDirectory;
   }
 
-  public abstract @NonNull IconManager<I> iconManager();
+  public final @NonNull IconManager<I> iconManager() {
+    return this.iconManager;
+  }
 
   public final @NonNull Logger logger() {
     return this.logger;
   }
 
-  public final @NonNull Pair<I, String> createMOTD(final @NonNull MiniMOTDConfig config, final int onlinePlayers, final int maxPlayers) {
+  public final @NonNull ConfigManager configManager() {
+    return this.configManager;
+  }
+
+  public final @NonNull MOTDIconPair<I> createMOTD(final @NonNull MiniMOTDConfig config, final int onlinePlayers, final int maxPlayers) {
     I icon = null;
     String motd = null;
     String iconString = null;
@@ -70,7 +81,7 @@ public abstract class MiniMOTD<I> {
     if (config.iconEnabled()) {
       icon = this.iconManager().icon(iconString);
     }
-    return new Pair<>(icon, motd);
+    return new MOTDIconPair<>(icon, motd);
   }
 
   public final int calculateOnlinePlayers(final @NonNull MiniMOTDConfig config, final int realOnlinePlayers) {
@@ -93,13 +104,10 @@ public abstract class MiniMOTD<I> {
           return realOnlinePlayers + addedPlayers;
         }
       } catch (final NumberFormatException ex) {
-        this.logger.info("fakePlayers config incorrect");
+        this.logger.warn("fakePlayers config incorrect");
       }
     }
     return realOnlinePlayers;
   }
 
-  public @NonNull ConfigManager configManager() {
-    return this.configManager;
-  }
 }
