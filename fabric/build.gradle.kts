@@ -1,5 +1,5 @@
 plugins {
-  id("fabric-loom") version "0.5-SNAPSHOT"
+  id("fabric-loom") version "0.6.35"
   id("net.kyori.blossom") version "1.1.0"
 }
 
