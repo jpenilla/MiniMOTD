@@ -85,14 +85,14 @@ public class VelocityCommand implements SimpleCommand {
     final String header = "<gradient:white:black>=============</gradient><gradient:black:white>=============";
     this.sendMessages(invocation, ImmutableList.of(
       header,
-      "<hover:show_text:'<rainbow>click me!'><click:open_url:" + this.plugin.getPluginDescription().getUrl().orElse("") + ">" + this.plugin.getPluginDescription().getName().orElse("") + " <gradient:red:yellow>" + this.plugin.getPluginDescription().getVersion().orElse(""),
+      "<hover:show_text:'<rainbow>click me!'><click:open_url:" + this.plugin.pluginDescription().getUrl().orElse("") + ">" + this.plugin.pluginDescription().getName().orElse("") + " <gradient:red:yellow>" + this.plugin.pluginDescription().getVersion().orElse(""),
       "<yellow>By</yellow><gray>:</gray> <gradient:blue:green>jmp",
       header
     ));
   }
 
   private void sendMessages(final @NonNull Invocation invocation, final @NonNull List<String> messages) {
-    messages.forEach(message -> invocation.source().sendMessage(Identity.nil(), this.plugin.getMiniMessage().parse(message)));
+    messages.forEach(message -> invocation.source().sendMessage(Identity.nil(), this.plugin.miniMessage().parse(message)));
   }
 
   private static final List<String> COMMANDS = ImmutableList.of("about", "reload", "help");

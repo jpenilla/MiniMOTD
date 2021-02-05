@@ -23,11 +23,11 @@
  */
 package xyz.jpenilla.minimotd.bungee;
 
-import lombok.NonNull;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,7 +104,7 @@ public class BungeeCommand extends Command {
   }
 
   private void send(final @NonNull CommandSender sender, final @NonNull String message) {
-    this.plugin.getAudiences().sender(sender).sendMessage(Identity.nil(), this.miniMessage.parse(message));
+    this.plugin.audiences().sender(sender).sendMessage(Identity.nil(), this.miniMessage.parse(message));
   }
 
   private void send(final @NonNull CommandSender sender, final @NonNull List<String> messages) {

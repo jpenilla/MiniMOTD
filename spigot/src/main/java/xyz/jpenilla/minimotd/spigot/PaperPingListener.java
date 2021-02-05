@@ -32,6 +32,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.util.CachedServerIcon;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.minimotd.common.MOTDIconPair;
+import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 
 public class PaperPingListener implements Listener {
@@ -39,9 +40,9 @@ public class PaperPingListener implements Listener {
   private final LegacyComponentSerializer serializer = LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build();
   private final MiniMessage miniMessage = MiniMessage.get();
   private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.builder().build();
-  private final MiniMOTD miniMOTD;
+  private final MiniMOTD<CachedServerIcon> miniMOTD;
 
-  public PaperPingListener(final @NonNull MiniMOTDPlugin plugin, final @NonNull MiniMOTD miniMOTD) {
+  public PaperPingListener(final @NonNull MiniMOTDPlugin plugin, final @NonNull MiniMOTD<CachedServerIcon> miniMOTD) {
     this.miniMOTD = miniMOTD;
     this.plugin = plugin;
   }
@@ -60,7 +61,7 @@ public class PaperPingListener implements Listener {
     final String motdString = pair.motd();
     if (motdString != null) {
       final Component motdComponent = this.miniMessage.parse(motdString);
-      if (e.getClient().getProtocolVersion() < 735 || this.plugin.getMajorMinecraftVersion() < 16) {
+      if (e.getClient().getProtocolVersion() < 735 || this.plugin.majorMinecraftVersion() < 16) {
         e.setMotd(this.legacySerializer.serialize(motdComponent));
       } else {
         e.setMotd(this.serializer.serialize(motdComponent));

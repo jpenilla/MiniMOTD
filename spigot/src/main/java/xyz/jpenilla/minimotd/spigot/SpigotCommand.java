@@ -111,9 +111,9 @@ public class SpigotCommand implements CommandExecutor, TabCompleter {
 
   private void send(final @NonNull CommandSender sender, final @NonNull String message) {
     if (sender instanceof Player) {
-      this.plugin.getAudiences().player((Player) sender).sendMessage(Identity.nil(), this.miniMessage.parse(message));
+      this.plugin.audiences().player((Player) sender).sendMessage(Identity.nil(), this.miniMessage.parse(message));
     } else {
-      this.plugin.getAudiences().console().sendMessage(Identity.nil(), this.miniMessage.parse(message));
+      this.plugin.audiences().console().sendMessage(Identity.nil(), this.miniMessage.parse(message));
     }
   }
 

@@ -31,16 +31,17 @@ import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.util.CachedServerIcon;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.minimotd.common.MOTDIconPair;
+import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 
 public class PingListener implements Listener {
-  private final MiniMOTD miniMOTD;
+  private final MiniMOTD<CachedServerIcon> miniMOTD;
   private final LegacyComponentSerializer serializer = LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build();
   private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.builder().build();
   private final MiniMessage miniMessage = MiniMessage.get();
   private final MiniMOTDPlugin plugin;
 
-  public PingListener(final @NonNull MiniMOTDPlugin plugin, final @NonNull MiniMOTD miniMOTD) {
+  public PingListener(final @NonNull MiniMOTDPlugin plugin, final @NonNull MiniMOTD<CachedServerIcon> miniMOTD) {
     this.plugin = plugin;
     this.miniMOTD = miniMOTD;
   }
@@ -57,7 +58,7 @@ public class PingListener implements Listener {
     final MOTDIconPair<CachedServerIcon> pair = this.miniMOTD.createMOTD(cfg, onlinePlayers, maxPlayers);
     final String motdString = pair.motd();
     if (motdString != null) {
-      if (this.plugin.getMajorMinecraftVersion() > 15) {
+      if (this.plugin.majorMinecraftVersion() > 15) {
         e.setMotd(this.serializer.serialize(this.miniMessage.parse(motdString)));
       } else {
         e.setMotd(this.legacySerializer.serialize(this.miniMessage.parse(motdString)));

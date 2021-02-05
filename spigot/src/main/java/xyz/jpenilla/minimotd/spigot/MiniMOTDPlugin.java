@@ -23,28 +23,35 @@
  */
 package xyz.jpenilla.minimotd.spigot;
 
-import lombok.Getter;
-import lombok.NonNull;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.CachedServerIcon;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import xyz.jpenilla.minimotd.common.MiniMOTD;
+import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
 import xyz.jpenilla.minimotd.common.UpdateChecker;
 
-public final class MiniMOTDPlugin extends JavaPlugin {
-  private MiniMOTD miniMOTD;
-  @Getter private static MiniMOTDPlugin instance;
-  @Getter private PrismaHook prisma;
-  @Getter private boolean isPaperServer;
-  @Getter private String serverPackageName;
-  @Getter private String serverApiVersion;
-  @Getter private int majorMinecraftVersion;
-  @Getter private BukkitAudiences audiences;
+import java.awt.image.BufferedImage;
+import java.nio.file.Path;
+
+public final class MiniMOTDPlugin extends JavaPlugin implements MiniMOTDPlatform<CachedServerIcon> {
+  private MiniMOTD<CachedServerIcon> miniMOTD;
+  private boolean isPaperServer;
+  private String serverPackageName;
+  private String serverApiVersion;
+  private int majorMinecraftVersion;
+  private BukkitAudiences audiences;
+  private Logger logger;
 
   @Override
   public void onEnable() {
-    this.miniMOTD = new MiniMOTD(this);
+    this.logger = LoggerFactory.getLogger(this.getName());
+    this.miniMOTD = new MiniMOTD<>(this);
     this.serverPackageName = this.getServer().getClass().getPackage().getName();
     this.serverApiVersion = this.serverPackageName.substring(this.serverPackageName.lastIndexOf('.') + 1);
     this.majorMinecraftVersion = Integer.parseInt(this.serverApiVersion.split("_")[1]);
@@ -54,10 +61,6 @@ public final class MiniMOTDPlugin extends JavaPlugin {
       this.isPaperServer = true;
     } catch (final ClassNotFoundException e) {
       this.isPaperServer = false;
-    }
-    instance = this;
-    if (Bukkit.getPluginManager().isPluginEnabled("Prisma")) {
-      this.prisma = new PrismaHook();
     }
     if (this.isPaperServer) {
       getServer().getPluginManager().registerEvents(new PaperPingListener(this, this.miniMOTD), this);
@@ -85,8 +88,30 @@ public final class MiniMOTDPlugin extends JavaPlugin {
     }
   }
 
-  public @NonNull MiniMOTD miniMOTD() {
+  public @NonNull MiniMOTD<CachedServerIcon> miniMOTD() {
     return this.miniMOTD;
   }
 
+  @Override
+  public @NonNull Path dataDirectory() {
+    return this.getDataFolder().toPath();
+  }
+
+  @Override
+  public @NonNull Logger logger() {
+    return this.logger;
+  }
+
+  @Override
+  public @NonNull CachedServerIcon loadIcon(final @NonNull BufferedImage image) throws Exception {
+    return Bukkit.loadServerIcon(image);
+  }
+
+  public int majorMinecraftVersion() {
+    return this.majorMinecraftVersion;
+  }
+
+  public @NonNull BukkitAudiences audiences() {
+    return this.audiences;
+  }
 }

@@ -37,17 +37,12 @@ import java.util.concurrent.ThreadLocalRandom;
 public final class IconManager<I> {
 
   private final Map<String, I> icons = new HashMap<>();
-  private final IconLoader<I> loader;
   private final MiniMOTD<I> miniMOTD;
   private final File iconsDirectory;
 
-  public IconManager(
-    final @NonNull MiniMOTD<I> miniMOTD,
-    final @NonNull IconLoader<I> loader
-  ) {
+  public IconManager(final @NonNull MiniMOTD<I> miniMOTD) {
     this.miniMOTD = miniMOTD;
     this.iconsDirectory = miniMOTD.dataDirectory().resolve("icons").toFile();
-    this.loader = loader;
     this.loadIcons();
   }
 
@@ -62,7 +57,7 @@ public final class IconManager<I> {
         try {
           final BufferedImage bufferedImage = ImageIO.read(icon);
           if (bufferedImage.getHeight() == 64 && bufferedImage.getWidth() == 64) {
-            final I newIcon = this.loader.loadIcon(bufferedImage);
+            final I newIcon = this.miniMOTD.platform().loadIcon(bufferedImage);
             this.icons.put(icon.getName().split("\\.")[0], newIcon);
           } else {
             this.miniMOTD.logger().warn("Could not load " + icon.getName() + ": image must be 64x64px");
@@ -72,11 +67,6 @@ public final class IconManager<I> {
         }
       }
     }
-  }
-
-  @FunctionalInterface
-  public interface IconLoader<I> {
-    @NonNull I loadIcon(@NonNull BufferedImage bufferedImage) throws Exception;
   }
 
   public @Nullable I icon(final @Nullable String iconString) {

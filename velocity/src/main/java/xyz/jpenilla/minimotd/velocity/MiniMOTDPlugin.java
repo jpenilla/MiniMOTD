@@ -29,21 +29,24 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 import com.velocitypowered.api.plugin.Plugin;
+import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.PluginDescription;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.api.util.Favicon;
-import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import xyz.jpenilla.minimotd.common.MOTDIconPair;
+import xyz.jpenilla.minimotd.common.MiniMOTD;
+import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
 import xyz.jpenilla.minimotd.common.UpdateChecker;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 
+import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 
 @Plugin(
@@ -54,41 +57,44 @@ import java.nio.file.Path;
   url = "{url}",
   authors = {"jmp"}
 )
-public class MiniMOTDPlugin {
-  public @NonNull
-  MiniMOTD miniMOTD() {
+public class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
+  public @NonNull MiniMOTD<Favicon> miniMOTD() {
     return this.miniMOTD;
   }
 
-  private MiniMOTD miniMOTD;
-  @Getter private final ProxyServer server;
-  @Getter private final Logger logger;
-  @Getter private final MiniMessage miniMessage = MiniMessage.get();
-  @Getter private PluginDescription pluginDescription;
+  private final MiniMOTD<Favicon> miniMOTD;
+  private final ProxyServer server;
+  private final Logger logger;
+  private final MiniMessage miniMessage = MiniMessage.get();
+  private final PluginContainer pluginContainer;
   private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.builder().build();
-
-  @Inject private CommandManager commandManager;
-
-  @Getter
-  @Inject
-  @DataDirectory
-  private Path dataDirectory;
+  private final CommandManager commandManager;
+  private final Path dataDirectory;
 
   @Inject
-  public MiniMOTDPlugin(final @NonNull ProxyServer server, final @NonNull Logger logger) {
+  public MiniMOTDPlugin(
+    final @NonNull ProxyServer server,
+    final @NonNull Logger logger,
+    final @NonNull CommandManager commandManager,
+    final @NonNull PluginContainer pluginContainer,
+    @DataDirectory final @NonNull Path dataDirectory
+  ) {
     this.server = server;
     this.logger = logger;
+    this.commandManager = commandManager;
+    this.pluginContainer = pluginContainer;
+    this.dataDirectory = dataDirectory;
+    this.miniMOTD = new MiniMOTD<>(this);
+    this.miniMOTD.configManager().loadExtraConfigs();
   }
 
   @Subscribe
   public void onProxyInitialization(final @NonNull ProxyInitializeEvent event) {
-    this.miniMOTD = new MiniMOTD(this.dataDirectory, this.logger);
-    this.server.getPluginManager().fromInstance(this).ifPresent(container -> this.pluginDescription = container.getDescription());
     this.commandManager.register(this.commandManager.metaBuilder("minimotd").build(), new VelocityCommand(this));
 
     if (this.miniMOTD.configManager().pluginSettings().updateChecker()) {
       this.server.getScheduler().buildTask(this, () ->
-        new UpdateChecker(this.getPluginDescription().getVersion().orElse("")).checkVersion().forEach(this.logger::info)
+        new UpdateChecker(this.pluginDescription().getVersion().orElse("")).checkVersion().forEach(this.logger::info)
       ).schedule();
     }
   }
@@ -132,4 +138,26 @@ public class MiniMOTDPlugin {
     ping.setPing(pong.build());
   }
 
+  @Override
+  public @NonNull Path dataDirectory() {
+    return this.dataDirectory;
+  }
+
+  @Override
+  public @NonNull Logger logger() {
+    return this.logger;
+  }
+
+  @Override
+  public @NonNull Favicon loadIcon(final @NonNull BufferedImage image) {
+    return Favicon.create(image);
+  }
+
+  public @NonNull MiniMessage miniMessage() {
+    return this.miniMessage;
+  }
+
+  public @NonNull PluginDescription pluginDescription() {
+    return this.pluginContainer.getDescription();
+  }
 }

@@ -49,7 +49,7 @@ public final class UpdateChecker {
     final List<String> messages = new ArrayList<>();
     final JsonArray result;
     try {
-      result = this.parser.parse(new InputStreamReader(new URL("https://api.github.com/repos/jmanpenilla/MiniMOTD/releases").openStream(), Charsets.UTF_8)).getAsJsonArray();
+      result = this.parser.parse(new InputStreamReader(new URL("https://api.github.com/repos/jpenilla/MiniMOTD/releases").openStream(), Charsets.UTF_8)).getAsJsonArray();
     } catch (final IOException exception) {
       messages.add("Cannot look for updates: " + exception.getMessage());
       return messages;

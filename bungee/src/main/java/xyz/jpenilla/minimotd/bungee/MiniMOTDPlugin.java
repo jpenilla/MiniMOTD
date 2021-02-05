@@ -23,24 +23,34 @@
  */
 package xyz.jpenilla.minimotd.bungee;
 
-import lombok.Getter;
-import lombok.NonNull;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
+import net.md_5.bungee.api.Favicon;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.bstats.bungeecord.Metrics;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import xyz.jpenilla.minimotd.common.MiniMOTD;
+import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
 import xyz.jpenilla.minimotd.common.UpdateChecker;
 
-public class MiniMOTDPlugin extends Plugin {
-  @Getter private BungeeAudiences audiences;
-  private MiniMOTD miniMOTD;
+import java.awt.image.BufferedImage;
+import java.nio.file.Path;
 
-  public @NonNull MiniMOTD miniMOTD() {
+public class MiniMOTDPlugin extends Plugin implements MiniMOTDPlatform<Favicon> {
+  private Logger logger;
+  private BungeeAudiences audiences;
+  private MiniMOTD<Favicon> miniMOTD;
+
+  public @NonNull MiniMOTD<Favicon> miniMOTD() {
     return this.miniMOTD;
   }
 
   @Override
   public void onEnable() {
-    this.miniMOTD = new MiniMOTD(this);
+    this.logger = LoggerFactory.getLogger(this.getDescription().getName());
+    this.miniMOTD = new MiniMOTD<>(this);
+    this.miniMOTD.configManager().loadExtraConfigs();
     this.audiences = BungeeAudiences.create(this);
     this.getProxy().getPluginManager().registerListener(this, new PingListener(this.miniMOTD));
     this.getProxy().getPluginManager().registerCommand(this, new BungeeCommand(this));
@@ -50,5 +60,24 @@ public class MiniMOTDPlugin extends Plugin {
       this.getProxy().getScheduler().runAsync(this, () ->
         new UpdateChecker(this.getDescription().getVersion()).checkVersion().forEach(getLogger()::info));
     }
+  }
+
+  @Override
+  public @NonNull Path dataDirectory() {
+    return this.getDataFolder().toPath();
+  }
+
+  @Override
+  public @NonNull Logger logger() {
+    return this.logger;
+  }
+
+  @Override
+  public @NonNull Favicon loadIcon(final @NonNull BufferedImage image) {
+    return Favicon.create(image);
+  }
+
+  public @NonNull BungeeAudiences audiences() {
+    return this.audiences;
   }
 }

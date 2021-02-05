@@ -29,37 +29,59 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.spongepowered.api.MinecraftVersion;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.lifecycle.LoadedGameEvent;
 import org.spongepowered.api.event.server.ClientPingServerEvent;
 import org.spongepowered.api.network.status.Favicon;
+import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.jvm.Plugin;
-import xyz.jpenilla.minimotd.common.IconManager;
-import xyz.jpenilla.minimotd.common.Pair;
+import org.spongepowered.plugin.metadata.PluginMetadata;
+import xyz.jpenilla.minimotd.common.MOTDIconPair;
+import xyz.jpenilla.minimotd.common.MiniMOTD;
+import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
+import xyz.jpenilla.minimotd.common.UpdateChecker;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 
+import java.awt.image.BufferedImage;
+import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.Objects;
 
 @Plugin("minimotd-sponge8")
-public class MiniMOTDPlugin {
-
-  @Inject
-  private Logger logger;
-
-  @Inject
-  @ConfigDir(sharedRoot = false)
-  private Path dataDirectory;
-
-  private MiniMOTD miniMOTD;
-  private final MiniMessage miniMessage = MiniMessage.get();
+public class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
+  private final Path dataDirectory;
+  private final PluginMetadata pluginMetadata;
+  private final Logger logger;
   private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.builder().build();
+  private final MiniMessage miniMessage = MiniMessage.get();
+  private final PluginContainer pluginContainer;
+  private final MiniMOTD<Favicon> miniMOTD;
+
+  @Inject
+  public MiniMOTDPlugin(
+    @ConfigDir(sharedRoot = false) final @NonNull Path dataDirectory,
+    final @NonNull PluginContainer pluginContainer
+  ) {
+    this.dataDirectory = dataDirectory;
+    this.pluginContainer = pluginContainer;
+    this.pluginMetadata = pluginContainer.getMetadata();
+    this.logger = LoggerFactory.getLogger(this.pluginMetadata.getId());
+    this.miniMOTD = new MiniMOTD<>(this);
+  }
 
   @Listener
   public void onServerStart(final @NonNull LoadedGameEvent event) {
-    this.miniMOTD = new MiniMOTD(this.dataDirectory, this.logger);
+    Sponge.getAsyncScheduler().submit(Task.builder().plugin(this.pluginContainer).execute(() ->
+      new UpdateChecker(this.pluginMetadata.getVersion()).checkVersion().forEach(this.logger::info)
+    ).build());
   }
+
+  private Method SpongeMinecraftVersion_getProtocol;
 
   @Listener
   public void onPing(final @NonNull ClientPingServerEvent event) {
@@ -74,45 +96,48 @@ public class MiniMOTDPlugin {
       final int maxPlayers = config.adjustedMaxPlayers(onlinePlayers, players.getMax());
       players.setMax(maxPlayers);
 
-      final Pair<Favicon, String> pair = this.miniMOTD.createMOTD(config, onlinePlayers, maxPlayers);
-      final Favicon favicon = pair.left();
-      if (favicon != null) {
-        response.setFavicon(favicon);
+      final @NonNull MOTDIconPair<Favicon> pair = this.miniMOTD.createMOTD(config, onlinePlayers, maxPlayers);
+
+      final String motdString = pair.motd();
+      try {
+        if (motdString != null) {
+          Component motdComponent = this.miniMessage.parse(motdString);
+          final MinecraftVersion version = event.getClient().getVersion();
+          if (!version.isLegacy() && this.SpongeMinecraftVersion_getProtocol == null) {
+            this.SpongeMinecraftVersion_getProtocol = version.getClass().getMethod("getProtocol");
+          }
+          if (version.isLegacy() || (int) this.SpongeMinecraftVersion_getProtocol.invoke(version) < 735) {
+            motdComponent = this.legacySerializer.deserialize(this.legacySerializer.serialize(motdComponent));
+          }
+          response.setDescription(motdComponent);
+        }
+      } catch (final ReflectiveOperationException e) {
+        throw new IllegalStateException("Failed to get protocol version", e);
       }
 
-      final String motdString = pair.right();
-      if (motdString != null) {
-        final Component motdComponent = this.miniMessage.parse(motdString);
-        //if (pong.getVersion().getProtocol() < 735) { // todo
-        //  motdComponent = this.legacySerializer.deserialize(this.legacySerializer.serialize(motdComponent));
-        //}
-        response.setDescription(motdComponent);
+      final Favicon favicon = pair.icon();
+      if (favicon != null) {
+        response.setFavicon(favicon);
       }
 
       if (config.disablePlayerListHover()) {
         players.getProfiles().clear();
       }
-
     });
   }
 
-  private static final class MiniMOTD extends xyz.jpenilla.minimotd.common.MiniMOTD<Favicon> { //todo command
-
-    private final IconManager<Favicon> iconManager;
-
-    MiniMOTD(final @NonNull Path dataDirectory, final @NonNull Logger logger) {
-      super(dataDirectory, logger);
-      this.iconManager = new IconManager<>(
-        this,
-        bufferedImage -> Objects.requireNonNull(Favicon.load(bufferedImage), "failed to load favicon")
-      );
-    }
-
-    @Override
-    public @NonNull IconManager<Favicon> iconManager() {
-      return this.iconManager;
-    }
-
+  @Override
+  public @NonNull Path dataDirectory() {
+    return this.dataDirectory;
   }
 
+  @Override
+  public @NonNull Logger logger() {
+    return this.logger;
+  }
+
+  @Override
+  public @NonNull Favicon loadIcon(final @NonNull BufferedImage image) throws Exception {
+    return Objects.requireNonNull(Favicon.load(image), "failed to load favicon");
+  }
 }

@@ -35,16 +35,17 @@ import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.minimotd.common.MOTDIconPair;
+import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 
 import java.util.Optional;
 
 public class PingListener implements Listener {
   private final MiniMessage miniMessage = MiniMessage.get();
-  private final MiniMOTD miniMOTD;
+  private final MiniMOTD<Favicon> miniMOTD;
   private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.builder().build();
 
-  public PingListener(final @NonNull MiniMOTD miniMOTD) {
+  public PingListener(final @NonNull MiniMOTD<Favicon> miniMOTD) {
     this.miniMOTD = miniMOTD;
   }
 

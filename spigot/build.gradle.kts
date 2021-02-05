@@ -8,7 +8,6 @@ dependencies {
   implementation("net.kyori", "adventure-platform-bukkit", "4.0.0-SNAPSHOT")
   implementation("org.bstats", "bstats-bukkit", "1.8")
   compileOnly("com.destroystokyo.paper", "paper-api", "1.16.4-R0.1-SNAPSHOT")
-  compileOnly("com.github.DiamondDagger590", "Prisma", "a622d01b80")
 }
 
 tasks {

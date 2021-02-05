@@ -36,6 +36,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.jpenilla.minimotd.common.MOTDIconPair;
+import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 import xyz.jpenilla.minimotd.fabric.MiniMOTDFabric;
 
@@ -48,7 +49,7 @@ public class ServerStatusPacketListenerImplMixin {
   public void onRequest(final ServerboundStatusRequestPacket serverboundStatusRequestPacket, final CallbackInfo ci) {
     if (!this.hasRequestedStatus) {
       final MiniMOTDFabric miniMOTDFabric = MiniMOTDFabric.get();
-      final MiniMOTDFabric.MiniMOTD miniMOTD = miniMOTDFabric.miniMOTD();
+      final MiniMOTD<String> miniMOTD = miniMOTDFabric.miniMOTD();
       final MiniMOTDConfig config = miniMOTD.configManager().mainConfig();
 
       final int onlinePlayers = miniMOTD.calculateOnlinePlayers(config, this.server.getPlayerCount());

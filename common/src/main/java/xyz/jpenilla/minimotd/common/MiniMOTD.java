@@ -31,26 +31,24 @@ import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 import java.nio.file.Path;
 import java.util.concurrent.ThreadLocalRandom;
 
-public abstract class MiniMOTD<I> {
-
+public final class MiniMOTD<I> {
   private final ConfigManager configManager;
   private final IconManager<I> iconManager;
-  private final Path dataDirectory;
-  private final Logger logger;
+  private final MiniMOTDPlatform<I> platform;
 
-  public MiniMOTD(final @NonNull Path dataDirectory, final @NonNull Logger logger, final IconManager.@NonNull IconLoader<I> iconLoaderFunction) {
-    this.dataDirectory = dataDirectory;
-    this.logger = logger;
-    this.iconManager = new IconManager<>(
-      this,
-      iconLoaderFunction
-    );
+  public MiniMOTD(final @NonNull MiniMOTDPlatform<I> platform) {
+    this.platform = platform;
+    this.iconManager = new IconManager<>(this);
     this.configManager = new ConfigManager(this);
     this.configManager.loadConfigs();
   }
 
+  public @NonNull MiniMOTDPlatform<I> platform() {
+    return this.platform;
+  }
+
   public final @NonNull Path dataDirectory() {
-    return this.dataDirectory;
+    return this.platform.dataDirectory();
   }
 
   public final @NonNull IconManager<I> iconManager() {
@@ -58,13 +56,14 @@ public abstract class MiniMOTD<I> {
   }
 
   public final @NonNull Logger logger() {
-    return this.logger;
+    return this.platform.logger();
   }
 
   public final @NonNull ConfigManager configManager() {
     return this.configManager;
   }
 
+  // todo: move deserialization from MM -> Component, color down-sampling here, take protocolVersion int as param
   public final @NonNull MOTDIconPair<I> createMOTD(final @NonNull MiniMOTDConfig config, final int onlinePlayers, final int maxPlayers) {
     I icon = null;
     String motd = null;
@@ -104,10 +103,9 @@ public abstract class MiniMOTD<I> {
           return realOnlinePlayers + addedPlayers;
         }
       } catch (final NumberFormatException ex) {
-        this.logger.warn("fakePlayers config incorrect");
+        this.logger().warn("fakePlayers config incorrect");
       }
     }
     return realOnlinePlayers;
   }
-
 }

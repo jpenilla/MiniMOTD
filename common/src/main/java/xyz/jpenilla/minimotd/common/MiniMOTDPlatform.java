@@ -21,23 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package xyz.jpenilla.minimotd.velocity;
+package xyz.jpenilla.minimotd.common;
 
-import com.velocitypowered.api.util.Favicon;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 
+import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 
-public class MiniMOTD extends xyz.jpenilla.minimotd.common.MiniMOTD<Favicon> {
+public interface MiniMOTDPlatform<I> {
+  @NonNull Path dataDirectory();
 
-  public MiniMOTD(final @NonNull Path dataDirectory, final @NonNull Logger logger) {
-    super(
-      dataDirectory,
-      logger,
-      Favicon::create
-    );
-    this.configManager().loadExtraConfigs();
-  }
+  @NonNull Logger logger();
 
+  @NonNull I loadIcon(@NonNull BufferedImage image) throws Exception;
 }

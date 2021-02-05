@@ -35,10 +35,11 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.minecraft.commands.Commands;
 import org.apache.commons.lang3.Validate;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import xyz.jpenilla.minimotd.common.MiniMOTD;
+import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
 import xyz.jpenilla.minimotd.common.UpdateChecker;
 
 import javax.imageio.ImageIO;
@@ -50,15 +51,16 @@ import java.nio.file.Path;
 import java.util.Base64;
 import java.util.concurrent.CompletableFuture;
 
-public class MiniMOTDFabric implements ModInitializer {
+public class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<String> {
 
   private static MiniMOTDFabric instance = null;
 
-  private final Logger logger = LogManager.getLogger("MiniMOTD");
+  private final Logger logger = LoggerFactory.getLogger(MiniMOTD.class);
+  private final Path dataDirectory = new File("").getAbsoluteFile().toPath().resolve("config/MiniMOTD");
   private final MiniMessage miniMessage = MiniMessage.get();
   private final GsonComponentSerializer gsonComponentSerializer = GsonComponentSerializer.gson();
   private final GsonComponentSerializer downsamplingGsonComponentSerializer = GsonComponentSerializer.colorDownsamplingGson();
-  private final MiniMOTD miniMOTD = new MiniMOTD(new File("").getAbsoluteFile().toPath().resolve("config/MiniMOTD"));
+  private final MiniMOTD<String> miniMOTD = new MiniMOTD<>(this);
 
   private FabricServerAudiences audiences;
   private int protocolVersionCache;
@@ -78,7 +80,7 @@ public class MiniMOTDFabric implements ModInitializer {
     this.protocolVersionCache = protocolVersionCache;
   }
 
-  public @NonNull MiniMOTD miniMOTD() {
+  public @NonNull MiniMOTD<String> miniMOTD() {
     return this.miniMOTD;
   }
 
@@ -94,20 +96,16 @@ public class MiniMOTDFabric implements ModInitializer {
     return this.gsonComponentSerializer;
   }
 
-  public @NonNull FabricServerAudiences audiences() {
-    return this.audiences;
-  }
-
   @Override
   public void onInitialize() {
     this.registerCommand();
     ServerLifecycleEvents.SERVER_STARTED.register(minecraftServer -> {
       this.audiences = FabricServerAudiences.of(minecraftServer);
       if (this.miniMOTD.configManager().pluginSettings().updateChecker()) {
-        CompletableFuture.runAsync(() -> new UpdateChecker("{version}").checkVersion().forEach(this.logger::info));
+        CompletableFuture.runAsync(() -> new UpdateChecker("{version}").checkVersion().forEach(this.miniMOTD.logger()::info));
       }
     });
-    this.logger.info("Done initializing MiniMOTD");
+    this.miniMOTD.logger().info("Done initializing MiniMOTD");
   }
 
   private void registerCommand() {
@@ -128,7 +126,7 @@ public class MiniMOTDFabric implements ModInitializer {
           .executes(ctx -> {
             this.send(this.audiences.audience(ctx.getSource()),
               "<strikethrough><gradient:black:white>------------------",
-              "<hover:show_text:'<gradient:blue:aqua>click me!'><click:open_url:https://github.com/jmanpenilla/MiniMOTD-Fabric>    MiniMOTD-Fabric",
+              "<hover:show_text:'<gradient:blue:aqua>click me!'><click:open_url:https://github.com/jpenilla/MiniMOTD>    MiniMOTD v{version}",
               "<gray>      By <gradient:gold:yellow>jmp",
               "<strikethrough><gradient:black:white>------------------"
             );
@@ -148,31 +146,29 @@ public class MiniMOTDFabric implements ModInitializer {
     return instance;
   }
 
-  public static final class MiniMOTD extends xyz.jpenilla.minimotd.common.MiniMOTD<String> {
-
-    public MiniMOTD(final @NonNull Path dataDirectory) {
-      super(
-        dataDirectory,
-        LoggerFactory.getLogger(MiniMOTD.class),
-        MiniMOTD::loadIcon
-      );
-    }
-
-    private static @NonNull String loadIcon(final @NonNull BufferedImage bufferedImage) throws Exception {
-      Validate.validState(bufferedImage.getWidth() == 64, "Must be 64 pixels wide");
-      Validate.validState(bufferedImage.getHeight() == 64, "Must be 64 pixels high");
-      final ByteBuf byteBuf = Unpooled.buffer();
-      final String icon;
-      try {
-        ImageIO.write(bufferedImage, "PNG", new ByteBufOutputStream(byteBuf));
-        final ByteBuffer byteBuffer = Base64.getEncoder().encode(byteBuf.nioBuffer());
-        icon = "data:image/png;base64," + StandardCharsets.UTF_8.decode(byteBuffer);
-      } finally {
-        byteBuf.release();
-      }
-      return icon;
-    }
-
+  @Override
+  public @NonNull Path dataDirectory() {
+    return this.dataDirectory;
   }
 
+  @Override
+  public @NonNull Logger logger() {
+    return this.logger;
+  }
+
+  @Override
+  public @NonNull String loadIcon(final @NonNull BufferedImage bufferedImage) throws Exception {
+    Validate.validState(bufferedImage.getWidth() == 64, "Must be 64 pixels wide");
+    Validate.validState(bufferedImage.getHeight() == 64, "Must be 64 pixels high");
+    final ByteBuf byteBuf = Unpooled.buffer();
+    final String icon;
+    try {
+      ImageIO.write(bufferedImage, "PNG", new ByteBufOutputStream(byteBuf));
+      final ByteBuffer byteBuffer = Base64.getEncoder().encode(byteBuf.nioBuffer());
+      icon = "data:image/png;base64," + StandardCharsets.UTF_8.decode(byteBuffer);
+    } finally {
+      byteBuf.release();
+    }
+    return icon;
+  }
 }

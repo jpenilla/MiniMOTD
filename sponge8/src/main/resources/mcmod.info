@@ -1,8 +1,0 @@
-[{
-    "modid": "{project.name}",
-    "name": "{rootProject.name}",
-    "version": "{version}",
-    "description": "{description}",
-    "authorList": ["jmp"],
-    "dependencies": []
-}]

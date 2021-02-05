@@ -14,9 +14,9 @@ setupSubproject("minimotd-common") {
 setupSubproject("minimotd-spigot") {
   projectDir = file("spigot")
 }
-/*setupSubproject("minimotd-sponge8") {
+setupSubproject("minimotd-sponge8") {
   projectDir = file("sponge8")
-}*/
+}
 setupSubproject("minimotd-bungeecord") {
   projectDir = file("bungee")
 }

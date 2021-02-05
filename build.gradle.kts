@@ -17,7 +17,7 @@ allprojects {
   description = "Use MiniMessage text formatting in your servers MOTD."
 }
 
-ext["url"] = "https://github.com/jmanpenilla/MiniMOTD/"
+ext["url"] = "https://github.com/jpenilla/MiniMOTD/"
 
 subprojects {
   apply<JavaLibraryPlugin>()
@@ -35,7 +35,7 @@ subprojects {
     maven("https://nexus.velocitypowered.com/repository/maven-public/")
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://oss.sonatype.org/content/groups/public/")
-    //maven("https://repo-new.spongepowered.org/repository/maven-public/")
+    maven("https://repo.spongepowered.org/repository/maven-public/")
     maven("https://repo.jpenilla.xyz/snapshots/")
     maven("https://jitpack.io")
     maven("https://repo.codemc.org/repository/maven-public")
@@ -47,11 +47,6 @@ subprojects {
       issues = true
     }
     mitLicense()
-  }
-
-  dependencies {
-    annotationProcessor("org.projectlombok", "lombok", "1.18.16")
-    compileOnly("org.projectlombok", "lombok", "1.18.16")
   }
 
   tasks {
@@ -93,7 +88,7 @@ tasks {
   val aggregate = create("aggregateJars") {
     val artifacts = arrayListOf<File>()
     dependsOn(project(":minimotd-universal").tasks.getByName("build"))
-    arrayOf("spigot", "bungeecord", "velocity"/*, "sponge8"*/).forEach {
+    arrayOf("spigot", "bungeecord", "velocity", "sponge8").forEach {
       val subProject = project(":minimotd-$it")
       val shadow = subProject.tasks.getByName("shadowJar")
       artifacts.add(shadow.outputs.files.singleFile)

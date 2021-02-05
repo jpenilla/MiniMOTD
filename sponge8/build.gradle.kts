@@ -1,6 +1,5 @@
 dependencies {
   implementation(project(":minimotd-common"))
-  implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.14.0")
   implementation("net.kyori", "adventure-text-serializer-legacy", "4.4.0")
   compileOnly("org.spongepowered", "spongeapi", "8.0.0-SNAPSHOT")
   annotationProcessor("org.spongepowered", "spongeapi", "8.0.0-SNAPSHOT")
@@ -8,20 +7,20 @@ dependencies {
 
 tasks {
   shadowJar {
-    relocate("org.slf4j", "xyz.jpenilla.minimotd.lib.slf4j")
     relocate("org.spongepowered.configurate", "xyz.jpenilla.minimotd.lib.spongepowered.configurate")
     relocate("io.leangen.geantyref", "xyz.jpenilla.minimotd.lib.io.leangen.geantyref")
     relocate("com.typesafe.config", "xyz.jpenilla.minimotd.lib.typesafe.config")
     relocate("net.kyori.adventure.text.minimessage", "xyz.jpenilla.minimotd.lib.kyori_native.minimessage")
     relocate("net.kyori.adventure.text.serializer.legacy", "xyz.jpenilla.minimotd.lib.kyori_native.legacy.text.serializer")
-    relocate("xyz.jpenilla.minimotd.common", "xyz.jpenilla.minimotd.velocity.lib.minimotd.common")
+    relocate("xyz.jpenilla.minimotd.common", "xyz.jpenilla.minimotd.sponge8.lib.minimotd.common")
     relocate("org.checkerframework", "xyz.jpenilla.minimotd.lib.checkerframework")
     dependencies {
       exclude { dep -> dep.moduleGroup == "net.kyori" && !dep.name.contains("minimessage") && !dep.name.contains("text-serializer-legacy") }
+      exclude(dependency("org.slf4j:slf4j-api"))
     }
   }
   processResources {
-    filesMatching("mcmod.info") {
+    filesMatching("**/plugins.json") {
       mapOf(
         "{project.name}" to project.name,
         "{rootProject.name}" to rootProject.name,
