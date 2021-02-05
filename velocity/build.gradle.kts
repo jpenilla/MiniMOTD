@@ -18,7 +18,7 @@ tasks {
     relocate("io.leangen.geantyref", "xyz.jpenilla.minimotd.lib.io.leangen.geantyref")
     relocate("com.typesafe.config", "xyz.jpenilla.minimotd.lib.typesafe.config")
     relocate("net.kyori.adventure.text.minimessage", "xyz.jpenilla.minimotd.lib.kyori_native.minimessage")
-    relocate("xyz.jpenilla.minimotd.common", "xyz.jpenilla.minimotd.lib.kyori_native.minimotd.common")
+    relocate("xyz.jpenilla.minimotd.common", "xyz.jpenilla.minimotd.lib.velocity.minimotd.common")
     relocate("org.checkerframework", "xyz.jpenilla.minimotd.lib.checkerframework")
     dependencies {
       exclude { dep -> dep.moduleGroup == "net.kyori" && !dep.name.contains("minimessage") }

@@ -34,7 +34,7 @@ tasks {
     relocate("org.spongepowered.configurate", "xyz.jpenilla.minimotd.lib.spongepowered.configurate")
     relocate("com.typesafe.config", "xyz.jpenilla.minimotd.lib.typesafe.config")
     relocate("org.checkerframework", "xyz.jpenilla.minimotd.lib.checkerframework")
-    relocate("xyz.jpenilla.minimotd.common", "xyz.jpenilla.minimotd.lib.kyori_native.minimotd.common")
+    relocate("xyz.jpenilla.minimotd.common", "xyz.jpenilla.minimotd.lib.fabric.minimotd.common")
   }
   remapJar {
     dependsOn(shadowJar)

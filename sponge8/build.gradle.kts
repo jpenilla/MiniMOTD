@@ -13,7 +13,7 @@ tasks {
     relocate("net.kyori.adventure.text.minimessage", "xyz.jpenilla.minimotd.lib.kyori_native.minimessage")
     relocate("net.kyori.adventure.text.serializer.legacy", "xyz.jpenilla.minimotd.lib.kyori_native.legacy.text.serializer")
     relocate("org.checkerframework", "xyz.jpenilla.minimotd.lib.checkerframework")
-    relocate("xyz.jpenilla.minimotd.common", "xyz.jpenilla.minimotd.lib.kyori_native.minimotd.common")
+    relocate("xyz.jpenilla.minimotd.common", "xyz.jpenilla.minimotd.lib.sponge8.minimotd.common")
     dependencies {
       exclude { dep -> dep.moduleGroup == "net.kyori" && !dep.name.contains("minimessage") && !dep.name.contains("text-serializer-legacy") }
       exclude(dependency("org.slf4j:slf4j-api"))
