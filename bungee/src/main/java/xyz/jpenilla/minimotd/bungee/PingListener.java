@@ -55,7 +55,7 @@ public class PingListener implements Listener {
 
     if (response != null) {
       final String configString = this.miniMOTD.configManager().pluginSettings().configStringForHost(
-        Optional.of(e.getConnection().getVirtualHost())
+        Optional.ofNullable(e.getConnection().getVirtualHost())
           .map(inetSocketAddress -> String.format("%s:%s", inetSocketAddress.getHostName(), inetSocketAddress.getPort()))
           .orElse("default")
       ).orElse("default");
