@@ -4,6 +4,7 @@
   "package": "xyz.jpenilla.minimotd.fabric.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "ConnectionMixin",
     "ServerHandshakePacketListenerImplMixin",
     "ServerStatusPacketListenerImplMixin"
   ],

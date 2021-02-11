@@ -29,6 +29,7 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.fabric.FabricServerAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -44,7 +45,6 @@ import xyz.jpenilla.minimotd.common.UpdateChecker;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -52,32 +52,21 @@ import java.util.Base64;
 import java.util.concurrent.CompletableFuture;
 
 public class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<String> {
-
   private static MiniMOTDFabric instance = null;
 
   private final Logger logger = LoggerFactory.getLogger(MiniMOTD.class);
-  private final Path dataDirectory = new File("").getAbsoluteFile().toPath().resolve("config/MiniMOTD");
+  private final Path dataDirectory = FabricLoader.getInstance().getConfigDir().resolve("MiniMOTD");
   private final MiniMessage miniMessage = MiniMessage.get();
-  private final GsonComponentSerializer gsonComponentSerializer = GsonComponentSerializer.gson();
   private final GsonComponentSerializer downsamplingGsonComponentSerializer = GsonComponentSerializer.colorDownsamplingGson();
   private final MiniMOTD<String> miniMOTD = new MiniMOTD<>(this);
 
   private FabricServerAudiences audiences;
-  private int protocolVersionCache;
 
   public MiniMOTDFabric() {
     if (instance != null) {
       throw new IllegalStateException("Cannot create a second instance of " + this.getClass().getName());
     }
     instance = this;
-  }
-
-  public int protocolVersionCache() {
-    return this.protocolVersionCache;
-  }
-
-  public void protocolVersionCache(final int protocolVersionCache) {
-    this.protocolVersionCache = protocolVersionCache;
   }
 
   public @NonNull MiniMOTD<String> miniMOTD() {
@@ -92,17 +81,13 @@ public class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<String> 
     return this.downsamplingGsonComponentSerializer;
   }
 
-  public @NonNull GsonComponentSerializer gsonComponentSerializer() {
-    return this.gsonComponentSerializer;
-  }
-
   @Override
   public void onInitialize() {
     this.registerCommand();
     ServerLifecycleEvents.SERVER_STARTED.register(minecraftServer -> {
       this.audiences = FabricServerAudiences.of(minecraftServer);
       if (this.miniMOTD.configManager().pluginSettings().updateChecker()) {
-        CompletableFuture.runAsync(() -> new UpdateChecker("{version}").checkVersion().forEach(this.miniMOTD.logger()::info));
+        CompletableFuture.runAsync(() -> new UpdateChecker("{version}").checkVersion().forEach(this.logger()::info));
       }
     });
     this.miniMOTD.logger().info("Done initializing MiniMOTD");
@@ -140,6 +125,10 @@ public class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<String> 
     for (final String string : strings) {
       audience.sendMessage(this.miniMessage.parse(string));
     }
+  }
+
+  public @NonNull FabricServerAudiences audiences() {
+    return this.audiences;
   }
 
   public static @NonNull MiniMOTDFabric get() {

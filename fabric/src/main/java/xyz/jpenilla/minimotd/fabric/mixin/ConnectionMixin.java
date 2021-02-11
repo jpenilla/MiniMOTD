@@ -24,22 +24,21 @@
 package xyz.jpenilla.minimotd.fabric.mixin;
 
 import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.handshake.ClientIntentionPacket;
-import net.minecraft.server.network.ServerHandshakePacketListenerImpl;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.Unique;
 import xyz.jpenilla.minimotd.fabric.access.ConnectionAccess;
 
-@Mixin(ServerHandshakePacketListenerImpl.class)
-abstract class ServerHandshakePacketListenerImplMixin {
-  @Shadow @Final private Connection connection;
+@SuppressWarnings("checkstyle:FinalLocalVariable")
+@Mixin(Connection.class)
+abstract class ConnectionMixin implements ConnectionAccess {
+  @Unique
+  private int protocolVersion = -1;
 
-  @Inject(method = "handleIntention", at = @At("HEAD"))
-  public void onRequest(final ClientIntentionPacket packet, final CallbackInfo ci) {
-    ((ConnectionAccess) this.connection).minimotd$protocolVersion(packet.getProtocolVersion());
+  public void minimotd$protocolVersion(int protocolVersion) {
+    this.protocolVersion = protocolVersion;
+  }
+
+  public int minimotd$protocolVersion() {
+    return this.protocolVersion;
   }
 }
