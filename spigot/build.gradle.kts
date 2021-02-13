@@ -6,7 +6,7 @@ dependencies {
   implementation(project(":minimotd-common"))
   implementation("org.slf4j", "slf4j-jdk14","1.7.30")
   implementation("net.kyori", "adventure-platform-bukkit", "4.0.0-SNAPSHOT")
-  implementation("org.bstats", "bstats-bukkit", "2.1.0")
+  implementation("org.bstats", "bstats-bukkit", "2.2.0")
   compileOnly("com.destroystokyo.paper", "paper-api", "1.16.4-R0.1-SNAPSHOT")
 }
 

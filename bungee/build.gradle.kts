@@ -6,7 +6,7 @@ dependencies {
   implementation(project(":minimotd-common"))
   implementation("org.slf4j", "slf4j-jdk14","1.7.30")
   implementation("net.kyori", "adventure-platform-bungeecord", "4.0.0-SNAPSHOT")
-  implementation("org.bstats", "bstats-bungeecord", "2.1.0")
+  implementation("org.bstats", "bstats-bungeecord", "2.2.0")
   compileOnly("io.github.waterfallmc", "waterfall-api", "1.16-R0.4-SNAPSHOT")
 }
 

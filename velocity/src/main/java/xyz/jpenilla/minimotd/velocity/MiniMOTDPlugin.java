@@ -38,6 +38,7 @@ import com.velocitypowered.api.util.Favicon;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bstats.velocity.Metrics;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import xyz.jpenilla.minimotd.common.MOTDIconPair;
@@ -58,10 +59,6 @@ import java.nio.file.Path;
   authors = {"jmp"}
 )
 public class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
-  public @NonNull MiniMOTD<Favicon> miniMOTD() {
-    return this.miniMOTD;
-  }
-
   private final MiniMOTD<Favicon> miniMOTD;
   private final ProxyServer server;
   private final Logger logger;
@@ -70,6 +67,7 @@ public class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
   private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.builder().build();
   private final CommandManager commandManager;
   private final Path dataDirectory;
+  private final Metrics.Factory metricsFactory;
 
   @Inject
   public MiniMOTDPlugin(
@@ -77,13 +75,15 @@ public class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
     final @NonNull Logger logger,
     final @NonNull CommandManager commandManager,
     final @NonNull PluginContainer pluginContainer,
-    @DataDirectory final @NonNull Path dataDirectory
+    @DataDirectory final @NonNull Path dataDirectory,
+    final Metrics.@NonNull Factory metricsFactory
   ) {
     this.server = server;
     this.logger = logger;
     this.commandManager = commandManager;
     this.pluginContainer = pluginContainer;
     this.dataDirectory = dataDirectory;
+    this.metricsFactory = metricsFactory;
     this.miniMOTD = new MiniMOTD<>(this);
     this.miniMOTD.configManager().loadExtraConfigs();
   }
@@ -92,6 +92,7 @@ public class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
   public void onProxyInitialization(final @NonNull ProxyInitializeEvent event) {
     this.commandManager.register(this.commandManager.metaBuilder("minimotd").build(), new VelocityCommand(this));
 
+    this.metricsFactory.make(this, 10257);
     if (this.miniMOTD.configManager().pluginSettings().updateChecker()) {
       this.server.getScheduler().buildTask(this, () ->
         new UpdateChecker(this.pluginDescription().getVersion().orElse("")).checkVersion().forEach(this.logger::info)
@@ -136,6 +137,10 @@ public class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
     }
 
     ping.setPing(pong.build());
+  }
+
+  public @NonNull MiniMOTD<Favicon> miniMOTD() {
+    return this.miniMOTD;
   }
 
   @Override

@@ -8,6 +8,7 @@ dependencies {
   implementation(project(":minimotd-common")) {
     exclude("org.slf4j", "slf4j-api")
   }
+  implementation("org.bstats", "bstats-velocity", "2.2.0")
   compileOnly("com.velocitypowered", "velocity-api", "1.1.2")
   annotationProcessor("com.velocitypowered", "velocity-api", "1.1.2")
 }
@@ -20,6 +21,7 @@ tasks {
     relocate("net.kyori.adventure.text.minimessage", "xyz.jpenilla.minimotd.lib.kyori_native.minimessage")
     relocate("xyz.jpenilla.minimotd.common", "xyz.jpenilla.minimotd.lib.velocity.minimotd.common")
     relocate("org.checkerframework", "xyz.jpenilla.minimotd.lib.checkerframework")
+    relocate("org.bstats", "xyz.jpenilla.minimotd.lib.bstats")
     dependencies {
       exclude { dep -> dep.moduleGroup == "net.kyori" && !dep.name.contains("minimessage") }
     }
