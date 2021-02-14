@@ -33,7 +33,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.fabric.FabricServerAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.minecraft.commands.Commands;
 import org.apache.commons.lang3.Validate;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -57,7 +56,6 @@ public class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<String> 
   private final Logger logger = LoggerFactory.getLogger(MiniMOTD.class);
   private final Path dataDirectory = FabricLoader.getInstance().getConfigDir().resolve("MiniMOTD");
   private final MiniMessage miniMessage = MiniMessage.get();
-  private final GsonComponentSerializer downsamplingGsonComponentSerializer = GsonComponentSerializer.colorDownsamplingGson();
   private final MiniMOTD<String> miniMOTD = new MiniMOTD<>(this);
 
   private FabricServerAudiences audiences;
@@ -75,10 +73,6 @@ public class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<String> 
 
   public @NonNull MiniMessage miniMessage() {
     return this.miniMessage;
-  }
-
-  public @NonNull GsonComponentSerializer downsamplingGsonComponentSerializer() {
-    return this.downsamplingGsonComponentSerializer;
   }
 
   @Override

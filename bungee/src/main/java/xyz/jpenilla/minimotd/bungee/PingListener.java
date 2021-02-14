@@ -26,14 +26,16 @@ package xyz.jpenilla.minimotd.bungee;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.md_5.bungee.api.Favicon;
 import net.md_5.bungee.api.ServerPing;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import xyz.jpenilla.minimotd.common.Constants;
 import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
@@ -43,7 +45,6 @@ import java.util.Optional;
 public class PingListener implements Listener {
   private final MiniMessage miniMessage = MiniMessage.get();
   private final MiniMOTD<Favicon> miniMOTD;
-  private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.builder().build();
 
   public PingListener(final @NonNull MiniMOTD<Favicon> miniMOTD) {
     this.miniMOTD = miniMOTD;
@@ -76,10 +77,10 @@ public class PingListener implements Listener {
       final String motdString = pair.motd();
       if (motdString != null) {
         Component motdComponent = this.miniMessage.parse(motdString);
-        if (e.getConnection().getVersion() < 735) {
-          motdComponent = this.legacySerializer.deserialize(this.legacySerializer.serialize(motdComponent));
+        if (e.getConnection().getVersion() < Constants.MINECRAFT_1_16_PROTOCOL_VERSION) {
+          motdComponent = GsonComponentSerializer.colorDownsamplingGson().deserialize(GsonComponentSerializer.colorDownsamplingGson().serialize(motdComponent));
         }
-        response.setDescriptionComponent(BungeeComponentSerializer.get().serialize(motdComponent)[0]);
+        response.setDescriptionComponent(new TextComponent(BungeeComponentSerializer.get().serialize(motdComponent)));
       }
 
       final Favicon favicon = pair.icon();

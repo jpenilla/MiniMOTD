@@ -26,7 +26,7 @@ package xyz.jpenilla.minimotd.sponge8;
 import com.google.inject.Inject;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +41,7 @@ import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.jvm.Plugin;
 import org.spongepowered.plugin.metadata.PluginMetadata;
+import xyz.jpenilla.minimotd.common.Constants;
 import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
@@ -52,12 +53,11 @@ import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.Objects;
 
-@Plugin("minimotd-sponge8")
+@Plugin("minimotd-sponge8") // todo commands
 public class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
   private final Path dataDirectory;
   private final PluginMetadata pluginMetadata;
   private final Logger logger;
-  private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.builder().build();
   private final MiniMessage miniMessage = MiniMessage.get();
   private final PluginContainer pluginContainer;
   private final MiniMOTD<Favicon> miniMOTD;
@@ -106,8 +106,8 @@ public class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
           if (!version.isLegacy() && this.SpongeMinecraftVersion_getProtocol == null) {
             this.SpongeMinecraftVersion_getProtocol = version.getClass().getMethod("getProtocol");
           }
-          if (version.isLegacy() || (int) this.SpongeMinecraftVersion_getProtocol.invoke(version) < 735) {
-            motdComponent = this.legacySerializer.deserialize(this.legacySerializer.serialize(motdComponent));
+          if (version.isLegacy() || (int) this.SpongeMinecraftVersion_getProtocol.invoke(version) < Constants.MINECRAFT_1_16_PROTOCOL_VERSION) {
+            motdComponent = GsonComponentSerializer.colorDownsamplingGson().deserialize(GsonComponentSerializer.colorDownsamplingGson().serialize(motdComponent));
           }
           response.setDescription(motdComponent);
         }

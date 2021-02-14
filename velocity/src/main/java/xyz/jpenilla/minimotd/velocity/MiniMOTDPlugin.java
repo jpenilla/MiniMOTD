@@ -37,10 +37,11 @@ import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.api.util.Favicon;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bstats.velocity.Metrics;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
+import xyz.jpenilla.minimotd.common.Constants;
 import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
@@ -64,7 +65,6 @@ public class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
   private final Logger logger;
   private final MiniMessage miniMessage = MiniMessage.get();
   private final PluginContainer pluginContainer;
-  private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.builder().build();
   private final CommandManager commandManager;
   private final Path dataDirectory;
   private final Metrics.Factory metricsFactory;
@@ -126,8 +126,8 @@ public class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
     final String motdString = pair.motd();
     if (motdString != null) {
       Component motdComponent = this.miniMessage.parse(motdString);
-      if (pong.getVersion().getProtocol() < 735) {
-        motdComponent = this.legacySerializer.deserialize(this.legacySerializer.serialize(motdComponent));
+      if (pong.getVersion().getProtocol() < Constants.MINECRAFT_1_16_PROTOCOL_VERSION) {
+        motdComponent = GsonComponentSerializer.colorDownsamplingGson().deserialize(GsonComponentSerializer.colorDownsamplingGson().serialize(motdComponent));
       }
       pong.description(motdComponent);
     }
