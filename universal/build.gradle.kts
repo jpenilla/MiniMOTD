@@ -2,6 +2,7 @@ tasks {
   val universal = register<Jar>("universal") {
     artifacts.add("archives", this)
     archiveClassifier.set("")
+    destinationDirectory.set(rootProject.buildDir.resolve("libs"))
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     arrayOf("spigot", "bungeecord", "velocity", "sponge8").forEach {
       val shadowJar = rootProject.project(":minimotd-$it").tasks.getByName("shadowJar")

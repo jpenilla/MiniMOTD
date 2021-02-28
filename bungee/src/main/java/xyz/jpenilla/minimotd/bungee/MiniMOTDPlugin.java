@@ -58,7 +58,7 @@ public class MiniMOTDPlugin extends Plugin implements MiniMOTDPlatform<Favicon> 
 
     if (this.miniMOTD.configManager().pluginSettings().updateChecker()) {
       this.getProxy().getScheduler().runAsync(this, () ->
-        new UpdateChecker(this.getDescription().getVersion()).checkVersion().forEach(getLogger()::info));
+        new UpdateChecker().checkVersion().forEach(getLogger()::info));
     }
   }
 
@@ -79,5 +79,10 @@ public class MiniMOTDPlugin extends Plugin implements MiniMOTDPlatform<Favicon> 
 
   public @NonNull BungeeAudiences audiences() {
     return this.audiences;
+  }
+
+  @Override
+  public void onReload() {
+    this.miniMOTD.configManager().loadExtraConfigs();
   }
 }

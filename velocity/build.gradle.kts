@@ -1,7 +1,5 @@
-import net.kyori.blossom.BlossomExtension
-
 plugins {
-  id("net.kyori.blossom") version "1.1.0"
+  id("net.kyori.blossom")
 }
 
 dependencies {
@@ -32,19 +30,13 @@ tasks {
 }
 
 blossom {
+  fun replaceTokens(file: String, vararg tokens: Pair<String, String>) = tokens.forEach { (k, v) ->
+    replaceToken("\${$k}", v, file)
+  }
   replaceTokens(
     "src/main/java/xyz/jpenilla/minimotd/velocity/MiniMOTDPlugin.java",
-    "{project.name}" to project.name,
-    "{rootProject.name}" to rootProject.name,
-    "{version}" to version.toString(),
-    "{description}" to description!!,
-    "{url}" to rootProject.ext["url"].toString()
+    "project.name" to project.name,
+    "description" to description!!,
+    "url" to rootProject.ext["url"].toString()
   )
-}
-
-fun BlossomExtension.replaceTokens(
-  filePath: String,
-  vararg replacements: Pair<String, String>
-) {
-  for ((token, replacement) in replacements) replaceToken(token, replacement, filePath)
 }

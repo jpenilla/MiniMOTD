@@ -84,7 +84,7 @@ public final class MiniMOTDPlugin extends JavaPlugin implements MiniMOTDPlatform
 
     if (this.miniMOTD.configManager().pluginSettings().updateChecker()) {
       Bukkit.getScheduler().runTaskAsynchronously(this, () ->
-        new UpdateChecker(this.getDescription().getVersion()).checkVersion().forEach(getLogger()::info));
+        new UpdateChecker().checkVersion().forEach(getLogger()::info));
     }
   }
 

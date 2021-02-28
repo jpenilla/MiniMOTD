@@ -24,7 +24,12 @@
 package xyz.jpenilla.minimotd.velocity;
 
 import com.google.inject.Inject;
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
+import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandManager;
+import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
@@ -41,6 +46,7 @@ import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bstats.velocity.Metrics;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
+import xyz.jpenilla.minimotd.common.CommandHandlerFactory;
 import xyz.jpenilla.minimotd.common.Constants;
 import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
@@ -52,14 +58,14 @@ import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 
 @Plugin(
-  id = "{project.name}",
-  name = "{rootProject.name}",
-  version = "{version}",
-  description = "{description}",
-  url = "{url}",
+  id = "${project.name}",
+  name = Constants.PluginMetadata.NAME,
+  version = Constants.PluginMetadata.VERSION,
+  description = "${description}",
+  url = "${url}",
   authors = {"jmp"}
 )
-public class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
+public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
   private final MiniMOTD<Favicon> miniMOTD;
   private final ProxyServer server;
   private final Logger logger;
@@ -90,14 +96,39 @@ public class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
 
   @Subscribe
   public void onProxyInitialization(final @NonNull ProxyInitializeEvent event) {
-    this.commandManager.register(this.commandManager.metaBuilder("minimotd").build(), new VelocityCommand(this));
-
+    this.registerCommand();
     this.metricsFactory.make(this, 10257);
     if (this.miniMOTD.configManager().pluginSettings().updateChecker()) {
-      this.server.getScheduler().buildTask(this, () ->
-        new UpdateChecker(this.pluginDescription().getVersion().orElse("")).checkVersion().forEach(this.logger::info)
+      this.server.getScheduler().buildTask(
+        this,
+        () -> new UpdateChecker().checkVersion().forEach(this.logger::info)
       ).schedule();
     }
+  }
+
+  private void registerCommand() {
+    final class WrappingExecutor implements Command<CommandSource> {
+      private final CommandHandlerFactory.CommandHandler handler;
+
+      WrappingExecutor(final CommandHandlerFactory.@NonNull CommandHandler handler) {
+        this.handler = handler;
+      }
+
+      @Override
+      public int run(final @NonNull CommandContext<CommandSource> context) {
+        this.handler.execute(context.getSource());
+        return 1;
+      }
+    }
+
+    final CommandHandlerFactory handlerFactory = new CommandHandlerFactory(this.miniMOTD);
+    this.commandManager.register(this.commandManager.metaBuilder("minimotd").build(), new BrigadierCommand(
+      LiteralArgumentBuilder.<CommandSource>literal("minimotd")
+        .requires(source -> source.hasPermission("minimotd.admin"))
+        .then(LiteralArgumentBuilder.<CommandSource>literal("help").executes(new WrappingExecutor(handlerFactory.help())))
+        .then(LiteralArgumentBuilder.<CommandSource>literal("about").executes(new WrappingExecutor(handlerFactory.about())))
+        .then(LiteralArgumentBuilder.<CommandSource>literal("reload").executes(new WrappingExecutor(handlerFactory.reload())))
+    ));
   }
 
   @Subscribe
@@ -164,5 +195,10 @@ public class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
 
   public @NonNull PluginDescription pluginDescription() {
     return this.pluginContainer.getDescription();
+  }
+
+  @Override
+  public void onReload() {
+    this.miniMOTD.configManager().loadExtraConfigs();
   }
 }

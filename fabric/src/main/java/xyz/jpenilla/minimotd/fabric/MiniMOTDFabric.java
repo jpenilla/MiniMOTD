@@ -23,6 +23,8 @@
  */
 package xyz.jpenilla.minimotd.fabric;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.context.CommandContext;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
@@ -30,14 +32,13 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.fabric.FabricServerAudiences;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.minecraft.commands.Commands;
+import net.minecraft.commands.CommandSourceStack;
 import org.apache.commons.lang3.Validate;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import xyz.jpenilla.minimotd.common.CommandHandlerFactory;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
 import xyz.jpenilla.minimotd.common.UpdateChecker;
@@ -50,12 +51,13 @@ import java.nio.file.Path;
 import java.util.Base64;
 import java.util.concurrent.CompletableFuture;
 
-public class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<String> {
+import static net.minecraft.commands.Commands.literal;
+
+public final class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<String> {
   private static MiniMOTDFabric instance = null;
 
   private final Logger logger = LoggerFactory.getLogger(MiniMOTD.class);
   private final Path dataDirectory = FabricLoader.getInstance().getConfigDir().resolve("MiniMOTD");
-  private final MiniMessage miniMessage = MiniMessage.get();
   private final MiniMOTD<String> miniMOTD = new MiniMOTD<>(this);
 
   private FabricServerAudiences audiences;
@@ -71,54 +73,41 @@ public class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<String> 
     return this.miniMOTD;
   }
 
-  public @NonNull MiniMessage miniMessage() {
-    return this.miniMessage;
-  }
-
   @Override
   public void onInitialize() {
     this.registerCommand();
     ServerLifecycleEvents.SERVER_STARTED.register(minecraftServer -> {
       this.audiences = FabricServerAudiences.of(minecraftServer);
       if (this.miniMOTD.configManager().pluginSettings().updateChecker()) {
-        CompletableFuture.runAsync(() -> new UpdateChecker("{version}").checkVersion().forEach(this.logger()::info));
+        CompletableFuture.runAsync(() -> new UpdateChecker().checkVersion().forEach(this.logger()::info));
       }
     });
     this.miniMOTD.logger().info("Done initializing MiniMOTD");
   }
 
   private void registerCommand() {
-    CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> dispatcher.register(
-      Commands.literal("minimotd")
-        .requires(source -> source.hasPermission(4))
-        .then(Commands.literal("reload")
-          .executes(ctx -> {
-            final Audience audience = this.audiences.audience(ctx.getSource());
-            this.send(audience, "<white>[<gradient:blue:aqua>MiniMOTD</gradient>] <italic><gray>Reloading MiniMOTD...");
-            this.miniMOTD.configManager().loadConfigs();
-            this.miniMOTD.iconManager().loadIcons();
-            this.send(audience, "<white>[<gradient:blue:aqua>MiniMOTD</gradient>] <green>Done reloading MiniMOTD.");
-            return 1;
-          })
-        )
-        .then(Commands.literal("about")
-          .executes(ctx -> {
-            this.send(this.audiences.audience(ctx.getSource()),
-              "<strikethrough><gradient:black:white>------------------",
-              "<hover:show_text:'<gradient:blue:aqua>click me!'><click:open_url:https://github.com/jpenilla/MiniMOTD>    MiniMOTD v{version}",
-              "<gray>      By <gradient:gold:yellow>jmp",
-              "<strikethrough><gradient:black:white>------------------"
-            );
-            return 1;
-          })
-        )
-    ));
-  }
+    final class WrappingExecutor implements Command<CommandSourceStack> {
+      private final CommandHandlerFactory.CommandHandler handler;
 
-  private void send(final @NonNull Audience audience, final String... strings) {
-    for (final String string : strings) {
-      audience.sendMessage(this.miniMessage.parse(string));
+      WrappingExecutor(final CommandHandlerFactory.@NonNull CommandHandler handler) {
+        this.handler = handler;
+      }
+
+      @Override
+      public int run(final @NonNull CommandContext<CommandSourceStack> context) {
+        this.handler.execute(MiniMOTDFabric.this.audiences.audience(context.getSource()));
+        return 1;
+      }
     }
+
+    final CommandHandlerFactory handlerFactory = new CommandHandlerFactory(this.miniMOTD);
+    CommandRegistrationCallback.EVENT.register((dispatcher, $) -> dispatcher.register(
+      literal("minimotd")
+        .requires(source -> source.hasPermission(4))
+        .then(literal("reload").executes(new WrappingExecutor(handlerFactory.reload())))
+        .then(literal("about").executes(new WrappingExecutor(handlerFactory.about())))
+        .then(literal("help").executes(new WrappingExecutor(handlerFactory.help())))
+    ));
   }
 
   public @NonNull FabricServerAudiences audiences() {

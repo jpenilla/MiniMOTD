@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "id": "{project.name}",
-  "version": "{version}",
+  "version": "{project.version}",
   "name": "{rootProject.name}",
-  "description": "{description}",
+  "description": "{project.description}",
   "authors": [
     "jmp"
   ],

@@ -1,6 +1,5 @@
 plugins {
   id("fabric-loom") version "0.5-SNAPSHOT"
-  id("net.kyori.blossom") version "1.1.0"
 }
 
 configurations {
@@ -40,20 +39,18 @@ tasks {
     dependsOn(shadowJar)
     input.set(shadowJar.get().outputs.files.singleFile)
     archiveFileName.set("${project.name}-mc$minecraftVersion-${project.version}.jar")
+    destinationDirectory.set(rootProject.buildDir.resolve("libs"))
   }
   processResources {
     filesMatching("fabric.mod.json") {
       mapOf(
         "{project.name}" to project.name,
         "{rootProject.name}" to rootProject.name,
-        "{version}" to version.toString(),
-        "{description}" to project.description,
-        "{url}" to rootProject.ext["url"].toString()
-      ).entries.forEach { (k, v) -> filter { it.replace(k, v as String) } }
+        "{project.version}" to project.version.toString(),
+        "{project.description}" to project.description.toString()
+      ).forEach { (k, v) ->
+        filter { resource -> resource.replace(k, v) }
+      }
     }
   }
-}
-
-blossom {
-  replaceToken("{version}", version.toString(), "src/main/java/xyz/jpenilla/minimotd/fabric/MiniMOTDFabric.java")
 }

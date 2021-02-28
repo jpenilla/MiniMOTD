@@ -9,11 +9,12 @@ plugins {
   `java-library`
   id("net.kyori.indra") version "1.3.1"
   id("com.github.johnrengelman.shadow") version "6.1.0"
+  id("net.kyori.blossom") version "1.1.0" apply false
 }
 
 allprojects {
   group = "xyz.jpenilla"
-  version = "2.0.1+${latestCommitHash()}-SNAPSHOT"
+  version = "2.0.1+${lastCommitHash()}-SNAPSHOT"
   description = "Use MiniMessage text formatting in your servers MOTD."
 }
 
@@ -53,64 +54,29 @@ subprojects {
     shadowJar {
       minimize()
       if (!project.name.contains("fabric")) {
+        destinationDirectory.set(rootProject.buildDir.resolve("libs"))
         archiveClassifier.set("")
       }
     }
     withType<JavaCompile> {
       options.compilerArgs.add("-Xlint:-processing")
     }
-  }
-
-  java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-  }
-}
-
-allprojects {
-  tasks.withType<Jar> {
-    onlyIf {
-      val classifier = archiveClassifier.get()
-      classifier != "javadoc"
-        && project.name != rootProject.name
+    withType<Jar> {
+      onlyIf { archiveClassifier.get() != "javadoc" }
+    }
+    withType<Javadoc> {
+      onlyIf { false }
     }
   }
-  tasks.withType<Javadoc> {
-    onlyIf { false }
-  }
 }
 
-configurations.archives {
-  artifacts.removeAll { true }
+tasks.withType<Jar> {
+  onlyIf { false }
 }
 
-tasks {
-  val aggregate = create("aggregateJars") {
-    val artifacts = arrayListOf<File>()
-    dependsOn(project(":minimotd-universal").tasks.getByName("build"))
-    arrayOf("spigot", "bungeecord", "velocity", "sponge8").forEach {
-      val subProject = project(":minimotd-$it")
-      val shadow = subProject.tasks.getByName("shadowJar")
-      artifacts.add(shadow.outputs.files.singleFile)
-    }
-    doLast {
-      artifacts.add(project(":minimotd-fabric").tasks.getByName("remapJar").outputs.files.singleFile)
-      artifacts.add(project(":minimotd-universal").project.tasks.getByName("universal").outputs.files.singleFile)
-      val libs = rootProject.buildDir.resolve("libs")
-      libs.listFiles()?.forEach { it.delete() }
-      artifacts.forEach { it.copyTo(libs.resolve(it.name)) }
-    }
-  }
-  build {
-    dependsOn(aggregate)
-  }
-}
-
-fun latestCommitHash(): String {
-  val byteOut = ByteArrayOutputStream()
+fun lastCommitHash(): String = ByteArrayOutputStream().apply {
   exec {
     commandLine = listOf("git", "rev-parse", "--short", "HEAD")
-    standardOutput = byteOut
+    standardOutput = this@apply
   }
-  return byteOut.toString(Charsets.UTF_8.name()).trim()
-}
+}.toString(Charsets.UTF_8.name()).trim()

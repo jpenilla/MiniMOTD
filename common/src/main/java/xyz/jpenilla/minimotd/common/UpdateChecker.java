@@ -24,6 +24,7 @@
 package xyz.jpenilla.minimotd.common;
 
 import com.google.common.base.Charsets;
+import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -31,7 +32,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,39 +40,33 @@ import java.util.Map;
 
 public final class UpdateChecker {
   private final JsonParser parser = new JsonParser();
-  private final String currentVersion;
 
-  public UpdateChecker(final @NonNull String currentVersion) {
-    this.currentVersion = currentVersion;
-  }
-
-  public List<String> checkVersion() {
-    final List<String> messages = new ArrayList<>();
+  public @NonNull List<String> checkVersion() {
     final JsonArray result;
     try {
       result = this.parser.parse(new InputStreamReader(new URL("https://api.github.com/repos/jpenilla/MiniMOTD/releases").openStream(), Charsets.UTF_8)).getAsJsonArray();
     } catch (final IOException exception) {
-      messages.add("Cannot look for updates: " + exception.getMessage());
-      return messages;
+      return Collections.singletonList("Cannot look for updates: " + exception.getMessage());
     }
     final Map<String, String> versionMap = new LinkedHashMap<>();
     result.forEach(element -> versionMap.put(element.getAsJsonObject().get("tag_name").getAsString(), element.getAsJsonObject().get("html_url").getAsString()));
     final List<String> versionList = new LinkedList<>(versionMap.keySet());
-    final String currentVersion = "v" + this.currentVersion;
+    final String currentVersion = "v" + Constants.PluginMetadata.VERSION;
     if (versionList.get(0).equals(currentVersion)) {
-      messages.add("You are running the latest version of MiniMOTD! :)");
-      return messages;
+      return Collections.emptyList(); // Up to date, do nothing
     }
     if (currentVersion.contains("SNAPSHOT")) {
-      messages.add("You are running a development build of MiniMOTD! (" + currentVersion + ")");
-      messages.add("The latest official release is " + versionList.get(0));
-      return messages;
+      return ImmutableList.of(
+        "This server is running a development build of MiniMOTD! (" + currentVersion + ")",
+        "The latest official release is " + versionList.get(0)
+      );
     }
     final int versionsBehind = versionList.indexOf(currentVersion);
-    messages.add("There is an update available for MiniMOTD!");
-    messages.add("You are running version " + currentVersion + ", which is " + (versionsBehind == -1 ? "many" : versionsBehind) + " versions outdated.");
-    messages.add("Download the latest version, " + versionList.get(0) + " from GitHub at the link below:");
-    messages.add(versionMap.get(versionList.get(0)));
-    return messages;
+    return ImmutableList.of(
+      "There is an update available for " + Constants.PluginMetadata.NAME + "!",
+      "This server is running version " + currentVersion + ", which is " + (versionsBehind == -1 ? "UNKNOWN" : versionsBehind) + " versions outdated.",
+      "Download the latest version, " + versionList.get(0) + " from GitHub at the link below:",
+      versionMap.get(versionList.get(0))
+    );
   }
 }

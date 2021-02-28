@@ -35,4 +35,7 @@ public interface MiniMOTDPlatform<I> {
   @NonNull Logger logger();
 
   @NonNull I loadIcon(@NonNull BufferedImage image) throws Exception;
+
+  default void onReload() {
+  }
 }

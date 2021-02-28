@@ -69,6 +69,9 @@ public final class MiniMOTD<I> {
     String motd = null;
     String iconString = null;
     if (config.motdEnabled()) {
+      if (config.motds().size() == 0) {
+        throw new IllegalStateException("MOTD is enabled, but there are no MOTDs in the config file?");
+      }
       final int index = config.motds().size() == 1 ? 0 : ThreadLocalRandom.current().nextInt(config.motds().size());
       final MiniMOTDConfig.MOTD m = config.motds().get(index);
       motd = String.format("%s<reset>\n%s", m.line1(), m.line2())
@@ -107,5 +110,11 @@ public final class MiniMOTD<I> {
       }
     }
     return realOnlinePlayers;
+  }
+
+  public void reload() {
+    this.iconManager.loadIcons();
+    this.configManager.loadConfigs();
+    this.platform.onReload();
   }
 }

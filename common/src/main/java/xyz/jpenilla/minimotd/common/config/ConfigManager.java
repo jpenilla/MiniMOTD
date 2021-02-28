@@ -81,7 +81,7 @@ public final class ConfigManager {
     try {
       if (!Files.exists(extraConfigsDir)) {
         Files.createDirectories(extraConfigsDir);
-        this.createDefaultProxyConfigs(extraConfigsDir);
+        this.createDefaultExtraConfigs(extraConfigsDir);
       }
       for (final Path path : Files.list(extraConfigsDir).collect(Collectors.toList())) {
         if (path.toString().endsWith(".conf")) {
@@ -101,7 +101,7 @@ public final class ConfigManager {
     }
   }
 
-  private void createDefaultProxyConfigs(final @NonNull Path extraConfigsDir) throws ConfigurateException {
+  private void createDefaultExtraConfigs(final @NonNull Path extraConfigsDir) throws ConfigurateException {
     final List<Pair<Path, MiniMOTDConfig.MOTD>> defaults = ImmutableList.of(
       Pair.of(extraConfigsDir.resolve("skyblock.conf"), new MiniMOTDConfig.MOTD("<green><italic>Skyblock</green>", "<bold><rainbow>MiniMOTD Skyblock Server")),
       Pair.of(extraConfigsDir.resolve("survival.conf"), new MiniMOTDConfig.MOTD("<gradient:blue:red>Survival Mode Hardcore", "<green><bold>MiniMOTD Survival Server"))

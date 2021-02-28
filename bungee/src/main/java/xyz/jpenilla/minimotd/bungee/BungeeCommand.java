@@ -23,93 +23,58 @@
  */
 package xyz.jpenilla.minimotd.bungee;
 
-import net.kyori.adventure.identity.Identity;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 import org.checkerframework.checker.nullness.qual.NonNull;
-
-import java.util.ArrayList;
-import java.util.List;
+import xyz.jpenilla.minimotd.common.CommandHandlerFactory;
 
 public class BungeeCommand extends Command {
   private final MiniMOTDPlugin plugin;
-  private final MiniMessage miniMessage;
+  private final CommandHandlerFactory handlerFactory;
 
   public BungeeCommand(final @NonNull MiniMOTDPlugin plugin) {
     super("minimotd");
     this.plugin = plugin;
-    this.miniMessage = MiniMessage.get();
+    this.handlerFactory = new CommandHandlerFactory(plugin.miniMOTD());
   }
 
   @Override
   public void execute(final @NonNull CommandSender sender, final @NonNull String @NonNull [] args) {
+    final Audience audience = this.plugin.audiences().sender(sender);
     if (!sender.hasPermission("minimotd.admin")) {
-      this.onNoPermission(sender, args);
+      audience.sendMessage(Component.text("No permission.", NamedTextColor.RED));
       return;
     }
 
     if (args.length == 0) {
-      this.onInvalidUse(sender, args);
+      this.onInvalidUse(audience);
       return;
     }
 
     switch (args[0]) {
       case "about":
-        this.onAbout(sender, args);
+        this.handlerFactory.about().execute(audience);
         return;
       case "help":
-        this.onHelp(sender, args);
+        this.handlerFactory.help().execute(audience);
         return;
       case "reload":
-        this.onReload(sender, args);
+        this.handlerFactory.reload().execute(audience);
         return;
     }
 
-    this.onInvalidUse(sender, args);
+    this.onInvalidUse(audience);
   }
 
-  private void onHelp(final @NonNull CommandSender sender, final @NonNull String[] args) {
-    final List<String> messages = new ArrayList<>();
-    messages.add("<gradient:blue:green>MiniMOTD Commands:");
-    messages.add(" <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotd about'><click:run_command:/minimotd about><yellow>/minimotd about");
-    messages.add(" <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotd reload'><click:run_command:/minimotd reload><yellow>/minimotd reload");
-    messages.add(" <gray>-</gray> <hover:show_text:'<green>Click for <yellow>/minimotd help'><click:run_command:/minimotd help><yellow>/minimotd help");
-    this.send(sender, messages);
-  }
-
-  private void onReload(final @NonNull CommandSender sender, final @NonNull String[] args) {
-    this.plugin.miniMOTD().configManager().loadConfigs();
-    this.plugin.miniMOTD().configManager().loadExtraConfigs();
-    this.plugin.miniMOTD().iconManager().loadIcons();
-    this.send(sender, "<green>Done reloading.");
-  }
-
-  private void onAbout(final @NonNull CommandSender sender, final @NonNull String[] args) {
-    final ArrayList<String> messages = new ArrayList<>();
-    final String header = "<gradient:white:black>=============</gradient><gradient:black:white>=============";
-    messages.add(header);
-    messages.add("<hover:show_text:'<rainbow>click me!'><click:open_url:https://github.com/jmanpenilla/MiniMOTD/>" + this.plugin.getDescription().getName() + " <gradient:red:yellow>" + this.plugin.getDescription().getVersion());
-    messages.add("<yellow>By</yellow><gray>:</gray> <gradient:blue:green>jmp");
-    messages.add(header);
-    this.send(sender, messages);
-  }
-
-  private void onInvalidUse(final @NonNull CommandSender sender, final @NonNull String[] args) {
-    this.send(sender, "<hover:show_text:'<green>Click for <yellow>/minimotd help'><click:run_command:/minimotd help><italic><gradient:red:gold>Invalid usage.</gradient> <blue>Try <yellow>/minimotd help</yellow> or click here");
-  }
-
-  private void onNoPermission(final @NonNull CommandSender sender, final @NonNull String[] args) {
-    this.send(sender, "<gradient:red:yellow>No permission.");
-  }
-
-  private void send(final @NonNull CommandSender sender, final @NonNull String message) {
-    this.plugin.audiences().sender(sender).sendMessage(Identity.nil(), this.miniMessage.parse(message));
-  }
-
-  private void send(final @NonNull CommandSender sender, final @NonNull List<String> messages) {
-    for (final String message : messages) {
-      this.send(sender, message);
-    }
+  private void onInvalidUse(final @NonNull Audience audience) {
+    audience.sendMessage(
+      Component.text("Invalid command usage. Use '/minimotd help' for a list of command provided by MiniMOTD.", NamedTextColor.RED)
+        .hoverEvent(Component.text("Click to execute '/minimotd help'"))
+        .clickEvent(ClickEvent.runCommand("/minimotd help"))
+    );
   }
 }

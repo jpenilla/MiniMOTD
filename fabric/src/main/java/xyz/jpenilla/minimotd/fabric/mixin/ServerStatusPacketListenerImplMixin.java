@@ -25,6 +25,7 @@ package xyz.jpenilla.minimotd.fabric.mixin;
 
 import com.mojang.authlib.GameProfile;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.status.ServerStatus;
@@ -67,7 +68,7 @@ abstract class ServerStatusPacketListenerImplMixin {
 
     final String motdString = pair.motd();
     if (motdString != null) {
-      final Component motdComponent = miniMOTDFabric.miniMessage().parse(motdString);
+      final Component motdComponent = MiniMessage.get().parse(motdString);
       if (((ConnectionAccess) this.connection).minimotd$protocolVersion() >= Constants.MINECRAFT_1_16_PROTOCOL_VERSION) {
         modifiedStatus.setDescription(miniMOTDFabric.audiences().toNative(motdComponent));
       } else {
