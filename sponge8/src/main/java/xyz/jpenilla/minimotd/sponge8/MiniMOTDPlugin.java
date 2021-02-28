@@ -124,7 +124,7 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
   }
 
   @Listener
-  private void onRefresh(final @NonNull RefreshGameEvent event) {
+  public void onRefresh(final @NonNull RefreshGameEvent event) {
     this.miniMOTD.reload();
   }
 

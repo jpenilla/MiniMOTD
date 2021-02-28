@@ -54,8 +54,11 @@ subprojects {
     shadowJar {
       minimize()
       if (!project.name.contains("fabric")) {
-        destinationDirectory.set(rootProject.buildDir.resolve("libs"))
         archiveClassifier.set("")
+        doLast {
+          val output = outputs.files.singleFile
+          output.copyTo(rootProject.buildDir.resolve("libs").resolve(output.name), overwrite = true)
+        }
       }
     }
     withType<JavaCompile> {
