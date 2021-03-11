@@ -2,9 +2,7 @@
 name: Bug Report
 about: Report a bug
 title: "[Bug Report] This happens when another thing should have"
-labels:
- - bug
- - unconfirmed
+labels: bug, unconfirmed
 assignees: ''
 
 ---
