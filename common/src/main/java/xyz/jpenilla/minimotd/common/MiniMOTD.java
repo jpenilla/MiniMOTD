@@ -23,6 +23,9 @@
  */
 package xyz.jpenilla.minimotd.common;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import xyz.jpenilla.minimotd.common.config.ConfigManager;
@@ -63,27 +66,33 @@ public final class MiniMOTD<I> {
     return this.configManager;
   }
 
-  // todo: move deserialization from MM -> Component, color down-sampling here, take protocolVersion int as param
+  // todo: move color down-sampling here, take protocolVersion int as param
   public final @NonNull MOTDIconPair<I> createMOTD(final @NonNull MiniMOTDConfig config, final int onlinePlayers, final int maxPlayers) {
     I icon = null;
-    String motd = null;
+    Component motd = null;
     String iconString = null;
     if (config.motdEnabled()) {
       if (config.motds().size() == 0) {
         throw new IllegalStateException("MOTD is enabled, but there are no MOTDs in the config file?");
       }
       final int index = config.motds().size() == 1 ? 0 : ThreadLocalRandom.current().nextInt(config.motds().size());
-      final MiniMOTDConfig.MOTD m = config.motds().get(index);
-      motd = String.format("%s<reset>\n%s", m.line1(), m.line2())
-        .replace("{onlinePlayers}", String.valueOf(onlinePlayers))
-        .replace("{maxPlayers}", String.valueOf(maxPlayers))
-        .replace("{br}", "\n");
-      iconString = m.icon();
+      final MiniMOTDConfig.MOTD motdConfig = config.motds().get(index);
+      motd = TextComponent.ofChildren(
+        MiniMessage.get().parse(replacePlayerCount(motdConfig.line1(), onlinePlayers, maxPlayers)),
+        Component.newline(),
+        MiniMessage.get().parse(replacePlayerCount(motdConfig.line2(), onlinePlayers, maxPlayers))
+      );
+      iconString = motdConfig.icon();
     }
     if (config.iconEnabled()) {
       icon = this.iconManager().icon(iconString);
     }
     return new MOTDIconPair<>(icon, motd);
+  }
+
+  private static @NonNull String replacePlayerCount(final @NonNull String input, final int onlinePlayers, final int maxPlayers) {
+    return input.replace("{onlinePlayers}", String.valueOf(onlinePlayers))
+      .replace("{maxPlayers}", String.valueOf(maxPlayers));
   }
 
   public final int calculateOnlinePlayers(final @NonNull MiniMOTDConfig config, final int realOnlinePlayers) {

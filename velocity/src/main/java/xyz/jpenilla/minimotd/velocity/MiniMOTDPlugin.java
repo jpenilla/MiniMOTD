@@ -117,7 +117,7 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
       @Override
       public int run(final @NonNull CommandContext<CommandSource> context) {
         this.handler.execute(context.getSource());
-        return 1;
+        return Command.SINGLE_SUCCESS;
       }
     }
 
@@ -154,13 +154,13 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
       pong.favicon(favicon);
     }
 
-    final String motdString = pair.motd();
-    if (motdString != null) {
-      Component motdComponent = this.miniMessage.parse(motdString);
+    final Component motdComponent = pair.motd();
+    if (motdComponent != null) {
       if (pong.getVersion().getProtocol() < Constants.MINECRAFT_1_16_PROTOCOL_VERSION) {
-        motdComponent = GsonComponentSerializer.colorDownsamplingGson().deserialize(GsonComponentSerializer.colorDownsamplingGson().serialize(motdComponent));
+        pong.description(GsonComponentSerializer.colorDownsamplingGson().deserialize(GsonComponentSerializer.colorDownsamplingGson().serialize(motdComponent)));
+      } else {
+        pong.description(motdComponent);
       }
-      pong.description(motdComponent);
     }
 
     if (config.disablePlayerListHover()) {

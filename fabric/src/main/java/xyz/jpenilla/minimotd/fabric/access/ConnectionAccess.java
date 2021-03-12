@@ -24,7 +24,7 @@
 package xyz.jpenilla.minimotd.fabric.access;
 
 public interface ConnectionAccess {
-  void minimotd$protocolVersion(int protocolVersion);
+  void protocolVersion(int protocolVersion);
 
-  int minimotd$protocolVersion();
+  int protocolVersion();
 }

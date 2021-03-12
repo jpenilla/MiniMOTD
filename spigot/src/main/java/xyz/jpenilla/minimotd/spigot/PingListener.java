@@ -23,7 +23,7 @@
  */
 package xyz.jpenilla.minimotd.spigot;
 
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -38,7 +38,6 @@ public class PingListener implements Listener {
   private final MiniMOTD<CachedServerIcon> miniMOTD;
   private final LegacyComponentSerializer serializer = LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build();
   private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.builder().build();
-  private final MiniMessage miniMessage = MiniMessage.get();
   private final MiniMOTDPlugin plugin;
 
   public PingListener(final @NonNull MiniMOTDPlugin plugin, final @NonNull MiniMOTD<CachedServerIcon> miniMOTD) {
@@ -56,12 +55,12 @@ public class PingListener implements Listener {
     e.setMaxPlayers(maxPlayers);
 
     final MOTDIconPair<CachedServerIcon> pair = this.miniMOTD.createMOTD(cfg, onlinePlayers, maxPlayers);
-    final String motdString = pair.motd();
-    if (motdString != null) {
+    final Component motdComponent = pair.motd();
+    if (motdComponent != null) {
       if (this.plugin.majorMinecraftVersion() > 15) {
-        e.setMotd(this.serializer.serialize(this.miniMessage.parse(motdString)));
+        e.setMotd(this.serializer.serialize(motdComponent));
       } else {
-        e.setMotd(this.legacySerializer.serialize(this.miniMessage.parse(motdString)));
+        e.setMotd(this.legacySerializer.serialize(motdComponent));
       }
     }
 

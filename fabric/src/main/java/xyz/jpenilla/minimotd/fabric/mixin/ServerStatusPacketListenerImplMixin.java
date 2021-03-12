@@ -25,7 +25,6 @@ package xyz.jpenilla.minimotd.fabric.mixin;
 
 import com.mojang.authlib.GameProfile;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.status.ServerStatus;
@@ -34,6 +33,7 @@ import net.minecraft.server.network.ServerStatusPacketListenerImpl;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import xyz.jpenilla.minimotd.common.Constants;
@@ -43,12 +43,13 @@ import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 import xyz.jpenilla.minimotd.fabric.MiniMOTDFabric;
 import xyz.jpenilla.minimotd.fabric.access.ConnectionAccess;
 
+@Unique
 @Mixin(ServerStatusPacketListenerImpl.class)
 abstract class ServerStatusPacketListenerImplMixin {
   @Shadow @Final private Connection connection;
 
   @Redirect(method = "handleStatusRequest", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;getStatus()Lnet/minecraft/network/protocol/status/ServerStatus;"))
-  public ServerStatus method(final MinecraftServer minecraftServer) {
+  public ServerStatus injectHandleStatusRequest(final MinecraftServer minecraftServer) {
     final ServerStatus vanillaStatus = minecraftServer.getStatus();
 
     final ServerStatus modifiedStatus = new ServerStatus();
@@ -66,15 +67,14 @@ abstract class ServerStatusPacketListenerImplMixin {
 
     final MOTDIconPair<String> pair = miniMOTD.createMOTD(config, onlinePlayers, maxPlayers);
 
-    final String motdString = pair.motd();
-    if (motdString != null) {
-      final Component motdComponent = MiniMessage.get().parse(motdString);
-      if (((ConnectionAccess) this.connection).minimotd$protocolVersion() >= Constants.MINECRAFT_1_16_PROTOCOL_VERSION) {
+    final Component motdComponent = pair.motd();
+    if (motdComponent != null) {
+      if (((ConnectionAccess) this.connection).protocolVersion() >= Constants.MINECRAFT_1_16_PROTOCOL_VERSION) {
         modifiedStatus.setDescription(miniMOTDFabric.audiences().toNative(motdComponent));
       } else {
         modifiedStatus.setDescription(net.minecraft.network.chat.Component.Serializer.fromJson(
-          GsonComponentSerializer.colorDownsamplingGson().serialize(motdComponent))
-        );
+          GsonComponentSerializer.colorDownsamplingGson().serialize(motdComponent)
+        ));
       }
     }
 

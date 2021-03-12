@@ -24,21 +24,24 @@
 package xyz.jpenilla.minimotd.fabric.mixin;
 
 import net.minecraft.network.Connection;
+import org.spongepowered.asm.mixin.Implements;
+import org.spongepowered.asm.mixin.Interface;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import xyz.jpenilla.minimotd.fabric.access.ConnectionAccess;
 
 @SuppressWarnings("checkstyle:FinalLocalVariable")
+@Unique
 @Mixin(Connection.class)
-abstract class ConnectionMixin implements ConnectionAccess {
-  @Unique
+@Implements({@Interface(iface = ConnectionAccess.class, prefix = "tabtps$")})
+abstract class ConnectionMixin {
   private int protocolVersion = -1;
 
-  public void minimotd$protocolVersion(int protocolVersion) {
+  public void tabtps$protocolVersion(int protocolVersion) {
     this.protocolVersion = protocolVersion;
   }
 
-  public int minimotd$protocolVersion() {
+  public int tabtps$protocolVersion() {
     return this.protocolVersion;
   }
 }

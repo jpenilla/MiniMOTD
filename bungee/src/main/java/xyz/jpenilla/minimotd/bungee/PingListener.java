@@ -24,7 +24,6 @@
 package xyz.jpenilla.minimotd.bungee;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.md_5.bungee.api.Favicon;
@@ -43,7 +42,6 @@ import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 import java.util.Optional;
 
 public class PingListener implements Listener {
-  private final MiniMessage miniMessage = MiniMessage.get();
   private final MiniMOTD<Favicon> miniMOTD;
 
   public PingListener(final @NonNull MiniMOTD<Favicon> miniMOTD) {
@@ -74,9 +72,8 @@ public class PingListener implements Listener {
 
       final MOTDIconPair<Favicon> pair = this.miniMOTD.createMOTD(cfg, onlinePlayers, maxPlayers);
 
-      final String motdString = pair.motd();
-      if (motdString != null) {
-        Component motdComponent = this.miniMessage.parse(motdString);
+      Component motdComponent = pair.motd();
+      if (motdComponent != null) {
         if (e.getConnection().getVersion() < Constants.MINECRAFT_1_16_PROTOCOL_VERSION) {
           motdComponent = GsonComponentSerializer.colorDownsamplingGson().deserialize(GsonComponentSerializer.colorDownsamplingGson().serialize(motdComponent));
         }

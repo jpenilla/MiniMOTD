@@ -23,14 +23,15 @@
  */
 package xyz.jpenilla.minimotd.common;
 
+import net.kyori.adventure.text.Component;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class MOTDIconPair<I> {
 
   private final I icon;
-  private final String motd;
+  private final Component motd;
 
-  public MOTDIconPair(final @Nullable I icon, final @Nullable String motd) {
+  public MOTDIconPair(final @Nullable I icon, final @Nullable Component motd) {
     this.icon = icon;
     this.motd = motd;
   }
@@ -39,7 +40,7 @@ public final class MOTDIconPair<I> {
     return this.icon;
   }
 
-  public @Nullable String motd() {
+  public @Nullable Component motd() {
     return this.motd;
   }
 

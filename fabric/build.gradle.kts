@@ -2,9 +2,7 @@ plugins {
   id("fabric-loom") version "0.6-SNAPSHOT"
 }
 
-configurations {
-  create("shade")
-}
+val shade: Configuration by configurations.creating
 
 val minecraftVersion = "1.16.5"
 
@@ -12,9 +10,9 @@ dependencies {
   minecraft("com.mojang", "minecraft", minecraftVersion)
   mappings(minecraft.officialMojangMappings())
   modImplementation("net.fabricmc", "fabric-loader", "0.11.1")
-  modImplementation("net.fabricmc.fabric-api", "fabric-api", "0.29.4+1.16")
+  modImplementation("net.fabricmc.fabric-api", "fabric-api", "0.31.0+1.16")
 
-  add("shade", implementation(project(":minimotd-common")) {
+  shade(implementation(project(":minimotd-common")) {
     exclude("net.kyori")
     exclude("org.slf4j")
   })
@@ -28,7 +26,7 @@ dependencies {
 
 tasks {
   shadowJar {
-    configurations = listOf(project.configurations.getByName("shade"))
+    configurations = listOf(shade)
     relocate("io.leangen.geantyref", "xyz.jpenilla.minimotd.lib.io.leangen.geantyref")
     relocate("org.spongepowered.configurate", "xyz.jpenilla.minimotd.lib.spongepowered.configurate")
     relocate("com.typesafe.config", "xyz.jpenilla.minimotd.lib.typesafe.config")

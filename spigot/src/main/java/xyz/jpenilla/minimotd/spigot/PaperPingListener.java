@@ -25,7 +25,6 @@ package xyz.jpenilla.minimotd.spigot;
 
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -38,7 +37,6 @@ import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 public class PaperPingListener implements Listener {
   private final MiniMOTDPlugin plugin;
   private final LegacyComponentSerializer serializer = LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build();
-  private final MiniMessage miniMessage = MiniMessage.get();
   private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.builder().build();
   private final MiniMOTD<CachedServerIcon> miniMOTD;
 
@@ -58,9 +56,8 @@ public class PaperPingListener implements Listener {
 
     final MOTDIconPair<CachedServerIcon> pair = this.miniMOTD.createMOTD(cfg, onlinePlayers, maxPlayers);
 
-    final String motdString = pair.motd();
-    if (motdString != null) {
-      final Component motdComponent = this.miniMessage.parse(motdString);
+    final Component motdComponent = pair.motd();
+    if (motdComponent != null) {
       if (e.getClient().getProtocolVersion() < 735 || this.plugin.majorMinecraftVersion() < 16) {
         e.setMotd(this.legacySerializer.serialize(motdComponent));
       } else {

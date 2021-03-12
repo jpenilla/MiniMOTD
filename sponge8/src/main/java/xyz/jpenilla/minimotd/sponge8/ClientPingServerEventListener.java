@@ -24,7 +24,6 @@
 package xyz.jpenilla.minimotd.sponge8;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.spongepowered.api.MinecraftVersion;
@@ -64,18 +63,18 @@ final class ClientPingServerEventListener implements EventListener<ClientPingSer
 
     final @NonNull MOTDIconPair<Favicon> pair = this.miniMOTD.createMOTD(config, onlinePlayers, maxPlayers);
 
-    final String motdString = pair.motd();
+    final Component motdComponent = pair.motd();
     try {
-      if (motdString != null) {
-        Component motdComponent = MiniMessage.get().parse(motdString);
+      if (motdComponent != null) {
         final MinecraftVersion version = event.getClient().getVersion();
         if (!version.isLegacy() && this.SpongeMinecraftVersion_getProtocol == null) {
           this.SpongeMinecraftVersion_getProtocol = version.getClass().getMethod("getProtocol");
         }
         if (version.isLegacy() || (int) this.SpongeMinecraftVersion_getProtocol.invoke(version) < Constants.MINECRAFT_1_16_PROTOCOL_VERSION) {
-          motdComponent = GsonComponentSerializer.colorDownsamplingGson().deserialize(GsonComponentSerializer.colorDownsamplingGson().serialize(motdComponent));
+          response.setDescription(GsonComponentSerializer.colorDownsamplingGson().deserialize(GsonComponentSerializer.colorDownsamplingGson().serialize(motdComponent)));
+        } else {
+          response.setDescription(motdComponent);
         }
-        response.setDescription(motdComponent);
       }
     } catch (final ReflectiveOperationException e) {
       throw new IllegalStateException("Failed to get protocol version", e);

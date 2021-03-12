@@ -96,7 +96,7 @@ public final class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<St
       @Override
       public int run(final @NonNull CommandContext<CommandSourceStack> context) {
         this.handler.execute(MiniMOTDFabric.this.audiences.audience(context.getSource()));
-        return 1;
+        return Command.SINGLE_SUCCESS;
       }
     }
 
