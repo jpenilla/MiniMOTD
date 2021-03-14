@@ -61,7 +61,9 @@ public final class MiniMOTDConfig {
 
   public int adjustedMaxPlayers(final int onlinePlayers, final int actualMaxPlayers) {
     if (this.playerCountSettings.maxPlayersEnabled) {
-      return this.playerCountSettings.justXMoreSettings.justXMoreEnabled ? onlinePlayers + this.playerCountSettings.justXMoreSettings.xValue : this.playerCountSettings.maxPlayers;
+      return this.playerCountSettings.justXMoreSettings.justXMoreEnabled
+        ? onlinePlayers + this.playerCountSettings.justXMoreSettings.xValue
+        : this.playerCountSettings.maxPlayers;
     } else {
       return actualMaxPlayers;
     }

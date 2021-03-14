@@ -25,7 +25,6 @@ package xyz.jpenilla.minimotd.bungee;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.md_5.bungee.api.Favicon;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -34,6 +33,7 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import xyz.jpenilla.minimotd.common.ComponentColorDownsampler;
 import xyz.jpenilla.minimotd.common.Constants;
 import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
@@ -75,7 +75,7 @@ public class PingListener implements Listener {
       Component motdComponent = pair.motd();
       if (motdComponent != null) {
         if (e.getConnection().getVersion() < Constants.MINECRAFT_1_16_PROTOCOL_VERSION) {
-          motdComponent = GsonComponentSerializer.colorDownsamplingGson().deserialize(GsonComponentSerializer.colorDownsamplingGson().serialize(motdComponent));
+          motdComponent = ComponentColorDownsampler.downsampler().downsample(motdComponent);
         }
         response.setDescriptionComponent(new TextComponent(BungeeComponentSerializer.get().serialize(motdComponent)));
       }

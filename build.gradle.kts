@@ -1,3 +1,5 @@
+import com.adarshr.gradle.testlogger.TestLoggerPlugin
+import com.adarshr.gradle.testlogger.theme.ThemeType
 import com.github.jengelman.gradle.plugins.shadow.ShadowPlugin
 import net.kyori.indra.IndraCheckstylePlugin
 import net.kyori.indra.IndraLicenseHeaderPlugin
@@ -9,6 +11,7 @@ plugins {
   `java-library`
   id("net.kyori.indra") version "1.3.1"
   id("com.github.johnrengelman.shadow") version "6.1.0"
+  id("com.adarshr.test-logger") version "2.1.1"
   id("net.kyori.blossom") version "1.1.0" apply false
 }
 
@@ -26,6 +29,7 @@ subprojects {
   apply<IndraPlugin>()
   apply<IndraCheckstylePlugin>()
   apply<IndraLicenseHeaderPlugin>()
+  apply<TestLoggerPlugin>()
 
   repositories {
     //mavenLocal()
@@ -42,12 +46,24 @@ subprojects {
     maven("https://repo.codemc.org/repository/maven-public")
   }
 
+  dependencies {
+    testImplementation("org.junit.jupiter", "junit-jupiter-engine", "5.7.0")
+  }
+
   indra {
-    javaVersions.target.set(8)
+    javaVersions {
+      testWith(8, 11, 15)
+      target.set(8)
+    }
     github("jpenilla", "MiniMOTD") {
       issues = true
     }
     mitLicense()
+  }
+
+  testlogger {
+    theme = ThemeType.MOCHA_PARALLEL
+    showPassed = false
   }
 
   tasks {

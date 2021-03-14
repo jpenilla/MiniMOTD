@@ -24,12 +24,12 @@
 package xyz.jpenilla.minimotd.sponge8;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.spongepowered.api.MinecraftVersion;
 import org.spongepowered.api.event.EventListener;
 import org.spongepowered.api.event.server.ClientPingServerEvent;
 import org.spongepowered.api.network.status.Favicon;
+import xyz.jpenilla.minimotd.common.ComponentColorDownsampler;
 import xyz.jpenilla.minimotd.common.Constants;
 import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
@@ -71,7 +71,7 @@ final class ClientPingServerEventListener implements EventListener<ClientPingSer
           this.SpongeMinecraftVersion_getProtocol = version.getClass().getMethod("getProtocol");
         }
         if (version.isLegacy() || (int) this.SpongeMinecraftVersion_getProtocol.invoke(version) < Constants.MINECRAFT_1_16_PROTOCOL_VERSION) {
-          response.setDescription(GsonComponentSerializer.colorDownsamplingGson().deserialize(GsonComponentSerializer.colorDownsamplingGson().serialize(motdComponent)));
+          response.setDescription(ComponentColorDownsampler.downsampler().downsample(motdComponent));
         } else {
           response.setDescription(motdComponent);
         }

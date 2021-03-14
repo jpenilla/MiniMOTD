@@ -25,7 +25,6 @@ package xyz.jpenilla.minimotd.fabric.mixin;
 
 import com.mojang.authlib.GameProfile;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.status.ServerStatus;
 import net.minecraft.server.MinecraftServer;
@@ -36,6 +35,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import xyz.jpenilla.minimotd.common.ComponentColorDownsampler;
 import xyz.jpenilla.minimotd.common.Constants;
 import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
@@ -72,8 +72,8 @@ abstract class ServerStatusPacketListenerImplMixin {
       if (((ConnectionAccess) this.connection).protocolVersion() >= Constants.MINECRAFT_1_16_PROTOCOL_VERSION) {
         modifiedStatus.setDescription(miniMOTDFabric.audiences().toNative(motdComponent));
       } else {
-        modifiedStatus.setDescription(net.minecraft.network.chat.Component.Serializer.fromJson(
-          GsonComponentSerializer.colorDownsamplingGson().serialize(motdComponent)
+        modifiedStatus.setDescription(miniMOTDFabric.audiences().toNative(
+          ComponentColorDownsampler.downsampler().downsample(motdComponent)
         ));
       }
     }

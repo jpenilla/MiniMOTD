@@ -42,11 +42,11 @@ import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.api.util.Favicon;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bstats.velocity.Metrics;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import xyz.jpenilla.minimotd.common.CommandHandlerFactory;
+import xyz.jpenilla.minimotd.common.ComponentColorDownsampler;
 import xyz.jpenilla.minimotd.common.Constants;
 import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
@@ -157,7 +157,7 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
     final Component motdComponent = pair.motd();
     if (motdComponent != null) {
       if (pong.getVersion().getProtocol() < Constants.MINECRAFT_1_16_PROTOCOL_VERSION) {
-        pong.description(GsonComponentSerializer.colorDownsamplingGson().deserialize(GsonComponentSerializer.colorDownsamplingGson().serialize(motdComponent)));
+        pong.description(ComponentColorDownsampler.downsampler().downsample(motdComponent));
       } else {
         pong.description(motdComponent);
       }
