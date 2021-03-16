@@ -55,7 +55,6 @@ abstract class ServerStatusPacketListenerImplMixin {
     final ServerStatus modifiedStatus = new ServerStatus();
     modifiedStatus.setDescription(vanillaStatus.getDescription());
     modifiedStatus.setFavicon(vanillaStatus.getFavicon());
-    modifiedStatus.setPlayers(vanillaStatus.getPlayers());
     modifiedStatus.setVersion(vanillaStatus.getVersion());
 
     final MiniMOTDFabric miniMOTDFabric = MiniMOTDFabric.get();
@@ -63,7 +62,7 @@ abstract class ServerStatusPacketListenerImplMixin {
     final MiniMOTDConfig config = miniMOTD.configManager().mainConfig();
 
     final int onlinePlayers = miniMOTD.calculateOnlinePlayers(config, minecraftServer.getPlayerCount());
-    final int maxPlayers = config.adjustedMaxPlayers(onlinePlayers, modifiedStatus.getPlayers().getMaxPlayers());
+    final int maxPlayers = config.adjustedMaxPlayers(onlinePlayers, vanillaStatus.getPlayers().getMaxPlayers());
 
     final MOTDIconPair<String> pair = miniMOTD.createMOTD(config, onlinePlayers, maxPlayers);
 
@@ -83,16 +82,16 @@ abstract class ServerStatusPacketListenerImplMixin {
       modifiedStatus.setFavicon(favicon);
     }
 
-    final GameProfile[] oldSample = modifiedStatus.getPlayers().getSample();
-    final ServerStatus.Players newPlayers = new ServerStatus.Players(maxPlayers, onlinePlayers);
-
-    if (config.disablePlayerListHover()) {
-      newPlayers.setSample(new GameProfile[]{});
-    } else {
-      newPlayers.setSample(oldSample);
+    if (!config.hidePlayerCount()) {
+      final GameProfile[] oldSample = vanillaStatus.getPlayers().getSample();
+      final ServerStatus.Players newPlayers = new ServerStatus.Players(maxPlayers, onlinePlayers);
+      if (config.disablePlayerListHover()) {
+        newPlayers.setSample(new GameProfile[]{});
+      } else {
+        newPlayers.setSample(oldSample);
+      }
+      modifiedStatus.setPlayers(newPlayers);
     }
-
-    modifiedStatus.setPlayers(newPlayers);
 
     return modifiedStatus;
   }

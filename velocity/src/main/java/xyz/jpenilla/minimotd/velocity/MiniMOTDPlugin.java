@@ -166,6 +166,9 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
     if (config.disablePlayerListHover()) {
       pong.clearSamplePlayers();
     }
+    if (config.hidePlayerCount()) {
+      pong.nullPlayers();
+    }
 
     ping.setPing(pong.build());
   }

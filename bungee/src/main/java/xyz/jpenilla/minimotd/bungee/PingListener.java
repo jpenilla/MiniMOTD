@@ -51,42 +51,45 @@ public class PingListener implements Listener {
   @EventHandler(priority = EventPriority.LOWEST)
   public void onPing(final @NonNull ProxyPingEvent e) {
     final ServerPing response = e.getResponse();
+    if (response == null) {
+      return;
+    }
 
-    if (response != null) {
-      final String configString = this.miniMOTD.configManager().pluginSettings().configStringForHost(
-        Optional.ofNullable(e.getConnection().getVirtualHost())
-          .map(inetSocketAddress -> String.format("%s:%s", inetSocketAddress.getHostName(), inetSocketAddress.getPort()))
-          .orElse("default")
-      ).orElse("default");
-      final MiniMOTDConfig cfg = this.miniMOTD.configManager().resolveConfig(configString);
-      final ServerPing.Players players = response.getPlayers();
-      final int onlinePlayers = this.miniMOTD.calculateOnlinePlayers(cfg, players.getOnline());
+    final String configString = this.miniMOTD.configManager().pluginSettings().configStringForHost(
+      Optional.ofNullable(e.getConnection().getVirtualHost())
+        .map(inetSocketAddress -> String.format("%s:%s", inetSocketAddress.getHostName(), inetSocketAddress.getPort()))
+        .orElse("default")
+    ).orElse("default");
+    final MiniMOTDConfig cfg = this.miniMOTD.configManager().resolveConfig(configString);
+    final ServerPing.Players players = response.getPlayers();
+    final int onlinePlayers = this.miniMOTD.calculateOnlinePlayers(cfg, players.getOnline());
+    final int maxPlayers = cfg.adjustedMaxPlayers(onlinePlayers, players.getMax());
+
+    if (cfg.hidePlayerCount()) {
+      response.setPlayers(null);
+    } else {
       players.setOnline(onlinePlayers);
-
-      final int maxPlayers = cfg.adjustedMaxPlayers(onlinePlayers, players.getMax());
       players.setMax(maxPlayers);
-
       if (cfg.disablePlayerListHover()) {
         players.setSample(new ServerPing.PlayerInfo[]{});
       }
-
-      final MOTDIconPair<Favicon> pair = this.miniMOTD.createMOTD(cfg, onlinePlayers, maxPlayers);
-
-      Component motdComponent = pair.motd();
-      if (motdComponent != null) {
-        if (e.getConnection().getVersion() < Constants.MINECRAFT_1_16_PROTOCOL_VERSION) {
-          motdComponent = ComponentColorDownsampler.downsampler().downsample(motdComponent);
-        }
-        response.setDescriptionComponent(new TextComponent(BungeeComponentSerializer.get().serialize(motdComponent)));
-      }
-
-      final Favicon favicon = pair.icon();
-      if (favicon != null) {
-        response.setFavicon(favicon);
-      }
-
-      response.setPlayers(players);
-      e.setResponse(response);
     }
+
+    final MOTDIconPair<Favicon> pair = this.miniMOTD.createMOTD(cfg, onlinePlayers, maxPlayers);
+
+    Component motdComponent = pair.motd();
+    if (motdComponent != null) {
+      if (e.getConnection().getVersion() < Constants.MINECRAFT_1_16_PROTOCOL_VERSION) {
+        motdComponent = ComponentColorDownsampler.downsampler().downsample(motdComponent);
+      }
+      response.setDescriptionComponent(new TextComponent(BungeeComponentSerializer.get().serialize(motdComponent)));
+    }
+
+    final Favicon favicon = pair.icon();
+    if (favicon != null) {
+      response.setFavicon(favicon);
+    }
+
+    e.setResponse(response);
   }
 }

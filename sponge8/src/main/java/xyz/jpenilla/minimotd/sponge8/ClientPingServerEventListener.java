@@ -48,9 +48,18 @@ final class ClientPingServerEventListener implements EventListener<ClientPingSer
   @Override
   public void handle(final @NonNull ClientPingServerEvent event) {
     final ClientPingServerEvent.Response response = event.getResponse();
-    final ClientPingServerEvent.Response.Players players = response.getPlayers().orElse(null);
-    if (players == null) {
-      return;
+
+    final ClientPingServerEvent.Response.Players players;
+    final ClientPingServerEvent.Response.Players players0 = response.getPlayers().orElse(null);
+    if (players0 != null) {
+      players = players0;
+    } else {
+      response.setHidePlayers(false);
+      players = response.getPlayers().orElse(null);
+      if (players == null) {
+        this.miniMOTD.logger().warn(String.format("Failed to handle ClientPingServerEvent: '%s', response.getPlayers() was null.", event.toString()));
+        return;
+      }
     }
 
     final MiniMOTDConfig config = this.miniMOTD.configManager().mainConfig();
@@ -87,6 +96,9 @@ final class ClientPingServerEventListener implements EventListener<ClientPingSer
 
     if (config.disablePlayerListHover()) {
       players.getProfiles().clear();
+    }
+    if (config.hidePlayerCount()) {
+      response.setHidePlayers(true);
     }
   }
 }

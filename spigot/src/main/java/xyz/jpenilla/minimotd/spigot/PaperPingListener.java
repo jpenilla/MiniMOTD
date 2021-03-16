@@ -73,5 +73,8 @@ public class PaperPingListener implements Listener {
     if (cfg.disablePlayerListHover()) {
       e.getPlayerSample().clear();
     }
+    if (cfg.hidePlayerCount()) {
+      e.setHidePlayers(true);
+    }
   }
 }

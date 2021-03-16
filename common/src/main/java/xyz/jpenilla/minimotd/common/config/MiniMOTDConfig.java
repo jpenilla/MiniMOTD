@@ -116,6 +116,10 @@ public final class MiniMOTDConfig {
     @Comment("Setting this to true will disable the hover text showing online player usernames")
     private boolean disablePlayerListHover = false;
 
+    @Comment("Setting this to true will disable the player list hover (same as 'disable-player-list-hover'),\n"
+      + "but will also cause the player count to appear as '???'")
+    private boolean hidePlayerCount = false;
+
     @Comment("Settings for the fake player count feature")
     private FakePlayers fakePlayers = new FakePlayers();
 
@@ -175,5 +179,9 @@ public final class MiniMOTDConfig {
 
   public boolean disablePlayerListHover() {
     return this.playerCountSettings.disablePlayerListHover;
+  }
+
+  public boolean hidePlayerCount() {
+    return this.playerCountSettings.hidePlayerCount;
   }
 }
