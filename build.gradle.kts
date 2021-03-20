@@ -17,7 +17,7 @@ plugins {
 
 allprojects {
   group = "xyz.jpenilla"
-  version = "2.0.1+${lastCommitHash()}-SNAPSHOT"
+  version = "2.0.2+${lastCommitHash()}-SNAPSHOT"
   description = "Use MiniMessage text formatting in your servers MOTD."
 }
 
