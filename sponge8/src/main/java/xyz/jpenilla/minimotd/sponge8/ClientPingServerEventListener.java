@@ -47,15 +47,15 @@ final class ClientPingServerEventListener implements EventListener<ClientPingSer
 
   @Override
   public void handle(final @NonNull ClientPingServerEvent event) {
-    final ClientPingServerEvent.Response response = event.getResponse();
+    final ClientPingServerEvent.Response response = event.response();
 
     final ClientPingServerEvent.Response.Players players;
-    final ClientPingServerEvent.Response.Players players0 = response.getPlayers().orElse(null);
+    final ClientPingServerEvent.Response.Players players0 = response.players().orElse(null);
     if (players0 != null) {
       players = players0;
     } else {
       response.setHidePlayers(false);
-      players = response.getPlayers().orElse(null);
+      players = response.players().orElse(null);
       if (players == null) {
         this.miniMOTD.logger().warn(String.format("Failed to handle ClientPingServerEvent: '%s', response.getPlayers() was null.", event.toString()));
         return;
@@ -64,10 +64,10 @@ final class ClientPingServerEventListener implements EventListener<ClientPingSer
 
     final MiniMOTDConfig config = this.miniMOTD.configManager().mainConfig();
 
-    final int onlinePlayers = this.miniMOTD.calculateOnlinePlayers(config, players.getOnline());
+    final int onlinePlayers = this.miniMOTD.calculateOnlinePlayers(config, players.online());
     players.setOnline(onlinePlayers);
 
-    final int maxPlayers = config.adjustedMaxPlayers(onlinePlayers, players.getMax());
+    final int maxPlayers = config.adjustedMaxPlayers(onlinePlayers, players.max());
     players.setMax(maxPlayers);
 
     final @NonNull MOTDIconPair<Favicon> pair = this.miniMOTD.createMOTD(config, onlinePlayers, maxPlayers);
@@ -75,7 +75,7 @@ final class ClientPingServerEventListener implements EventListener<ClientPingSer
     final Component motdComponent = pair.motd();
     try {
       if (motdComponent != null) {
-        final MinecraftVersion version = event.getClient().getVersion();
+        final MinecraftVersion version = event.client().version();
         if (!version.isLegacy() && this.SpongeMinecraftVersion_getProtocol == null) {
           this.SpongeMinecraftVersion_getProtocol = version.getClass().getMethod("getProtocol");
         }
@@ -95,7 +95,7 @@ final class ClientPingServerEventListener implements EventListener<ClientPingSer
     }
 
     if (config.disablePlayerListHover()) {
-      players.getProfiles().clear();
+      players.profiles().clear();
     }
     if (config.hidePlayerCount()) {
       response.setHidePlayers(true);

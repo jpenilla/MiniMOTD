@@ -70,7 +70,7 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
     this.pluginMetadata = pluginContainer.getMetadata();
     this.logger = LoggerFactory.getLogger(this.pluginMetadata.getId());
     this.miniMOTD = new MiniMOTD<>(this);
-    Sponge.getEventManager().registerListener(
+    Sponge.eventManager().registerListener(
       pluginContainer,
       ClientPingServerEvent.class,
       new ClientPingServerEventListener(this.miniMOTD)
@@ -79,7 +79,7 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
 
   @Listener
   public void onGameLoaded(final @NonNull LoadedGameEvent event) {
-    Sponge.getAsyncScheduler().submit(Task.builder()
+    Sponge.asyncScheduler().submit(Task.builder()
       .plugin(this.pluginContainer)
       .execute(() -> new UpdateChecker().checkVersion().forEach(this.logger::info))
       .build());
@@ -96,28 +96,28 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
 
       @Override
       public CommandResult execute(final @NonNull CommandContext context) {
-        this.handler.execute(context.getCause().getAudience());
+        this.handler.execute(context.cause().audience());
         return CommandResult.success();
       }
     }
 
     final CommandHandlerFactory handlerFactory = new CommandHandlerFactory(this.miniMOTD);
     final Command.Parameterized about = Command.builder()
-      .setExecutor(new WrappingExecutor(handlerFactory.about()))
+      .executor(new WrappingExecutor(handlerFactory.about()))
       .build();
     final Command.Parameterized help = Command.builder()
-      .setExecutor(new WrappingExecutor(handlerFactory.help()))
+      .executor(new WrappingExecutor(handlerFactory.help()))
       .build();
     final Command.Parameterized reload = Command.builder()
-      .setExecutor(new WrappingExecutor(handlerFactory.reload()))
+      .executor(new WrappingExecutor(handlerFactory.reload()))
       .build();
     event.register(
       this.pluginContainer,
       Command.builder()
-        .setPermission("minimotd.admin")
-        .child(about, "about")
-        .child(help, "help")
-        .child(reload, "reload")
+        .permission("minimotd.admin")
+        .addChild(about, "about")
+        .addChild(help, "help")
+        .addChild(reload, "reload")
         .build(),
       "minimotd"
     );
