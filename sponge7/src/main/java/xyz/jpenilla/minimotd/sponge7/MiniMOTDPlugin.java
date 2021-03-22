@@ -21,74 +21,75 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package xyz.jpenilla.minimotd.sponge8;
+package xyz.jpenilla.minimotd.sponge7;
 
 import com.google.inject.Inject;
+import net.kyori.adventure.platform.spongeapi.SpongeAudiences;
+import org.bstats.sponge.Metrics;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.command.Command;
-import org.spongepowered.api.command.CommandExecutor;
 import org.spongepowered.api.command.CommandResult;
-import org.spongepowered.api.command.parameter.CommandContext;
+import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.command.args.CommandContext;
+import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.lifecycle.LoadedGameEvent;
-import org.spongepowered.api.event.lifecycle.RefreshGameEvent;
-import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
+import org.spongepowered.api.event.game.GameReloadEvent;
+import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.server.ClientPingServerEvent;
 import org.spongepowered.api.network.status.Favicon;
+import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.scheduler.Task;
-import org.spongepowered.plugin.PluginContainer;
-import org.spongepowered.plugin.jvm.Plugin;
-import org.spongepowered.plugin.metadata.PluginMetadata;
 import xyz.jpenilla.minimotd.common.CommandHandlerFactory;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
 import xyz.jpenilla.minimotd.common.UpdateChecker;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Objects;
 
-@Plugin("minimotd-sponge8")
+@Plugin(id = "minimotd-sponge7")
 public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
-  private final Path dataDirectory;
-  private final PluginMetadata pluginMetadata;
   private final Logger logger;
-  private final PluginContainer pluginContainer;
+  private final Path dataDirectory;
   private final MiniMOTD<Favicon> miniMOTD;
+  private final SpongeAudiences audiences;
 
   @Inject
   public MiniMOTDPlugin(
+    final @NonNull Logger logger,
     @ConfigDir(sharedRoot = false) final @NonNull Path dataDirectory,
-    final @NonNull PluginContainer pluginContainer
+    final @NonNull SpongeAudiences audiences,
+    final Metrics.@NonNull Factory metricsFactory
   ) {
+    this.logger = logger;
     this.dataDirectory = dataDirectory;
-    this.pluginContainer = pluginContainer;
-    this.pluginMetadata = pluginContainer.getMetadata();
-    this.logger = LoggerFactory.getLogger(this.pluginMetadata.getId());
+    this.audiences = audiences;
     this.miniMOTD = new MiniMOTD<>(this);
-    Sponge.eventManager().registerListener(
-      pluginContainer,
-      ClientPingServerEvent.class,
-      new ClientPingServerEventListener(this.miniMOTD)
-    );
+    metricsFactory.make(10768);
   }
 
   @Listener
-  public void onGameLoaded(final @NonNull LoadedGameEvent event) {
+  public void gameStarted(final @NonNull GameStartedServerEvent event) {
+    Sponge.getEventManager().registerListener(this, ClientPingServerEvent.class, new ClientPingServerEventListener(this.miniMOTD));
+    this.registerCommands();
     if (this.miniMOTD.configManager().pluginSettings().updateChecker()) {
-      Sponge.asyncScheduler().submit(Task.builder()
-        .plugin(this.pluginContainer)
+      Task.builder()
+        .async()
         .execute(() -> new UpdateChecker().checkVersion().forEach(this.logger::info))
-        .build());
+        .submit(this);
     }
   }
 
   @Listener
-  public void registerCommands(final @NonNull RegisterCommandEvent<Command.Parameterized> event) {
+  public void reloaded(final @NonNull GameReloadEvent event) {
+    this.miniMOTD.reload();
+  }
+
+  private void registerCommands() {
     final class WrappingExecutor implements CommandExecutor {
       private final CommandHandlerFactory.CommandHandler handler;
 
@@ -97,37 +98,32 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
       }
 
       @Override
-      public CommandResult execute(final @NonNull CommandContext context) {
-        this.handler.execute(context.cause().audience());
+      public CommandResult execute(final @NonNull CommandSource src, final @NonNull CommandContext args) {
+        this.handler.execute(MiniMOTDPlugin.this.audiences.receiver(src));
         return CommandResult.success();
       }
     }
 
-    final CommandHandlerFactory handlerFactory = new CommandHandlerFactory(this.miniMOTD);
-    final Command.Parameterized about = Command.builder()
-      .executor(new WrappingExecutor(handlerFactory.about()))
+    final CommandHandlerFactory factory = new CommandHandlerFactory(this.miniMOTD);
+    final CommandSpec help = CommandSpec.builder()
+      .executor(new WrappingExecutor(factory.help()))
       .build();
-    final Command.Parameterized help = Command.builder()
-      .executor(new WrappingExecutor(handlerFactory.help()))
+    final CommandSpec about = CommandSpec.builder()
+      .executor(new WrappingExecutor(factory.about()))
       .build();
-    final Command.Parameterized reload = Command.builder()
-      .executor(new WrappingExecutor(handlerFactory.reload()))
+    final CommandSpec reload = CommandSpec.builder()
+      .executor(new WrappingExecutor(factory.reload()))
       .build();
-    event.register(
-      this.pluginContainer,
-      Command.builder()
+    Sponge.getCommandManager().register(
+      this,
+      CommandSpec.builder()
         .permission("minimotd.admin")
-        .addChild(about, "about")
-        .addChild(help, "help")
-        .addChild(reload, "reload")
+        .child(help, "help")
+        .child(about, "about")
+        .child(reload, "reload")
         .build(),
       "minimotd"
     );
-  }
-
-  @Listener
-  public void onRefresh(final @NonNull RefreshGameEvent event) {
-    this.miniMOTD.reload();
   }
 
   @Override
@@ -141,7 +137,7 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
   }
 
   @Override
-  public @NonNull Favicon loadIcon(final @NonNull BufferedImage image) throws Exception {
-    return Objects.requireNonNull(Favicon.load(image), "failed to load favicon");
+  public @NonNull Favicon loadIcon(final @NonNull BufferedImage image) throws IOException {
+    return Sponge.getRegistry().loadFavicon(image);
   }
 }

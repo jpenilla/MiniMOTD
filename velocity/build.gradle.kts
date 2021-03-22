@@ -6,7 +6,7 @@ dependencies {
   implementation(project(":minimotd-common")) {
     exclude("org.slf4j", "slf4j-api")
   }
-  implementation("org.bstats", "bstats-velocity", "2.2.0")
+  implementation("org.bstats", "bstats-velocity", "2.2.1")
   compileOnly("com.velocitypowered", "velocity-api", "1.1.4")
   annotationProcessor("com.velocitypowered", "velocity-api", "1.1.4")
 }
