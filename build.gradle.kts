@@ -69,6 +69,7 @@ subprojects {
   tasks {
     shadowJar {
       minimize()
+      exclude("META-INF/versions/**")
       if (!project.name.contains("fabric")) {
         archiveClassifier.set("")
         doLast {

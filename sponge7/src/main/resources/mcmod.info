@@ -1,0 +1,18 @@
+[
+    {
+        "modid": "{project.name}",
+        "name": "{rootProject.name}",
+        "version": "{project.version}",
+        "description": "{project.description}",
+        "url": "{url}",
+        "authorList": [
+            "jmp"
+        ],
+        "dependencies": [
+            "spongeapi@7.2.0"
+        ],
+        "requiredMods": [
+            "spongeapi@7.2.0"
+        ]
+    }
+]

@@ -7,6 +7,9 @@ plugins {
 
 dependencies {
   implementation(project(":minimotd-common"))
+  implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.8.1") {
+    isTransitive = false
+  }
 }
 
 sponge {
@@ -34,6 +37,8 @@ sponge {
 
 tasks {
   shadowJar {
+    relocate("org.apache.logging.slf4j", "xyz.jpenilla.minimotd.lib.apache.logging.slf4j")
+    relocate("org.slf4j", "xyz.jpenilla.minimotd.lib.slf4j_log4j")
     relocate("org.spongepowered.configurate", "xyz.jpenilla.minimotd.lib.spongepowered.configurate")
     relocate("io.leangen.geantyref", "xyz.jpenilla.minimotd.lib.io.leangen.geantyref")
     relocate("com.typesafe.config", "xyz.jpenilla.minimotd.lib.typesafe.config")
@@ -43,7 +48,6 @@ tasks {
     relocate("xyz.jpenilla.minimotd.common", "xyz.jpenilla.minimotd.lib.sponge8.minimotd.common")
     dependencies {
       exclude { dep -> dep.moduleGroup == "net.kyori" && !dep.name.contains("minimessage") && !dep.name.contains("text-serializer-legacy") }
-      exclude(dependency("org.slf4j:slf4j-api"))
     }
   }
   runServer {
