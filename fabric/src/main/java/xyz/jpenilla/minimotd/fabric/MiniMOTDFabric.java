@@ -34,7 +34,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.kyori.adventure.platform.fabric.FabricServerAudiences;
 import net.minecraft.commands.CommandSourceStack;
-import org.apache.commons.lang3.Validate;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,8 +129,6 @@ public final class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<St
 
   @Override
   public @NonNull String loadIcon(final @NonNull BufferedImage bufferedImage) throws Exception {
-    Validate.validState(bufferedImage.getWidth() == 64, "Must be 64 pixels wide");
-    Validate.validState(bufferedImage.getHeight() == 64, "Must be 64 pixels high");
     final ByteBuf byteBuf = Unpooled.buffer();
     final String icon;
     try {

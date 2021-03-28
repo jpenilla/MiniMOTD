@@ -27,13 +27,12 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.Favicon;
 import net.md_5.bungee.api.ServerPing;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
-import net.md_5.bungee.event.EventPriority;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import xyz.jpenilla.minimotd.common.ComponentColorDownsampler;
 import xyz.jpenilla.minimotd.common.Constants;
 import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
@@ -48,7 +47,7 @@ public class PingListener implements Listener {
     this.miniMOTD = miniMOTD;
   }
 
-  @EventHandler(priority = EventPriority.LOWEST)
+  @EventHandler
   public void onPing(final @NonNull ProxyPingEvent e) {
     final ServerPing response = e.getResponse();
     if (response == null) {
@@ -77,12 +76,19 @@ public class PingListener implements Listener {
 
     final MOTDIconPair<Favicon> pair = this.miniMOTD.createMOTD(cfg, onlinePlayers, maxPlayers);
 
-    Component motdComponent = pair.motd();
+    final Component motdComponent = pair.motd();
     if (motdComponent != null) {
+      final BaseComponent[] bungee;
       if (e.getConnection().getVersion() < Constants.MINECRAFT_1_16_PROTOCOL_VERSION) {
-        motdComponent = ComponentColorDownsampler.downsampler().downsample(motdComponent);
+        bungee = BungeeComponentSerializer.legacy().serialize(motdComponent);
+      } else {
+        bungee = BungeeComponentSerializer.get().serialize(motdComponent);
       }
-      response.setDescriptionComponent(new TextComponent(BungeeComponentSerializer.get().serialize(motdComponent)));
+      if (BungeeComponentSerializer.isNative()) {
+        response.setDescriptionComponent(bungee[0]);
+      } else {
+        response.setDescriptionComponent(new TextComponent(bungee));
+      }
     }
 
     final Favicon favicon = pair.icon();

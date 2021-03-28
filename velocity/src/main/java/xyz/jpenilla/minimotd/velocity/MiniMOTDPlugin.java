@@ -34,14 +34,11 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 import com.velocitypowered.api.plugin.Plugin;
-import com.velocitypowered.api.plugin.PluginContainer;
-import com.velocitypowered.api.plugin.PluginDescription;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.api.util.Favicon;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bstats.velocity.Metrics;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
@@ -69,8 +66,6 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
   private final MiniMOTD<Favicon> miniMOTD;
   private final ProxyServer server;
   private final Logger logger;
-  private final MiniMessage miniMessage = MiniMessage.get();
-  private final PluginContainer pluginContainer;
   private final CommandManager commandManager;
   private final Path dataDirectory;
   private final Metrics.Factory metricsFactory;
@@ -80,14 +75,12 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
     final @NonNull ProxyServer server,
     final @NonNull Logger logger,
     final @NonNull CommandManager commandManager,
-    final @NonNull PluginContainer pluginContainer,
     @DataDirectory final @NonNull Path dataDirectory,
     final Metrics.@NonNull Factory metricsFactory
   ) {
     this.server = server;
     this.logger = logger;
     this.commandManager = commandManager;
-    this.pluginContainer = pluginContainer;
     this.dataDirectory = dataDirectory;
     this.metricsFactory = metricsFactory;
     this.miniMOTD = new MiniMOTD<>(this);
@@ -132,15 +125,15 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
   }
 
   @Subscribe
-  public void onServerListPing(final @NonNull ProxyPingEvent ping) {
+  public void onServerListPing(final @NonNull ProxyPingEvent event) {
     final String configString = this.miniMOTD.configManager().pluginSettings().configStringForHost(
-      ping.getConnection().getVirtualHost()
+      event.getConnection().getVirtualHost()
         .map(inetSocketAddress -> String.format("%s:%s", inetSocketAddress.getHostName(), inetSocketAddress.getPort()))
         .orElse("default")
     ).orElse("default");
     final MiniMOTDConfig config = this.miniMOTD.configManager().resolveConfig(configString);
 
-    final ServerPing.Builder pong = ping.getPing().asBuilder();
+    final ServerPing.Builder pong = event.getPing().asBuilder();
 
     final int onlinePlayers = this.miniMOTD.calculateOnlinePlayers(config, pong.getOnlinePlayers());
     pong.onlinePlayers(onlinePlayers);
@@ -170,11 +163,7 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
       pong.nullPlayers();
     }
 
-    ping.setPing(pong.build());
-  }
-
-  public @NonNull MiniMOTD<Favicon> miniMOTD() {
-    return this.miniMOTD;
+    event.setPing(pong.build());
   }
 
   @Override
@@ -190,14 +179,6 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
   @Override
   public @NonNull Favicon loadIcon(final @NonNull BufferedImage image) {
     return Favicon.create(image);
-  }
-
-  public @NonNull MiniMessage miniMessage() {
-    return this.miniMessage;
-  }
-
-  public @NonNull PluginDescription pluginDescription() {
-    return this.pluginContainer.getDescription();
   }
 
   @Override

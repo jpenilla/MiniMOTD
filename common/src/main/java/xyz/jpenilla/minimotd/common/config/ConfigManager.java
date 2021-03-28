@@ -32,6 +32,7 @@ import xyz.jpenilla.minimotd.common.Pair;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,7 +112,7 @@ public final class ConfigManager {
         MiniMOTDConfig.class,
         pair.left()
       );
-      loader.save(new MiniMOTDConfig(ImmutableList.of(pair.right())));
+      loader.save(new MiniMOTDConfig(Collections.singletonList(pair.right())));
     }
   }
 

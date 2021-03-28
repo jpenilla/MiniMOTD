@@ -2,6 +2,12 @@ plugins {
   id("net.kyori.blossom")
 }
 
+tasks.jar {
+  from(rootProject.file("license.txt")) {
+    rename { "license_${rootProject.name.toLowerCase()}.txt" }
+  }
+}
+
 dependencies {
   api("org.slf4j", "slf4j-api", "1.7.30")
   api("org.spongepowered", "configurate-hocon", "4.1.0-SNAPSHOT")

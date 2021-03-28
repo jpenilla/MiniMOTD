@@ -30,6 +30,7 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.CachedServerIcon;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
@@ -40,51 +41,45 @@ import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 
 public final class MiniMOTDPlugin extends JavaPlugin implements MiniMOTDPlatform<CachedServerIcon> {
+  private static final boolean PAPER_PING_EVENT_EXISTS = findClass("com.destroystokyo.paper.event.server.PaperServerListPingEvent") != null;
+
+  private Logger logger;
   private MiniMOTD<CachedServerIcon> miniMOTD;
-  private boolean isPaperServer;
+  private BukkitAudiences audiences;
   private String serverPackageName;
   private String serverApiVersion;
   private int majorMinecraftVersion;
-  private BukkitAudiences audiences;
-  private Logger logger;
 
   @Override
   public void onEnable() {
     this.logger = LoggerFactory.getLogger(this.getName());
     this.miniMOTD = new MiniMOTD<>(this);
+    this.audiences = BukkitAudiences.create(this);
     this.serverPackageName = this.getServer().getClass().getPackage().getName();
     this.serverApiVersion = this.serverPackageName.substring(this.serverPackageName.lastIndexOf('.') + 1);
     this.majorMinecraftVersion = Integer.parseInt(this.serverApiVersion.split("_")[1]);
 
-    try {
-      Class.forName("com.destroystokyo.paper.event.server.PaperServerListPingEvent");
-      this.isPaperServer = true;
-    } catch (final ClassNotFoundException e) {
-      this.isPaperServer = false;
-    }
-    if (this.isPaperServer) {
-      getServer().getPluginManager().registerEvents(new PaperPingListener(this, this.miniMOTD), this);
+    if (PAPER_PING_EVENT_EXISTS) {
+      Bukkit.getPluginManager().registerEvents(new PaperPingListener(this, this.miniMOTD), this);
     } else {
-      getServer().getPluginManager().registerEvents(new PingListener(this, this.miniMOTD), this);
-      if (this.majorMinecraftVersion > 11) {
-        getLogger().info("#");
-        getLogger().info("# This server is not using Paper, and therefore some features may be limited or disabled.");
-        getLogger().info("# Get Paper from https://papermc.io/downloads");
-        getLogger().info("#");
+      Bukkit.getPluginManager().registerEvents(new PingListener(this, this.miniMOTD), this);
+      if (this.majorMinecraftVersion >= 12) { // PaperServerListPingEvent was added in 1.12
+        this.suggestPaper();
       }
     }
-    this.audiences = BukkitAudiences.create(this);
-    final PluginCommand command = getCommand("minimotd");
+
+    final PluginCommand command = this.getCommand("minimotd");
     if (command != null) {
-      command.setExecutor(new SpigotCommand(this));
-      command.setTabCompleter(new SpigotCommand(this));
+      final SpigotCommand spigotCommand = new SpigotCommand(this);
+      command.setExecutor(spigotCommand);
+      command.setTabCompleter(spigotCommand);
     }
 
     final Metrics metrics = new Metrics(this, 8132);
 
     if (this.miniMOTD.configManager().pluginSettings().updateChecker()) {
       Bukkit.getScheduler().runTaskAsynchronously(this, () ->
-        new UpdateChecker().checkVersion().forEach(getLogger()::info));
+        new UpdateChecker().checkVersion().forEach(this.logger::info));
     }
   }
 
@@ -113,5 +108,27 @@ public final class MiniMOTDPlugin extends JavaPlugin implements MiniMOTDPlatform
 
   public @NonNull BukkitAudiences audiences() {
     return this.audiences;
+  }
+
+  private void suggestPaper() {
+    this.logger.warn("======================================================");
+    this.logger.warn(" MiniMOTD works better if you use Paper as your server");
+    this.logger.warn(" software.");
+    this.logger.warn(" ");
+    this.logger.warn(" Spigot does not include the necessary APIs for all");
+    this.logger.warn(" of MiniMOTD's features to operate. MiniMOTD was");
+    this.logger.warn(" designed to work with Paper and it's expanded API");
+    this.logger.warn(" for full compatibility.");
+    this.logger.warn(" ");
+    this.logger.warn(" Get Paper from https://papermc.io/downloads");
+    this.logger.warn("======================================================");
+  }
+
+  private static @Nullable Class<?> findClass(final @NonNull String className) {
+    try {
+      return Class.forName(className);
+    } catch (final ClassNotFoundException ex) {
+      return null;
+    }
   }
 }
