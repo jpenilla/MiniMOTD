@@ -66,7 +66,6 @@ public final class MiniMOTD<I> {
     return this.configManager;
   }
 
-  // todo: move color down-sampling here, take protocolVersion int as param
   public final @NonNull MOTDIconPair<I> createMOTD(final @NonNull MiniMOTDConfig config, final int onlinePlayers, final int maxPlayers) {
     I icon = null;
     Component motd = null;

@@ -43,7 +43,6 @@ import org.bstats.velocity.Metrics;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import xyz.jpenilla.minimotd.common.CommandHandlerFactory;
-import xyz.jpenilla.minimotd.common.ComponentColorDownsampler;
 import xyz.jpenilla.minimotd.common.Constants;
 import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
@@ -149,11 +148,7 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
 
     final Component motdComponent = pair.motd();
     if (motdComponent != null) {
-      if (pong.getVersion().getProtocol() < Constants.MINECRAFT_1_16_PROTOCOL_VERSION) {
-        pong.description(ComponentColorDownsampler.downsampler().downsample(motdComponent));
-      } else {
-        pong.description(motdComponent);
-      }
+      pong.description(motdComponent);
     }
 
     if (config.disablePlayerListHover()) {
