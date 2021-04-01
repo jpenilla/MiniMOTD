@@ -11,7 +11,7 @@ plugins {
   `java-library`
   id("net.kyori.indra") version "1.3.1"
   id("com.github.johnrengelman.shadow") version "6.1.0"
-  id("com.adarshr.test-logger") version "2.1.1"
+  id("com.adarshr.test-logger") version "3.0.0"
   id("net.kyori.blossom") version "1.2.0" apply false
 }
 
