@@ -29,6 +29,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -38,34 +41,41 @@ public final class IconManager<I> {
 
   private final Map<String, I> icons = new HashMap<>();
   private final MiniMOTD<I> miniMOTD;
-  private final File iconsDirectory;
+  private final Path iconsDirectory;
 
   public IconManager(final @NonNull MiniMOTD<I> miniMOTD) {
     this.miniMOTD = miniMOTD;
-    this.iconsDirectory = miniMOTD.dataDirectory().resolve("icons").toFile();
+    this.iconsDirectory = miniMOTD.dataDirectory().resolve("icons");
     this.loadIcons();
   }
 
   public void loadIcons() {
-    if (!this.iconsDirectory.exists()) {
-      this.iconsDirectory.mkdir();
-    }
     this.icons.clear();
-    final File[] icons = this.iconsDirectory.listFiles(i -> i.getName().endsWith(".png"));
-    if (icons != null) {
-      for (final File icon : icons) {
-        try {
-          final BufferedImage bufferedImage = ImageIO.read(icon);
-          if (bufferedImage.getHeight() == 64 && bufferedImage.getWidth() == 64) {
-            final I newIcon = this.miniMOTD.platform().loadIcon(bufferedImage);
-            this.icons.put(icon.getName().split("\\.")[0], newIcon);
-          } else {
-            this.miniMOTD.logger().warn("Could not load " + icon.getName() + ": image must be 64x64px");
-          }
-        } catch (final Exception e) {
-          this.miniMOTD.logger().warn("Could not load " + icon.getName() + ": invalid image file", e);
-        }
+    try {
+      if (!Files.exists(this.iconsDirectory)) {
+        Files.createDirectories(this.iconsDirectory);
       }
+      Files.list(this.iconsDirectory)
+        .map(Path::toFile)
+        .filter(File::isFile)
+        .filter(file -> file.getName().endsWith(".png"))
+        .forEach(this::loadIcon);
+    } catch (final IOException ex) {
+      throw new RuntimeException("Exception loading server icons", ex);
+    }
+  }
+
+  private void loadIcon(final @NonNull File iconFile) {
+    try {
+      final BufferedImage bufferedImage = ImageIO.read(iconFile);
+      if (bufferedImage.getHeight() == 64 && bufferedImage.getWidth() == 64) {
+        final I newIcon = this.miniMOTD.platform().loadIcon(bufferedImage);
+        this.icons.put(iconFile.getName().split("\\.")[0], newIcon);
+      } else {
+        this.miniMOTD.logger().warn("Could not load " + iconFile.getName() + ": image must be 64x64px");
+      }
+    } catch (final Exception ex) {
+      this.miniMOTD.logger().warn("Could not load " + iconFile.getName() + ": invalid image file", ex);
     }
   }
 
