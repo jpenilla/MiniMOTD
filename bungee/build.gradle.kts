@@ -1,5 +1,5 @@
 plugins {
-  id("kr.entree.spigradle.bungee") version "2.2.3"
+  id("net.minecrell.plugin-yml.bungee") version "0.3.0"
 }
 
 dependencies {
@@ -27,5 +27,6 @@ tasks {
 
 bungee {
   name = rootProject.name
+  main = "xyz.jpenilla.minimotd.bungee.MiniMOTDPlugin"
   author = "jmp"
 }

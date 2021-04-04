@@ -50,7 +50,6 @@ import xyz.jpenilla.minimotd.common.UpdateChecker;
 
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
-import java.util.Objects;
 
 @Plugin("minimotd-sponge8")
 public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
@@ -142,6 +141,6 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
 
   @Override
   public @NonNull Favicon loadIcon(final @NonNull BufferedImage image) throws Exception {
-    return Objects.requireNonNull(Favicon.load(image), "failed to load favicon");
+    return Favicon.load(image);
   }
 }

@@ -1,5 +1,5 @@
 plugins {
-  id("kr.entree.spigradle") version "2.2.3"
+  id("net.minecrell.plugin-yml.bukkit") version "0.3.0"
 }
 
 dependencies {
@@ -25,16 +25,16 @@ tasks {
   }
 }
 
-spigot {
+bukkit {
   name = rootProject.name
+  main = "xyz.jpenilla.minimotd.spigot.MiniMOTDPlugin"
   apiVersion = "1.13"
   website = rootProject.ext["url"].toString()
-  authors("jmp")
-  softDepends("Prisma", "ViaVersion")
+  authors = listOf("jmp")
+  softDepend = listOf("ViaVersion")
   commands {
     create("minimotd") {
       description = "MiniMOTD Command"
-      permissionMessage = "No permission"
       usage = "/minimotd help"
     }
   }

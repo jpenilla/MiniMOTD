@@ -133,8 +133,8 @@ public final class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<St
     final String icon;
     try {
       ImageIO.write(bufferedImage, "PNG", new ByteBufOutputStream(byteBuf));
-      final ByteBuffer byteBuffer = Base64.getEncoder().encode(byteBuf.nioBuffer());
-      icon = "data:image/png;base64," + StandardCharsets.UTF_8.decode(byteBuffer);
+      final ByteBuffer base64 = Base64.getEncoder().encode(byteBuf.nioBuffer());
+      icon = "data:image/png;base64," + StandardCharsets.UTF_8.decode(base64);
     } finally {
       byteBuf.release();
     }

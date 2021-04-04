@@ -11,17 +11,17 @@ plugins {
   `java-library`
   id("net.kyori.indra") version "1.3.1"
   id("com.github.johnrengelman.shadow") version "6.1.0"
-  id("com.adarshr.test-logger") version "2.1.1"
+  id("com.adarshr.test-logger") version "3.0.0"
   id("net.kyori.blossom") version "1.2.0" apply false
 }
 
 allprojects {
   group = "xyz.jpenilla"
   version = "2.0.2+${lastCommitHash()}-SNAPSHOT"
-  description = "Use MiniMessage text formatting in your servers MOTD."
+  description = "Use MiniMessage text formatting in the server list MOTD."
 }
 
-ext["url"] = "https://github.com/jpenilla/MiniMOTD/"
+ext["url"] = "https://github.com/jpenilla/MiniMOTD"
 
 subprojects {
   apply<JavaLibraryPlugin>()

@@ -24,6 +24,7 @@
 package xyz.jpenilla.minimotd.sponge8;
 
 import net.kyori.adventure.text.Component;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.spongepowered.api.MinecraftVersion;
 import org.spongepowered.api.event.EventListener;
@@ -39,7 +40,7 @@ import java.lang.reflect.Method;
 
 final class ClientPingServerEventListener implements EventListener<ClientPingServerEvent> {
   private final MiniMOTD<Favicon> miniMOTD;
-  private Method SpongeMinecraftVersion_getProtocol;
+  private @MonotonicNonNull Method SpongeMinecraftVersion_getProtocol;
 
   ClientPingServerEventListener(final @NonNull MiniMOTD<Favicon> miniMOTD) {
     this.miniMOTD = miniMOTD;
@@ -73,20 +74,13 @@ final class ClientPingServerEventListener implements EventListener<ClientPingSer
     final MOTDIconPair<Favicon> pair = this.miniMOTD.createMOTD(config, onlinePlayers, maxPlayers);
 
     final Component motdComponent = pair.motd();
-    try {
-      if (motdComponent != null) {
-        final MinecraftVersion version = event.client().version();
-        if (!version.isLegacy() && this.SpongeMinecraftVersion_getProtocol == null) {
-          this.SpongeMinecraftVersion_getProtocol = version.getClass().getMethod("getProtocol");
-        }
-        if (version.isLegacy() || (int) this.SpongeMinecraftVersion_getProtocol.invoke(version) < Constants.MINECRAFT_1_16_PROTOCOL_VERSION) {
-          response.setDescription(ComponentColorDownsampler.downsampler().downsample(motdComponent));
-        } else {
-          response.setDescription(motdComponent);
-        }
+    if (motdComponent != null) {
+      final MinecraftVersion version = event.client().version();
+      if (this.legacy(version)) {
+        response.setDescription(ComponentColorDownsampler.downsampler().downsample(motdComponent));
+      } else {
+        response.setDescription(motdComponent);
       }
-    } catch (final ReflectiveOperationException e) {
-      throw new IllegalStateException("Failed to get protocol version", e);
     }
 
     final Favicon favicon = pair.icon();
@@ -99,6 +93,18 @@ final class ClientPingServerEventListener implements EventListener<ClientPingSer
     }
     if (config.hidePlayerCount()) {
       response.setHidePlayers(true);
+    }
+  }
+
+  private boolean legacy(final @NonNull MinecraftVersion version) {
+    try {
+      if (!version.isLegacy() && this.SpongeMinecraftVersion_getProtocol == null) {
+        this.SpongeMinecraftVersion_getProtocol = version.getClass().getMethod("getProtocol");
+      }
+      return version.isLegacy()
+        || (int) this.SpongeMinecraftVersion_getProtocol.invoke(version) < Constants.MINECRAFT_1_16_PROTOCOL_VERSION;
+    } catch (final ReflectiveOperationException e) {
+      throw new IllegalStateException("Failed to get protocol version", e);
     }
   }
 }

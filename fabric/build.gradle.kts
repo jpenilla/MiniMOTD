@@ -45,9 +45,10 @@ tasks {
         "{project.name}" to project.name,
         "{rootProject.name}" to rootProject.name,
         "{project.version}" to project.version.toString(),
-        "{project.description}" to project.description.toString()
+        "{project.description}" to project.description.toString(),
+        "{project.github_url}" to rootProject.ext["url"].toString()
       ).forEach { (k, v) ->
-        filter { resource -> resource.replace(k, v) }
+        filter { it.replace(k, v) }
       }
     }
   }

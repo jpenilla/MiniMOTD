@@ -23,7 +23,7 @@ sponge {
       val url = rootProject.ext["url"].toString()
       homepage(url)
       source(url)
-      issues("${url}issues/")
+      issues("${url}/issues")
     }
     contributor("jmp") {
       description("Lead Developer")
