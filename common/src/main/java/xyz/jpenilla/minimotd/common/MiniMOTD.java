@@ -108,6 +108,14 @@ public final class MiniMOTD<I> {
           final double factor = 1 + (Double.parseDouble(fakePlayersConfigString.replace("%", "")) / 100);
 
           return (int) Math.ceil(factor * realOnlinePlayers);
+        } else if (fakePlayersConfigString.contains("=")) {
+          final int shownPlayers = Integer.parseInt(fakePlayersConfigString.replace("=", ""));
+
+          return shownPlayers;
+        } else if (fakePlayersConfigString.contains("+")) {
+          final int minPlayers = Integer.parseInt(fakePlayersConfigString.replace("+", ""));
+
+          return Math.max(minPlayers, realOnlinePlayers);
         } else {
           final int addedPlayers = Integer.parseInt(fakePlayersConfigString);
 

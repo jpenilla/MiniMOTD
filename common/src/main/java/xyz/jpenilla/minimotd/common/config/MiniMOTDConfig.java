@@ -143,10 +143,14 @@ public final class MiniMOTDConfig {
       @Comment("Enable fake player count feature")
       private boolean fakePlayersEnabled = false;
 
-      @Comment("Modes: static, random, percent\n"
+      @Comment("Modes: static, constant, minimum, random, percent\n"
         + "\n"
         + " - static: This many fake players will be added\n"
         + "     ex: fakePlayers: \"3\"\n"
+        + " - constant: A constant value for the player count\n"
+        + "     ex: fakePlayers: \"=42\"\n"
+        + " - minimum: The minimum bound of the player count\n"
+        + "     ex: fakePlayers: \"7+\"\n"
         + " - random: A random number of fake players in this range will be added\n"
         + "     ex: fakePlayers: \"3:6\"\n"
         + " - percent: The player count will be inflated by this much, rounding up\n"
