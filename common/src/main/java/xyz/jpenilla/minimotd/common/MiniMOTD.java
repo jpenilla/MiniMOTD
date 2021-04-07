@@ -96,8 +96,8 @@ public final class MiniMOTD<I> {
 
   public final int calculateOnlinePlayers(final @NonNull MiniMOTDConfig config, final int realOnlinePlayers) {
     if (config.fakePlayersEnabled()) {
+      final String fakePlayersConfigString = config.fakePlayers();
       try {
-        final String fakePlayersConfigString = config.fakePlayers();
         if (fakePlayersConfigString.contains(":")) {
           final String[] fakePlayers = fakePlayersConfigString.split(":");
           final int start = Integer.parseInt(fakePlayers[0]);
@@ -109,9 +109,7 @@ public final class MiniMOTD<I> {
 
           return (int) Math.ceil(factor * realOnlinePlayers);
         } else if (fakePlayersConfigString.contains("=")) {
-          final int shownPlayers = Integer.parseInt(fakePlayersConfigString.replace("=", ""));
-
-          return shownPlayers;
+          return Integer.parseInt(fakePlayersConfigString.replace("=", ""));
         } else if (fakePlayersConfigString.contains("+")) {
           final int minPlayers = Integer.parseInt(fakePlayersConfigString.replace("+", ""));
 
@@ -122,7 +120,7 @@ public final class MiniMOTD<I> {
           return realOnlinePlayers + addedPlayers;
         }
       } catch (final NumberFormatException ex) {
-        this.logger().warn("fakePlayers config incorrect");
+        this.logger().warn(String.format("Exception parsing fake-players config string: '%s', please correct your configuration.", fakePlayersConfigString));
       }
     }
     return realOnlinePlayers;

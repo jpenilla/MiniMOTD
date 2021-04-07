@@ -146,15 +146,15 @@ public final class MiniMOTDConfig {
       @Comment("Modes: static, constant, minimum, random, percent\n"
         + "\n"
         + " - static: This many fake players will be added\n"
-        + "     ex: fakePlayers: \"3\"\n"
+        + "     ex: fake-players=\"3\"\n"
         + " - constant: A constant value for the player count\n"
-        + "     ex: fakePlayers: \"=42\"\n"
+        + "     ex: fake-players=\"=42\"\n"
         + " - minimum: The minimum bound of the player count\n"
-        + "     ex: fakePlayers: \"7+\"\n"
+        + "     ex: fake-players=\"7+\"\n"
         + " - random: A random number of fake players in this range will be added\n"
-        + "     ex: fakePlayers: \"3:6\"\n"
+        + "     ex: fake-players=\"3:6\"\n"
         + " - percent: The player count will be inflated by this much, rounding up\n"
-        + "     ex: fakePlayers: \"25%\"")
+        + "     ex: fake-players=\"25%\"")
       private String fakePlayers = "25%";
 
     }
