@@ -134,7 +134,7 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
 
     final ServerPing.Builder pong = event.getPing().asBuilder();
 
-    final int onlinePlayers = this.miniMOTD.calculateOnlinePlayers(config, pong.getOnlinePlayers());
+    final int onlinePlayers = config.calculateOnlinePlayers(pong.getOnlinePlayers());
     pong.onlinePlayers(onlinePlayers);
 
     final int maxPlayers = config.adjustedMaxPlayers(onlinePlayers, pong.getMaximumPlayers());

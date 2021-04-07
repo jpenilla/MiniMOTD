@@ -94,38 +94,6 @@ public final class MiniMOTD<I> {
       .replace("{maxPlayers}", String.valueOf(maxPlayers));
   }
 
-  public final int calculateOnlinePlayers(final @NonNull MiniMOTDConfig config, final int realOnlinePlayers) {
-    if (config.fakePlayersEnabled()) {
-      final String fakePlayersConfigString = config.fakePlayers();
-      try {
-        if (fakePlayersConfigString.contains(":")) {
-          final String[] fakePlayers = fakePlayersConfigString.split(":");
-          final int start = Integer.parseInt(fakePlayers[0]);
-          final int end = Integer.parseInt(fakePlayers[1]);
-
-          return realOnlinePlayers + ThreadLocalRandom.current().nextInt(start, end);
-        } else if (fakePlayersConfigString.contains("%")) {
-          final double factor = 1 + (Double.parseDouble(fakePlayersConfigString.replace("%", "")) / 100);
-
-          return (int) Math.ceil(factor * realOnlinePlayers);
-        } else if (fakePlayersConfigString.contains("=")) {
-          return Integer.parseInt(fakePlayersConfigString.replace("=", ""));
-        } else if (fakePlayersConfigString.contains("+")) {
-          final int minPlayers = Integer.parseInt(fakePlayersConfigString.replace("+", ""));
-
-          return Math.max(minPlayers, realOnlinePlayers);
-        } else {
-          final int addedPlayers = Integer.parseInt(fakePlayersConfigString);
-
-          return realOnlinePlayers + addedPlayers;
-        }
-      } catch (final NumberFormatException ex) {
-        this.logger().warn(String.format("Exception parsing fake-players config string: '%s', please correct your configuration.", fakePlayersConfigString));
-      }
-    }
-    return realOnlinePlayers;
-  }
-
   public void reload() {
     this.iconManager.loadIcons();
     this.configManager.loadConfigs();

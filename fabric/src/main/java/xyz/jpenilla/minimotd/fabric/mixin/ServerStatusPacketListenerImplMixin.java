@@ -61,7 +61,7 @@ abstract class ServerStatusPacketListenerImplMixin {
     final MiniMOTD<String> miniMOTD = miniMOTDFabric.miniMOTD();
     final MiniMOTDConfig config = miniMOTD.configManager().mainConfig();
 
-    final int onlinePlayers = miniMOTD.calculateOnlinePlayers(config, minecraftServer.getPlayerCount());
+    final int onlinePlayers = config.calculateOnlinePlayers(minecraftServer.getPlayerCount());
     final int maxPlayers = config.adjustedMaxPlayers(onlinePlayers, vanillaStatus.getPlayers().getMaxPlayers());
 
     final MOTDIconPair<String> pair = miniMOTD.createMOTD(config, onlinePlayers, maxPlayers);

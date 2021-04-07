@@ -61,7 +61,7 @@ public class PingListener implements Listener {
     ).orElse("default");
     final MiniMOTDConfig cfg = this.miniMOTD.configManager().resolveConfig(configString);
     final ServerPing.Players players = response.getPlayers();
-    final int onlinePlayers = this.miniMOTD.calculateOnlinePlayers(cfg, players.getOnline());
+    final int onlinePlayers = cfg.calculateOnlinePlayers(players.getOnline());
     final int maxPlayers = cfg.adjustedMaxPlayers(onlinePlayers, players.getMax());
 
     if (cfg.hidePlayerCount()) {

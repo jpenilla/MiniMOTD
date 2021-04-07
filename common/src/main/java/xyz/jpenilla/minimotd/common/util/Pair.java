@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package xyz.jpenilla.minimotd.common;
+package xyz.jpenilla.minimotd.common.util;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -47,10 +47,15 @@ public final class Pair<L, R> {
 
   @Override
   public boolean equals(final @Nullable Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || this.getClass() != o.getClass()) {
+      return false;
+    }
     final Pair<?, ?> pair = (Pair<?, ?>) o;
-    return this.left.equals(pair.left) && this.right.equals(pair.right);
+    return this.left.equals(pair.left)
+      && this.right.equals(pair.right);
   }
 
   @Override

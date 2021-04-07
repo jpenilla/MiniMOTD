@@ -35,14 +35,14 @@ import java.util.List;
 public final class MiniMOTDConfig {
 
   public MiniMOTDConfig() {
-    this(Arrays.asList(
+    this(
       new MOTD(),
       new MOTD("<blue>Another <bold><red>MOTD", "<italic><underlined><gradient:red:green>much wow")
-    ));
+    );
   }
 
-  public MiniMOTDConfig(final @NonNull List<MOTD> defaultMOTDs) {
-    this.motds.addAll(defaultMOTDs);
+  public MiniMOTDConfig(final @NonNull MOTD @NonNull ... defaults) {
+    this.motds.addAll(Arrays.asList(defaults));
   }
 
   @Comment("The list of MOTDs to display\n"
@@ -61,9 +61,10 @@ public final class MiniMOTDConfig {
 
   public int adjustedMaxPlayers(final int onlinePlayers, final int actualMaxPlayers) {
     if (this.playerCountSettings.maxPlayersEnabled) {
-      return this.playerCountSettings.justXMoreSettings.justXMoreEnabled
-        ? onlinePlayers + this.playerCountSettings.justXMoreSettings.xValue
-        : this.playerCountSettings.maxPlayers;
+      if (this.playerCountSettings.justXMoreSettings.justXMoreEnabled) {
+        return onlinePlayers + this.playerCountSettings.justXMoreSettings.xValue;
+      }
+      return this.playerCountSettings.maxPlayers;
     } else {
       return actualMaxPlayers;
     }
@@ -143,9 +144,9 @@ public final class MiniMOTDConfig {
       @Comment("Enable fake player count feature")
       private boolean fakePlayersEnabled = false;
 
-      @Comment("Modes: static, constant, minimum, random, percent\n"
+      @Comment("Modes: add, constant, minimum, random, percent\n"
         + "\n"
-        + " - static: This many fake players will be added\n"
+        + " - add: This many fake players will be added\n"
         + "     ex: fake-players=\"3\"\n"
         + " - constant: A constant value for the player count\n"
         + "     ex: fake-players=\"=42\"\n"
@@ -155,7 +156,7 @@ public final class MiniMOTDConfig {
         + "     ex: fake-players=\"3:6\"\n"
         + " - percent: The player count will be inflated by this much, rounding up\n"
         + "     ex: fake-players=\"25%\"")
-      private String fakePlayers = "25%";
+      private PlayerCountModifier fakePlayers = PlayerCountModifier.parse("25%");
 
     }
 
@@ -173,12 +174,19 @@ public final class MiniMOTDConfig {
     return this.motdEnabled;
   }
 
-  public boolean fakePlayersEnabled() {
+  private boolean fakePlayersEnabled() {
     return this.playerCountSettings.fakePlayers.fakePlayersEnabled;
   }
 
-  public @NonNull String fakePlayers() {
+  private @NonNull PlayerCountModifier playerCountModifier() {
     return this.playerCountSettings.fakePlayers.fakePlayers;
+  }
+
+  public int calculateOnlinePlayers(final int realOnlinePlayers) {
+    if (this.fakePlayersEnabled()) {
+      return this.playerCountModifier().apply(realOnlinePlayers);
+    }
+    return realOnlinePlayers;
   }
 
   public boolean disablePlayerListHover() {

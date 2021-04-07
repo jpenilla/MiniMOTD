@@ -39,7 +39,10 @@ public final class ConfigLoader<C> {
   private static final TypeSerializerCollection SERIALIZERS;
 
   static {
-    SERIALIZERS = TypeSerializerCollection.defaults();
+    SERIALIZERS = TypeSerializerCollection.defaults()
+      .childBuilder()
+      .register(PlayerCountModifier.serializer())
+      .build();
   }
 
   private final HoconConfigurationLoader loader;

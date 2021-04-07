@@ -59,7 +59,7 @@ final class ClientPingServerEventListener implements EventListener<ClientPingSer
 
     final MiniMOTDConfig config = this.miniMOTD.configManager().mainConfig();
 
-    final int onlinePlayers = this.miniMOTD.calculateOnlinePlayers(config, players.getOnline());
+    final int onlinePlayers = config.calculateOnlinePlayers(players.getOnline());
     players.setOnline(onlinePlayers);
 
     final int maxPlayers = config.adjustedMaxPlayers(onlinePlayers, players.getMax());

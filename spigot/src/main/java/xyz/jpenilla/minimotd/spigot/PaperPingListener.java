@@ -48,7 +48,7 @@ public class PaperPingListener implements Listener {
   @EventHandler
   public void onPing(final @NonNull PaperServerListPingEvent e) {
     final MiniMOTDConfig cfg = this.miniMOTD.configManager().mainConfig();
-    final int onlinePlayers = this.miniMOTD.calculateOnlinePlayers(cfg, e.getNumPlayers());
+    final int onlinePlayers = cfg.calculateOnlinePlayers(e.getNumPlayers());
     e.setNumPlayers(onlinePlayers);
 
     final int maxPlayers = cfg.adjustedMaxPlayers(onlinePlayers, e.getMaxPlayers());

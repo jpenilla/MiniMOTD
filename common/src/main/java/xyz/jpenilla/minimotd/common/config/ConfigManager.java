@@ -27,12 +27,11 @@ import com.google.common.collect.ImmutableList;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.spongepowered.configurate.ConfigurateException;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
-import xyz.jpenilla.minimotd.common.Pair;
+import xyz.jpenilla.minimotd.common.util.Pair;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -112,7 +111,7 @@ public final class ConfigManager {
         MiniMOTDConfig.class,
         pair.left()
       );
-      loader.save(new MiniMOTDConfig(Collections.singletonList(pair.right())));
+      loader.save(new MiniMOTDConfig(pair.right()));
     }
   }
 
