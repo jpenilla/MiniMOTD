@@ -33,6 +33,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
+import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig.PlayerCount;
 
 public class PingListener implements Listener {
   private final MiniMOTD<CachedServerIcon> miniMOTD;
@@ -49,9 +50,9 @@ public class PingListener implements Listener {
   public void onPing(final @NonNull ServerListPingEvent e) {
     final MiniMOTDConfig cfg = this.miniMOTD.configManager().mainConfig();
     final int onlinePlayers = e.getNumPlayers();
-    final int actualMaxPlayers = e.getMaxPlayers();
 
-    final int maxPlayers = cfg.adjustedMaxPlayers(onlinePlayers, actualMaxPlayers);
+    final PlayerCount count = cfg.modifyPlayerCount(onlinePlayers, e.getMaxPlayers());
+    final int maxPlayers = count.maxPlayers();
     e.setMaxPlayers(maxPlayers);
 
     final MOTDIconPair<CachedServerIcon> pair = this.miniMOTD.createMOTD(cfg, onlinePlayers, maxPlayers);

@@ -40,6 +40,7 @@ import xyz.jpenilla.minimotd.common.Constants;
 import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
+import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig.PlayerCount;
 import xyz.jpenilla.minimotd.fabric.MiniMOTDFabric;
 import xyz.jpenilla.minimotd.fabric.access.ConnectionAccess;
 
@@ -61,8 +62,9 @@ abstract class ServerStatusPacketListenerImplMixin {
     final MiniMOTD<String> miniMOTD = miniMOTDFabric.miniMOTD();
     final MiniMOTDConfig config = miniMOTD.configManager().mainConfig();
 
-    final int onlinePlayers = config.calculateOnlinePlayers(minecraftServer.getPlayerCount());
-    final int maxPlayers = config.adjustedMaxPlayers(onlinePlayers, vanillaStatus.getPlayers().getMaxPlayers());
+    final PlayerCount count = config.modifyPlayerCount(minecraftServer.getPlayerCount(), vanillaStatus.getPlayers().getMaxPlayers());
+    final int onlinePlayers = count.onlinePlayers();
+    final int maxPlayers = count.maxPlayers();
 
     final MOTDIconPair<String> pair = miniMOTD.createMOTD(config, onlinePlayers, maxPlayers);
 

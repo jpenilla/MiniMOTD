@@ -35,6 +35,7 @@ import xyz.jpenilla.minimotd.common.Constants;
 import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
+import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig.PlayerCount;
 
 import java.lang.reflect.Method;
 
@@ -58,17 +59,17 @@ final class ClientPingServerEventListener implements EventListener<ClientPingSer
       response.setHidePlayers(false);
       players = response.players().orElse(null);
       if (players == null) {
-        this.miniMOTD.logger().warn(String.format("Failed to handle ClientPingServerEvent: '%s', response.players() was null.", event.toString()));
+        this.miniMOTD.logger().warn(String.format("Failed to handle ClientPingServerEvent: '%s', response.players() was null.", event));
         return;
       }
     }
 
     final MiniMOTDConfig config = this.miniMOTD.configManager().mainConfig();
 
-    final int onlinePlayers = config.calculateOnlinePlayers(players.online());
+    final PlayerCount count = config.modifyPlayerCount(players.online(), players.max());
+    final int onlinePlayers = count.onlinePlayers();
+    final int maxPlayers = count.maxPlayers();
     players.setOnline(onlinePlayers);
-
-    final int maxPlayers = config.adjustedMaxPlayers(onlinePlayers, players.max());
     players.setMax(maxPlayers);
 
     final MOTDIconPair<Favicon> pair = this.miniMOTD.createMOTD(config, onlinePlayers, maxPlayers);

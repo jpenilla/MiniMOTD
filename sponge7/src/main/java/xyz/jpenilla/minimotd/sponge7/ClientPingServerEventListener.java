@@ -32,6 +32,7 @@ import org.spongepowered.api.network.status.Favicon;
 import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
+import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig.PlayerCount;
 
 final class ClientPingServerEventListener implements EventListener<ClientPingServerEvent> {
   private final MiniMOTD<Favicon> miniMOTD;
@@ -52,17 +53,17 @@ final class ClientPingServerEventListener implements EventListener<ClientPingSer
       response.setHidePlayers(false);
       players = response.getPlayers().orElse(null);
       if (players == null) {
-        this.miniMOTD.logger().warn(String.format("Failed to handle ClientPingServerEvent: '%s', response.getPlayers() was null.", event.toString()));
+        this.miniMOTD.logger().warn(String.format("Failed to handle ClientPingServerEvent: '%s', response.getPlayers() was null.", event));
         return;
       }
     }
 
     final MiniMOTDConfig config = this.miniMOTD.configManager().mainConfig();
 
-    final int onlinePlayers = config.calculateOnlinePlayers(players.getOnline());
+    final PlayerCount count = config.modifyPlayerCount(players.getOnline(), players.getMax());
+    final int onlinePlayers = count.onlinePlayers();
+    final int maxPlayers = count.maxPlayers();
     players.setOnline(onlinePlayers);
-
-    final int maxPlayers = config.adjustedMaxPlayers(onlinePlayers, players.getMax());
     players.setMax(maxPlayers);
 
     final MOTDIconPair<Favicon> pair = this.miniMOTD.createMOTD(config, onlinePlayers, maxPlayers);

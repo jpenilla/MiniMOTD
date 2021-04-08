@@ -59,17 +59,6 @@ public final class MiniMOTDConfig {
 
   private PlayerCountSettings playerCountSettings = new PlayerCountSettings();
 
-  public int adjustedMaxPlayers(final int onlinePlayers, final int actualMaxPlayers) {
-    if (this.playerCountSettings.maxPlayersEnabled) {
-      if (this.playerCountSettings.justXMoreSettings.justXMoreEnabled) {
-        return onlinePlayers + this.playerCountSettings.justXMoreSettings.xValue;
-      }
-      return this.playerCountSettings.maxPlayers;
-    } else {
-      return actualMaxPlayers;
-    }
-  }
-
   @ConfigSerializable
   public static final class MOTD {
 
@@ -128,6 +117,10 @@ public final class MiniMOTDConfig {
       + "ex: x=3 -> 16/19 players online.")
     private JustXMore justXMoreSettings = new JustXMore();
 
+    @Comment("Should the displayed online player count be allowed to exceed the displayed maximum player count?\n"
+      + "If false, the online player count will be capped at the maximum player count")
+    private boolean allowExceedingMaximum = false;
+
     @ConfigSerializable
     public static final class JustXMore {
 
@@ -174,26 +167,59 @@ public final class MiniMOTDConfig {
     return this.motdEnabled;
   }
 
-  private boolean fakePlayersEnabled() {
-    return this.playerCountSettings.fakePlayers.fakePlayersEnabled;
-  }
-
-  private @NonNull PlayerCountModifier playerCountModifier() {
-    return this.playerCountSettings.fakePlayers.fakePlayers;
-  }
-
-  public int calculateOnlinePlayers(final int realOnlinePlayers) {
-    if (this.fakePlayersEnabled()) {
-      return this.playerCountModifier().apply(realOnlinePlayers);
-    }
-    return realOnlinePlayers;
-  }
-
   public boolean disablePlayerListHover() {
     return this.playerCountSettings.disablePlayerListHover;
   }
 
   public boolean hidePlayerCount() {
     return this.playerCountSettings.hidePlayerCount;
+  }
+
+  private @NonNull PlayerCountModifier playerCountModifier() {
+    return this.playerCountSettings.fakePlayers.fakePlayers;
+  }
+
+  private int calculateOnlinePlayers(final int onlinePlayers) {
+    if (this.playerCountSettings.fakePlayers.fakePlayersEnabled) {
+      return this.playerCountModifier().apply(onlinePlayers);
+    }
+    return onlinePlayers;
+  }
+
+  private int calculateMaxPlayers(final int onlinePlayers, final int maxPlayers) {
+    if (this.playerCountSettings.maxPlayersEnabled) {
+      if (this.playerCountSettings.justXMoreSettings.justXMoreEnabled) {
+        return onlinePlayers + this.playerCountSettings.justXMoreSettings.xValue;
+      }
+      return this.playerCountSettings.maxPlayers;
+    }
+    return maxPlayers;
+  }
+
+  public @NonNull PlayerCount modifyPlayerCount(final int onlinePlayers, final int maxPlayers) {
+    final int online = this.calculateOnlinePlayers(onlinePlayers);
+    final int max = this.calculateMaxPlayers(online, maxPlayers);
+    if (!this.playerCountSettings.allowExceedingMaximum) {
+      return new PlayerCount(Math.min(online, max), max);
+    }
+    return new PlayerCount(online, max);
+  }
+
+  public static final class PlayerCount {
+    private final int onlinePlayers;
+    private final int maxPlayers;
+
+    private PlayerCount(final int onlinePlayers, final int maxPlayers) {
+      this.onlinePlayers = onlinePlayers;
+      this.maxPlayers = maxPlayers;
+    }
+
+    public int onlinePlayers() {
+      return this.onlinePlayers;
+    }
+
+    public int maxPlayers() {
+      return this.maxPlayers;
+    }
   }
 }

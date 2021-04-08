@@ -49,6 +49,7 @@ import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
 import xyz.jpenilla.minimotd.common.UpdateChecker;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
+import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig.PlayerCount;
 
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
@@ -134,10 +135,10 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
 
     final ServerPing.Builder pong = event.getPing().asBuilder();
 
-    final int onlinePlayers = config.calculateOnlinePlayers(pong.getOnlinePlayers());
+    final PlayerCount count = config.modifyPlayerCount(pong.getOnlinePlayers(), pong.getMaximumPlayers());
+    final int onlinePlayers = count.onlinePlayers();
+    final int maxPlayers = count.maxPlayers();
     pong.onlinePlayers(onlinePlayers);
-
-    final int maxPlayers = config.adjustedMaxPlayers(onlinePlayers, pong.getMaximumPlayers());
     pong.maximumPlayers(maxPlayers);
 
     final MOTDIconPair<Favicon> pair = this.miniMOTD.createMOTD(config, onlinePlayers, maxPlayers);

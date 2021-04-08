@@ -37,6 +37,7 @@ import xyz.jpenilla.minimotd.common.Constants;
 import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
+import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig.PlayerCount;
 
 import java.util.Optional;
 
@@ -61,8 +62,9 @@ public class PingListener implements Listener {
     ).orElse("default");
     final MiniMOTDConfig cfg = this.miniMOTD.configManager().resolveConfig(configString);
     final ServerPing.Players players = response.getPlayers();
-    final int onlinePlayers = cfg.calculateOnlinePlayers(players.getOnline());
-    final int maxPlayers = cfg.adjustedMaxPlayers(onlinePlayers, players.getMax());
+    final PlayerCount count = cfg.modifyPlayerCount(players.getOnline(), players.getMax());
+    final int onlinePlayers = count.onlinePlayers();
+    final int maxPlayers = count.maxPlayers();
 
     if (cfg.hidePlayerCount()) {
       response.setPlayers(null);
