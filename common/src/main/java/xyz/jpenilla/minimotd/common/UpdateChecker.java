@@ -57,7 +57,7 @@ public final class UpdateChecker {
     }
     if (currentVersion.contains("SNAPSHOT")) {
       return ImmutableList.of(
-        "This server is running a development build of MiniMOTD! (" + currentVersion + ")",
+        "This server is running a development build of " + Constants.PluginMetadata.NAME + "! (" + currentVersion + ")",
         "The latest official release is " + versionList.get(0)
       );
     }
