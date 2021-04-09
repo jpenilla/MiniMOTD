@@ -2,7 +2,6 @@ rootProject.name = "MiniMOTD"
 
 pluginManagement {
   repositories {
-    jcenter()
     maven("https://maven.fabricmc.net/")
     gradlePluginPortal()
   }

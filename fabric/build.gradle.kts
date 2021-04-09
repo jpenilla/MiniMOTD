@@ -35,7 +35,7 @@ tasks {
   }
   remapJar {
     dependsOn(shadowJar)
-    input.set(shadowJar.get().outputs.files.singleFile)
+    input.set(shadowJar.get().archiveFile)
     archiveFileName.set("${project.name}-mc$minecraftVersion-${project.version}.jar")
     destinationDirectory.set(rootProject.buildDir.resolve("libs"))
   }
