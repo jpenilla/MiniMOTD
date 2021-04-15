@@ -6,8 +6,8 @@ plugins {
 }
 
 dependencies {
-  implementation(project(":minimotd-common"))
-  implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.8.1") {
+  implementation(projects.minimotdCommon)
+  implementation(libs.slf4jLog4jImpl) {
     isTransitive = false
   }
 }

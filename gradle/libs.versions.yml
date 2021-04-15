@@ -1,0 +1,128 @@
+metadata:
+  format: { version: 1.0 }
+
+versions:
+  adventure: 4.7.0
+  adventurePlatform: 4.0.0-SNAPSHOT
+  minimessage: 4.1.0-SNAPSHOT
+  configurate: 4.1.0-SNAPSHOT
+  slf4j: 1.7.30
+  slf4jLog4jImpl: 2.8.1
+  gson: 2.8.0
+  guava: 21.0
+  bstats: 2.2.1
+  paperApi: 1.16.5-R0.1-SNAPSHOT
+  waterfallApi: 1.16-R0.4-SNAPSHOT
+  fabricApi: 0.31.0+1.16
+  fabricLoader: 0.11.1
+  fabricMinecraft: 1.16.5
+  spongeApi7: 7.2.0
+  velocityApi: 1.1.4
+
+dependencies:
+  adventureBom:
+    group: net.kyori
+    name: adventure-bom
+    version: { ref: adventure }
+  adventureTextSerializerGson:
+    group: net.kyori
+    name: adventure-text-serializer-gson
+  adventurePlatformBungeecord:
+    group: net.kyori
+    name: adventure-platform-bungeecord
+    version: { ref: adventurePlatform }
+  adventurePlatformBukkit:
+    group: net.kyori
+    name: adventure-platform-bukkit
+    version: { ref: adventurePlatform }
+  adventurePlatformFabric:
+    group: net.kyori
+    name: adventure-platform-fabric
+    version: { ref: adventurePlatform }
+  adventurePlatformSpongeApi:
+    group: net.kyori
+    name: adventure-platform-spongeapi
+    version: { ref: adventurePlatform }
+  minimessage:
+    group: net.kyori
+    name: adventure-text-minimessage
+    version: { ref: minimessage }
+
+  configurateHocon:
+    group: org.spongepowered
+    name: configurate-hocon
+    version: { ref: configurate }
+
+  slf4jApi:
+    group: org.slf4j
+    name: slf4j-api
+    version: { ref: slf4j }
+  slf4jJdk14:
+    group: org.slf4j
+    name: slf4j-jdk14
+    version: { ref: slf4j }
+  slf4jLog4jImpl:
+    group: org.apache.logging.log4j
+    name: log4j-slf4j-impl
+    version: { ref: slf4jLog4jImpl }
+
+  gson:
+    group: com.google.code.gson
+    name: gson
+    version: { ref: gson }
+  guava:
+    group: com.google.guava
+    name: guava
+    version: { ref: guava }
+
+  bstatsBukkit:
+    group: org.bstats
+    name: bstats-bukkit
+    version: { ref: bstats }
+  bstatsBungeecord:
+    group: org.bstats
+    name: bstats-bungeecord
+    version: { ref: bstats }
+  bstatsVelocity:
+    group: org.bstats
+    name: bstats-velocity
+    version: { ref: bstats }
+  bstatsSponge:
+    group: org.bstats
+    name: bstats-sponge
+    version: { ref: bstats }
+
+  paperApi:
+    group: com.destroystokyo.paper
+    name: paper-api
+    version: { ref: paperApi }
+
+  waterfallApi:
+    group: io.github.waterfallmc
+    name: waterfall-api
+    version: { ref: waterfallApi }
+
+  fabricApi:
+    group: net.fabricmc.fabric-api
+    name: fabric-api
+    version: { ref: fabricApi }
+  fabricLoader:
+    group: net.fabricmc
+    name: fabric-loader
+    version: { ref: fabricLoader }
+  fabricMinecraft:
+    group: com.mojang
+    name: minecraft
+    version: { ref: fabricMinecraft }
+
+  spongeApi7:
+    group: org.spongepowered
+    name: spongeapi
+    version: { ref: spongeApi7 }
+
+  velocityApi:
+    group: com.velocitypowered
+    name: velocity-api
+    version: { ref: velocityApi }
+
+bundles:

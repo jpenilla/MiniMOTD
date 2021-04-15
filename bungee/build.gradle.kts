@@ -3,14 +3,17 @@ plugins {
 }
 
 dependencies {
-  implementation(project(":minimotd-common"))
-  implementation("org.slf4j", "slf4j-jdk14","1.7.30")
-  implementation("net.kyori", "adventure-platform-bungeecord", "4.0.0-SNAPSHOT")
-  implementation("org.bstats", "bstats-bungeecord", "2.2.1")
-  compileOnly("io.github.waterfallmc", "waterfall-api", "1.16-R0.4-SNAPSHOT")
+  implementation(projects.minimotdCommon)
+  implementation(libs.slf4jJdk14)
+  implementation(libs.adventurePlatformBungeecord)
+  implementation(libs.bstatsBungeecord)
+  compileOnly(libs.waterfallApi)
 }
 
 tasks {
+  generateBungeePluginDescription {
+    mustRunAfter(clean)
+  }
   shadowJar {
     relocate("org.slf4j", "xyz.jpenilla.minimotd.lib.slf4j")
     relocate("io.leangen.geantyref", "xyz.jpenilla.minimotd.lib.io.leangen.geantyref")

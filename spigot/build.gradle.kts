@@ -3,14 +3,17 @@ plugins {
 }
 
 dependencies {
-  implementation(project(":minimotd-common"))
-  implementation("org.slf4j", "slf4j-jdk14","1.7.30")
-  implementation("net.kyori", "adventure-platform-bukkit", "4.0.0-SNAPSHOT")
-  implementation("org.bstats", "bstats-bukkit", "2.2.1")
-  compileOnly("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
+  implementation(projects.minimotdCommon)
+  implementation(libs.slf4jJdk14)
+  implementation(libs.adventurePlatformBukkit)
+  implementation(libs.bstatsBukkit)
+  compileOnly(libs.paperApi)
 }
 
 tasks {
+  generateBukkitPluginDescription {
+    mustRunAfter(clean)
+  }
   shadowJar {
     relocate("org.slf4j", "xyz.jpenilla.minimotd.lib.slf4j")
     relocate("io.leangen.geantyref", "xyz.jpenilla.minimotd.lib.io.leangen.geantyref")

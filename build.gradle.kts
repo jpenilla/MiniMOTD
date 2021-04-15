@@ -51,7 +51,7 @@ subprojects {
 
   indra {
     javaVersions {
-      testWith(8, 11, 15)
+      testWith(8, 11, 16)
       target.set(8)
     }
     github("jpenilla", "MiniMOTD") {
@@ -69,7 +69,7 @@ subprojects {
     shadowJar {
       minimize()
       exclude("META-INF/versions/**")
-      if (!project.name.contains("fabric")) {
+      if (project != rootProject.projects.minimotdFabric.dependencyProject) {
         archiveClassifier.set("")
         doLast {
           val output = outputs.files.singleFile

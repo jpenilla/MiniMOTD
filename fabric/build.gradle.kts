@@ -1,27 +1,31 @@
 plugins {
-  id("fabric-loom") version "0.6-SNAPSHOT"
+  id("fabric-loom") version "0.7-SNAPSHOT"
 }
 
 val shade: Configuration by configurations.creating
 
-val minecraftVersion = "1.16.5"
+val minecraftVersion = libs.versions.fabricMinecraft.get()
 
 dependencies {
-  minecraft("com.mojang", "minecraft", minecraftVersion)
+  minecraft(libs.fabricMinecraft)
   mappings(minecraft.officialMojangMappings())
-  modImplementation("net.fabricmc", "fabric-loader", "0.11.1")
-  modImplementation("net.fabricmc.fabric-api", "fabric-api", "0.31.0+1.16")
+  modImplementation(libs.fabricLoader)
+  modImplementation(libs.fabricApi)
 
-  shade(implementation(project(":minimotd-common")) {
+  shade(implementation(projects.minimotdCommon) {
     exclude("net.kyori")
     exclude("org.slf4j")
   })
 
-  modImplementation(include("net.kyori", "adventure-platform-fabric", "4.0.0-SNAPSHOT"))
-  implementation(include("net.kyori", "adventure-text-minimessage", "4.1.0-SNAPSHOT"))
+  modImplementation(libs.adventurePlatformFabric)
+  include(libs.adventurePlatformFabric)
+  implementation(libs.minimessage)
+  include(libs.minimessage)
 
-  implementation(include("org.slf4j", "slf4j-api", "1.7.30"))
-  implementation(include("org.apache.logging.log4j", "log4j-slf4j-impl", "2.8.1"))
+  implementation(libs.slf4jApi)
+  include(libs.slf4jApi)
+  implementation(libs.slf4jLog4jImpl)
+  include(libs.slf4jLog4jImpl)
 }
 
 tasks {

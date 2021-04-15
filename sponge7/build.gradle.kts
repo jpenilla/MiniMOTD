@@ -1,10 +1,10 @@
 dependencies {
-  implementation(project(":minimotd-common")) {
+  implementation(projects.minimotdCommon) {
     exclude("org.slf4j", "slf4j-api")
   }
-  implementation("net.kyori", "adventure-platform-spongeapi", "4.0.0-SNAPSHOT")
-  compileOnly("org.spongepowered", "spongeapi", "7.2.0")
-  implementation("org.bstats", "bstats-sponge", "2.2.1")
+  implementation(libs.adventurePlatformSpongeApi)
+  compileOnly(libs.spongeApi7)
+  implementation(libs.bstatsSponge)
 }
 
 tasks {
