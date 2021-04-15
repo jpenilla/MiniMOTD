@@ -1,5 +1,5 @@
 plugins {
-  id("fabric-loom") version "0.7-SNAPSHOT"
+  id("fabric-loom") version "0.7.27"
 }
 
 val shade: Configuration by configurations.creating
