@@ -21,6 +21,6 @@ fun ShadowJar.configureForNativeAdventurePlatform() {
 private fun DependencyFilter.excludeAdventureExceptMiniMessage() {
   exclude { dependency ->
     dependency.moduleGroup == "net.kyori"
-      && dependency.name != "adventure-text-minimessage"
+      && dependency.moduleName != "adventure-text-minimessage"
   }
 }
