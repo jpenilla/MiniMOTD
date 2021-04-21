@@ -1,5 +1,5 @@
 plugins {
-  id("net.minecrell.plugin-yml.bukkit") version "0.3.0"
+  id("net.minecrell.plugin-yml.bukkit")
 }
 
 dependencies {
@@ -15,13 +15,10 @@ tasks {
     mustRunAfter(clean)
   }
   shadowJar {
-    relocate("org.slf4j", "xyz.jpenilla.minimotd.lib.slf4j")
-    relocate("io.leangen.geantyref", "xyz.jpenilla.minimotd.lib.io.leangen.geantyref")
-    relocate("org.spongepowered.configurate", "xyz.jpenilla.minimotd.lib.spongepowered.configurate")
-    relocate("com.typesafe.config", "xyz.jpenilla.minimotd.lib.typesafe.config")
-    relocate("net.kyori", "xyz.jpenilla.minimotd.lib.kyori")
-    relocate("org.checkerframework", "xyz.jpenilla.minimotd.lib.checkerframework")
-    relocate("org.bstats", "xyz.jpenilla.minimotd.lib.bstats")
+    commonRelocation("org.slf4j")
+    commonRelocation("io.leangen.geantyref")
+    commonRelocation("net.kyori")
+    commonRelocation("org.bstats")
   }
   build {
     dependsOn(shadowJar)

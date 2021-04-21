@@ -9,10 +9,10 @@ import java.io.ByteArrayOutputStream
 
 plugins {
   `java-library`
-  id("net.kyori.indra") version "1.3.1"
-  id("com.github.johnrengelman.shadow") version "6.1.0"
-  id("com.adarshr.test-logger") version "3.0.0"
-  id("net.kyori.blossom") version "1.2.0" apply false
+  id("net.kyori.indra")
+  id("com.github.johnrengelman.shadow")
+  id("com.adarshr.test-logger")
+  id("net.kyori.blossom") apply false
 }
 
 allprojects {
@@ -69,6 +69,12 @@ subprojects {
     shadowJar {
       minimize()
       exclude("META-INF/versions/**")
+      dependencies {
+        exclude(dependency("org.checkerframework:checker-qual"))
+        exclude(dependency("org.jetbrains:annotations")) // transitive dep from adventure
+      }
+      commonRelocation("org.spongepowered.configurate")
+      commonRelocation("com.typesafe.config")
       if (project != rootProject.projects.minimotdFabric.dependencyProject) {
         archiveClassifier.set("")
         doLast {

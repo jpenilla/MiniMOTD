@@ -1,5 +1,5 @@
 plugins {
-  id("fabric-loom") version "0.7-SNAPSHOT"
+  id("fabric-loom")
 }
 
 val shade: Configuration by configurations.creating
@@ -24,18 +24,15 @@ dependencies {
 
   implementation(libs.slf4jApi)
   include(libs.slf4jApi)
-  implementation(libs.slf4jLog4jImpl)
-  include(libs.slf4jLog4jImpl)
+  implementation(libs.log4jSlf4jImpl)
+  include(libs.log4jSlf4jImpl)
 }
 
 tasks {
   shadowJar {
     configurations = listOf(shade)
-    relocate("io.leangen.geantyref", "xyz.jpenilla.minimotd.lib.io.leangen.geantyref")
-    relocate("org.spongepowered.configurate", "xyz.jpenilla.minimotd.lib.spongepowered.configurate")
-    relocate("com.typesafe.config", "xyz.jpenilla.minimotd.lib.typesafe.config")
-    relocate("org.checkerframework", "xyz.jpenilla.minimotd.lib.checkerframework")
-    relocate("xyz.jpenilla.minimotd.common", "xyz.jpenilla.minimotd.lib.fabric.minimotd.common")
+    commonRelocation("io.leangen.geantyref")
+    platformRelocation("fabric", "xyz.jpenilla.minimotd.common")
   }
   remapJar {
     dependsOn(shadowJar)
