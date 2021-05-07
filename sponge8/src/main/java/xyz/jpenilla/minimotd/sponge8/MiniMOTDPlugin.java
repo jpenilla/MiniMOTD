@@ -66,8 +66,8 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
   ) {
     this.dataDirectory = dataDirectory;
     this.pluginContainer = pluginContainer;
-    this.pluginMetadata = pluginContainer.getMetadata();
-    this.logger = LoggerFactory.getLogger(this.pluginMetadata.getId());
+    this.pluginMetadata = pluginContainer.metadata();
+    this.logger = LoggerFactory.getLogger(this.pluginMetadata.id());
     this.miniMOTD = new MiniMOTD<>(this);
     Sponge.eventManager().registerListener(
       pluginContainer,
