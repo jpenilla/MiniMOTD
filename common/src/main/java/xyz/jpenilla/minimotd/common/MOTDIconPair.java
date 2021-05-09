@@ -24,7 +24,10 @@
 package xyz.jpenilla.minimotd.common;
 
 import net.kyori.adventure.text.Component;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
+import java.util.function.Consumer;
 
 public final class MOTDIconPair<I> {
 
@@ -40,8 +43,32 @@ public final class MOTDIconPair<I> {
     return this.icon;
   }
 
+  /**
+   * If {@link #icon()} is non-null, the provided {@link Consumer} will be called using
+   * it's return value. If {@link #icon()} is {@code null}, do nothing.
+   *
+   * @param iconConsumer icon consumer
+   */
+  public void icon(final @NonNull Consumer<@NonNull I> iconConsumer) {
+    if (this.icon != null) {
+      iconConsumer.accept(this.icon);
+    }
+  }
+
   public @Nullable Component motd() {
     return this.motd;
+  }
+
+  /**
+   * If {@link #motd()} is non-null, the provided {@link Consumer} will be called using
+   * it's return value. If {@link #motd()} is {@code null}, do nothing.
+   *
+   * @param motdConsumer motd consumer
+   */
+  public void motd(final @NonNull Consumer<@NonNull Component> motdConsumer) {
+    if (this.motd != null) {
+      motdConsumer.accept(this.motd);
+    }
   }
 
 }

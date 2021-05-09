@@ -7,17 +7,17 @@ plugins:
   net.kyori.indra: 1.3.1
   net.kyori.blossom: 1.2.0
   org.spongepowered.gradle.plugin: 1.0.3
-  com.github.johnrengelman.shadow: 6.1.0
+  com.github.johnrengelman.shadow: 7.0.0
   com.adarshr.test-logger: 3.0.0
   fabric-loom: 0.7-SNAPSHOT
-  net.minecrell.plugin-yml.bungee: 0.3.0
-  net.minecrell.plugin-yml.bukkit: 0.3.0
+  net.minecrell.plugin-yml.bungee: 0.4.0
+  net.minecrell.plugin-yml.bukkit: 0.4.0
 
 versions:
   adventure: 4.7.0
   adventurePlatform: 4.0.0-SNAPSHOT
   minimessage: 4.1.0-SNAPSHOT
-  configurate: 4.1.0-SNAPSHOT
+  configurate: 4.1.1
   checkerQual: 3.12.0
   slf4j: 1.7.30
   log4jSlf4jImpl: 2.8.1
@@ -37,6 +37,12 @@ dependencies:
     group: net.kyori
     name: adventure-bom
     version: { ref: adventure }
+  adventureApi:
+    group: net.kyori
+    name: adventure-api
+  adventureTextSerializerPlain:
+    group: net.kyori
+    name: adventure-text-serializer-plain
   adventureTextSerializerGson:
     group: net.kyori
     name: adventure-text-serializer-gson

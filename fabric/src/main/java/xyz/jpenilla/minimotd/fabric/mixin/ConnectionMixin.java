@@ -30,14 +30,13 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import xyz.jpenilla.minimotd.fabric.access.ConnectionAccess;
 
-@SuppressWarnings("checkstyle:FinalLocalVariable")
 @Unique
 @Mixin(Connection.class)
 @Implements({@Interface(iface = ConnectionAccess.class, prefix = "tabtps$")})
 abstract class ConnectionMixin {
   private int protocolVersion = -1;
 
-  public void tabtps$protocolVersion(int protocolVersion) {
+  public void tabtps$protocolVersion(final int protocolVersion) {
     this.protocolVersion = protocolVersion;
   }
 

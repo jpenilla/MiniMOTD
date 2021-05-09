@@ -23,7 +23,6 @@
  */
 package xyz.jpenilla.minimotd.bungee;
 
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.Favicon;
 import net.md_5.bungee.api.ServerPing;
@@ -39,12 +38,10 @@ import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig.PlayerCount;
 
-import java.util.Optional;
-
-public class PingListener implements Listener {
+final class PingListener implements Listener {
   private final MiniMOTD<Favicon> miniMOTD;
 
-  public PingListener(final @NonNull MiniMOTD<Favicon> miniMOTD) {
+  PingListener(final @NonNull MiniMOTD<Favicon> miniMOTD) {
     this.miniMOTD = miniMOTD;
   }
 
@@ -55,12 +52,7 @@ public class PingListener implements Listener {
       return;
     }
 
-    final String configString = this.miniMOTD.configManager().pluginSettings().configStringForHost(
-      Optional.ofNullable(e.getConnection().getVirtualHost())
-        .map(inetSocketAddress -> String.format("%s:%s", inetSocketAddress.getHostName(), inetSocketAddress.getPort()))
-        .orElse("default")
-    ).orElse("default");
-    final MiniMOTDConfig cfg = this.miniMOTD.configManager().resolveConfig(configString);
+    final MiniMOTDConfig cfg = this.miniMOTD.configManager().resolveConfig(e.getConnection().getVirtualHost());
     final ServerPing.Players players = response.getPlayers();
     final PlayerCount count = cfg.modifyPlayerCount(players.getOnline(), players.getMax());
     final int onlinePlayers = count.onlinePlayers();
@@ -78,25 +70,20 @@ public class PingListener implements Listener {
 
     final MOTDIconPair<Favicon> pair = this.miniMOTD.createMOTD(cfg, onlinePlayers, maxPlayers);
 
-    final Component motdComponent = pair.motd();
-    if (motdComponent != null) {
+    pair.motd(motd -> {
       final BaseComponent[] bungee;
       if (e.getConnection().getVersion() < Constants.MINECRAFT_1_16_PROTOCOL_VERSION) {
-        bungee = BungeeComponentSerializer.legacy().serialize(motdComponent);
+        bungee = BungeeComponentSerializer.legacy().serialize(motd);
       } else {
-        bungee = BungeeComponentSerializer.get().serialize(motdComponent);
+        bungee = BungeeComponentSerializer.get().serialize(motd);
       }
       if (BungeeComponentSerializer.isNative()) {
         response.setDescriptionComponent(bungee[0]);
       } else {
         response.setDescriptionComponent(new TextComponent(bungee));
       }
-    }
-
-    final Favicon favicon = pair.icon();
-    if (favicon != null) {
-      response.setFavicon(favicon);
-    }
+    });
+    pair.icon(response::setFavicon);
 
     e.setResponse(response);
   }

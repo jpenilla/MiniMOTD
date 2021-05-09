@@ -21,59 +21,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package xyz.jpenilla.minimotd.sponge7;
+package xyz.jpenilla.minimotd.velocity;
 
-import net.kyori.adventure.text.serializer.spongeapi.SpongeComponentSerializer;
+import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.proxy.ProxyPingEvent;
+import com.velocitypowered.api.proxy.server.ServerPing;
+import com.velocitypowered.api.util.Favicon;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.spongepowered.api.event.EventListener;
-import org.spongepowered.api.event.server.ClientPingServerEvent;
-import org.spongepowered.api.network.status.Favicon;
 import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
-import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig.PlayerCount;
 
-final class ClientPingServerEventListener implements EventListener<ClientPingServerEvent> {
+final class PingListener {
   private final MiniMOTD<Favicon> miniMOTD;
 
-  ClientPingServerEventListener(final @NonNull MiniMOTD<Favicon> miniMOTD) {
+  PingListener(final @NonNull MiniMOTD<Favicon> miniMOTD) {
     this.miniMOTD = miniMOTD;
   }
 
-  @Override
-  public void handle(final @NonNull ClientPingServerEvent event) {
-    final ClientPingServerEvent.Response response = event.getResponse();
+  @Subscribe
+  public void handlePing(final @NonNull ProxyPingEvent event) {
+    final MiniMOTDConfig config = this.miniMOTD.configManager().resolveConfig(event.getConnection().getVirtualHost().orElse(null));
 
-    final ClientPingServerEvent.Response.Players players;
-    final ClientPingServerEvent.Response.Players players0 = response.getPlayers().orElse(null);
-    if (players0 != null) {
-      players = players0;
-    } else {
-      response.setHidePlayers(false);
-      players = response.getPlayers().orElse(null);
-      if (players == null) {
-        this.miniMOTD.logger().warn(String.format("Failed to handle ClientPingServerEvent: '%s', response.getPlayers() was null.", event));
-        return;
-      }
-    }
+    final ServerPing.Builder pong = event.getPing().asBuilder();
 
-    final MiniMOTDConfig config = this.miniMOTD.configManager().mainConfig();
-
-    final PlayerCount count = config.modifyPlayerCount(players.getOnline(), players.getMax());
+    final MiniMOTDConfig.PlayerCount count = config.modifyPlayerCount(pong.getOnlinePlayers(), pong.getMaximumPlayers());
     final int onlinePlayers = count.onlinePlayers();
     final int maxPlayers = count.maxPlayers();
-    players.setOnline(onlinePlayers);
-    players.setMax(maxPlayers);
+    pong.onlinePlayers(onlinePlayers);
+    pong.maximumPlayers(maxPlayers);
 
     final MOTDIconPair<Favicon> pair = this.miniMOTD.createMOTD(config, onlinePlayers, maxPlayers);
-    pair.motd(motd -> response.setDescription(SpongeComponentSerializer.get().serialize(motd)));
-    pair.icon(response::setFavicon);
+    pair.icon(pong::favicon);
+    pair.motd(pong::description);
 
     if (config.disablePlayerListHover()) {
-      players.getProfiles().clear();
+      pong.clearSamplePlayers();
     }
     if (config.hidePlayerCount()) {
-      response.setHidePlayers(true);
+      pong.nullPlayers();
     }
+
+    event.setPing(pong.build());
   }
 }

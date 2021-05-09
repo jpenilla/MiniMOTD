@@ -24,19 +24,20 @@
 package xyz.jpenilla.minimotd.bungee;
 
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.minimotd.common.CommandHandlerFactory;
 
-public class BungeeCommand extends Command {
+import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.event.ClickEvent.runCommand;
+import static net.kyori.adventure.text.format.NamedTextColor.RED;
+
+final class BungeeCommand extends Command {
   private final MiniMOTDPlugin plugin;
   private final CommandHandlerFactory handlerFactory;
 
-  public BungeeCommand(final @NonNull MiniMOTDPlugin plugin) {
+  BungeeCommand(final @NonNull MiniMOTDPlugin plugin) {
     super("minimotd");
     this.plugin = plugin;
     this.handlerFactory = new CommandHandlerFactory(plugin.miniMOTD());
@@ -46,7 +47,7 @@ public class BungeeCommand extends Command {
   public void execute(final @NonNull CommandSender sender, final @NonNull String @NonNull [] args) {
     final Audience audience = this.plugin.audiences().sender(sender);
     if (!sender.hasPermission("minimotd.admin")) {
-      audience.sendMessage(Component.text("No permission.", NamedTextColor.RED));
+      audience.sendMessage(text("No permission.", RED));
       return;
     }
 
@@ -71,10 +72,8 @@ public class BungeeCommand extends Command {
   }
 
   private void onInvalidUse(final @NonNull Audience audience) {
-    audience.sendMessage(
-      Component.text("Invalid command usage. Use '/minimotd help' for a list of command provided by MiniMOTD.", NamedTextColor.RED)
-        .hoverEvent(Component.text("Click to execute '/minimotd help'"))
-        .clickEvent(ClickEvent.runCommand("/minimotd help"))
-    );
+    audience.sendMessage(text("Invalid command usage. Use '/minimotd help' for a list of command provided by MiniMOTD.", RED)
+      .hoverEvent(text("Click to execute '/minimotd help'"))
+      .clickEvent(runCommand("/minimotd help")));
   }
 }

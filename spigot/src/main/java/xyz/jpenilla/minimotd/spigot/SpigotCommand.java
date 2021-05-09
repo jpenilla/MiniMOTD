@@ -25,9 +25,6 @@ package xyz.jpenilla.minimotd.spigot;
 
 import com.google.common.collect.ImmutableList;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -38,11 +35,15 @@ import xyz.jpenilla.minimotd.common.CommandHandlerFactory;
 import java.util.Collections;
 import java.util.List;
 
-public class SpigotCommand implements CommandExecutor, TabCompleter {
+import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.event.ClickEvent.runCommand;
+import static net.kyori.adventure.text.format.NamedTextColor.RED;
+
+final class SpigotCommand implements CommandExecutor, TabCompleter {
   private final MiniMOTDPlugin plugin;
   private final CommandHandlerFactory handlerFactory;
 
-  public SpigotCommand(final @NonNull MiniMOTDPlugin plugin) {
+  SpigotCommand(final @NonNull MiniMOTDPlugin plugin) {
     this.plugin = plugin;
     this.handlerFactory = new CommandHandlerFactory(plugin.miniMOTD());
   }
@@ -51,7 +52,7 @@ public class SpigotCommand implements CommandExecutor, TabCompleter {
   public boolean onCommand(final @NonNull CommandSender sender, final @NonNull Command command, final @NonNull String label, final @NonNull String[] args) {
     final Audience audience = this.plugin.audiences().sender(sender);
     if (!sender.hasPermission("minimotd.admin")) {
-      audience.sendMessage(Component.text("No permission.", NamedTextColor.RED));
+      audience.sendMessage(text("No permission.", RED));
       return true;
     }
 
@@ -77,11 +78,9 @@ public class SpigotCommand implements CommandExecutor, TabCompleter {
   }
 
   private void onInvalidUse(final @NonNull Audience audience) {
-    audience.sendMessage(
-      Component.text("Invalid command usage. Use '/minimotd help' for a list of command provided by MiniMOTD.", NamedTextColor.RED)
-        .hoverEvent(Component.text("Click to execute '/minimotd help'"))
-        .clickEvent(ClickEvent.runCommand("/minimotd help"))
-    );
+    audience.sendMessage(text("Invalid command usage. Use '/minimotd help' for a list of command provided by MiniMOTD.", RED)
+      .hoverEvent(text("Click to execute '/minimotd help'"))
+      .clickEvent(runCommand("/minimotd help")));
   }
 
   private static final List<String> COMMANDS = ImmutableList.of("about", "reload", "help");

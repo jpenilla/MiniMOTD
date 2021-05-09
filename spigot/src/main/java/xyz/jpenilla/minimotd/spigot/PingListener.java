@@ -23,7 +23,6 @@
  */
 package xyz.jpenilla.minimotd.spigot;
 
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,40 +34,33 @@ import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig.PlayerCount;
 
-public class PingListener implements Listener {
+final class PingListener implements Listener {
   private final MiniMOTD<CachedServerIcon> miniMOTD;
-  private final LegacyComponentSerializer serializer = LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build();
-  private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.builder().build();
+  private final LegacyComponentSerializer unusualHexSerializer = LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build();
   private final MiniMOTDPlugin plugin;
 
-  public PingListener(final @NonNull MiniMOTDPlugin plugin, final @NonNull MiniMOTD<CachedServerIcon> miniMOTD) {
+  PingListener(final @NonNull MiniMOTDPlugin plugin, final @NonNull MiniMOTD<CachedServerIcon> miniMOTD) {
     this.plugin = plugin;
     this.miniMOTD = miniMOTD;
   }
 
   @EventHandler
-  public void onPing(final @NonNull ServerListPingEvent e) {
+  public void handlePing(final @NonNull ServerListPingEvent event) {
     final MiniMOTDConfig cfg = this.miniMOTD.configManager().mainConfig();
-    final int onlinePlayers = e.getNumPlayers();
+    final int onlinePlayers = event.getNumPlayers();
 
-    final PlayerCount count = cfg.modifyPlayerCount(onlinePlayers, e.getMaxPlayers());
+    final PlayerCount count = cfg.modifyPlayerCount(onlinePlayers, event.getMaxPlayers());
     final int maxPlayers = count.maxPlayers();
-    e.setMaxPlayers(maxPlayers);
+    event.setMaxPlayers(maxPlayers);
 
     final MOTDIconPair<CachedServerIcon> pair = this.miniMOTD.createMOTD(cfg, onlinePlayers, maxPlayers);
-    final Component motdComponent = pair.motd();
-    if (motdComponent != null) {
+    pair.motd(motd -> {
       if (this.plugin.majorMinecraftVersion() > 15) {
-        e.setMotd(this.serializer.serialize(motdComponent));
+        event.setMotd(this.unusualHexSerializer.serialize(motd));
       } else {
-        e.setMotd(this.legacySerializer.serialize(motdComponent));
+        event.setMotd(LegacyComponentSerializer.legacySection().serialize(motd));
       }
-    }
-
-    final CachedServerIcon favicon = pair.icon();
-    if (favicon != null) {
-      e.setServerIcon(favicon);
-    }
-
+    });
+    pair.icon(event::setServerIcon);
   }
 }

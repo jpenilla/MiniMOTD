@@ -23,7 +23,6 @@
  */
 package xyz.jpenilla.minimotd.sponge8;
 
-import net.kyori.adventure.text.Component;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.spongepowered.api.MinecraftVersion;
@@ -73,21 +72,14 @@ final class ClientPingServerEventListener implements EventListener<ClientPingSer
     players.setMax(maxPlayers);
 
     final MOTDIconPair<Favicon> pair = this.miniMOTD.createMOTD(config, onlinePlayers, maxPlayers);
-
-    final Component motdComponent = pair.motd();
-    if (motdComponent != null) {
-      final MinecraftVersion version = event.client().version();
-      if (this.legacy(version)) {
-        response.setDescription(ComponentColorDownsampler.downsampler().downsample(motdComponent));
+    pair.motd(motd -> {
+      if (this.legacy(event.client().version())) {
+        response.setDescription(ComponentColorDownsampler.downsampler().downsample(motd));
       } else {
-        response.setDescription(motdComponent);
+        response.setDescription(motd);
       }
-    }
-
-    final Favicon favicon = pair.icon();
-    if (favicon != null) {
-      response.setFavicon(favicon);
-    }
+    });
+    pair.icon(response::setFavicon);
 
     if (config.disablePlayerListHover()) {
       players.profiles().clear();

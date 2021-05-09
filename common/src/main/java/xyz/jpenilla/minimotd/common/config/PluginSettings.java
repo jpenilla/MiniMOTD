@@ -24,12 +24,12 @@
 package xyz.jpenilla.minimotd.common.config;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @ConfigSerializable
 public final class PluginSettings {
@@ -56,14 +56,25 @@ public final class PluginSettings {
       + "Format is \"hostname:port\"=\"configName|default\"")
     private final Map<String, String> virtualHostConfigs = new HashMap<>();
 
+    @Comment("Set whether to enable virtual host testing mode.\n"
+      + "When enabled, MiniMOTD will print virtual host debug info to the console on each server ping.")
+    private final boolean virtualHostTestMode = false;
+
+    public boolean virtualHostTestMode() {
+      return this.virtualHostTestMode;
+    }
+
+    public @Nullable String findConfigStringForHost(final @NonNull String host) {
+      return this.virtualHostConfigs.get(host);
+    }
+  }
+
+  public @NonNull ProxySettings proxySettings() {
+    return this.proxySettings;
   }
 
   public boolean updateChecker() {
     return this.updateChecker;
-  }
-
-  public @NonNull Optional<String> configStringForHost(final @NonNull String host) {
-    return Optional.ofNullable(this.proxySettings.virtualHostConfigs.get(host));
   }
 
 }

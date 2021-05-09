@@ -25,11 +25,13 @@ package xyz.jpenilla.minimotd.common.config;
 
 import com.google.common.collect.ImmutableList;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.ConfigurateException;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.util.Pair;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -127,6 +129,23 @@ public final class ConfigManager {
       throw new IllegalStateException("Config has not yet been loaded");
     }
     return this.pluginSettings;
+  }
+
+  public @NonNull MiniMOTDConfig resolveConfig(final @Nullable InetSocketAddress address) {
+    if (address == null) {
+      return this.mainConfig();
+    }
+    final String hostString = String.format("%s:%s", address.getHostString(), address.getPort());
+    final String configString = this.pluginSettings().proxySettings().findConfigStringForHost(hostString);
+
+    if (this.pluginSettings().proxySettings().virtualHostTestMode()) {
+      this.miniMOTD.platform().logger().info("[virtual-host-debug] Virtual Host: '{}', Selected Config: '{}'", hostString, configString == null ? "default" : configString);
+    }
+
+    if (configString == null) {
+      return this.mainConfig();
+    }
+    return this.resolveConfig(configString);
   }
 
   public @NonNull MiniMOTDConfig resolveConfig(final @NonNull String name) {

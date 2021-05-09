@@ -42,7 +42,7 @@ import java.awt.image.BufferedImage;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 
-public class MiniMOTDPlugin extends Plugin implements MiniMOTDPlatform<Favicon> {
+public final class MiniMOTDPlugin extends Plugin implements MiniMOTDPlatform<Favicon> {
   private Logger logger;
   private BungeeAudiences audiences;
   private MiniMOTD<Favicon> miniMOTD;

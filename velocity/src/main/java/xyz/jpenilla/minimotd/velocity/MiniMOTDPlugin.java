@@ -32,24 +32,18 @@ import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
-import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
-import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.api.util.Favicon;
-import net.kyori.adventure.text.Component;
 import org.bstats.velocity.Metrics;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import xyz.jpenilla.minimotd.common.CommandHandlerFactory;
 import xyz.jpenilla.minimotd.common.Constants;
-import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
 import xyz.jpenilla.minimotd.common.UpdateChecker;
-import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
-import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig.PlayerCount;
 
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
@@ -85,6 +79,7 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
     this.metricsFactory = metricsFactory;
     this.miniMOTD = new MiniMOTD<>(this);
     this.miniMOTD.configManager().loadExtraConfigs();
+    server.getEventManager().register(this, new PingListener(this.miniMOTD));
   }
 
   @Subscribe
@@ -122,44 +117,6 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
         .then(LiteralArgumentBuilder.<CommandSource>literal("about").executes(new WrappingExecutor(handlerFactory.about())))
         .then(LiteralArgumentBuilder.<CommandSource>literal("reload").executes(new WrappingExecutor(handlerFactory.reload())))
     ));
-  }
-
-  @Subscribe
-  public void onServerListPing(final @NonNull ProxyPingEvent event) {
-    final String configString = this.miniMOTD.configManager().pluginSettings().configStringForHost(
-      event.getConnection().getVirtualHost()
-        .map(inetSocketAddress -> String.format("%s:%s", inetSocketAddress.getHostName(), inetSocketAddress.getPort()))
-        .orElse("default")
-    ).orElse("default");
-    final MiniMOTDConfig config = this.miniMOTD.configManager().resolveConfig(configString);
-
-    final ServerPing.Builder pong = event.getPing().asBuilder();
-
-    final PlayerCount count = config.modifyPlayerCount(pong.getOnlinePlayers(), pong.getMaximumPlayers());
-    final int onlinePlayers = count.onlinePlayers();
-    final int maxPlayers = count.maxPlayers();
-    pong.onlinePlayers(onlinePlayers);
-    pong.maximumPlayers(maxPlayers);
-
-    final MOTDIconPair<Favicon> pair = this.miniMOTD.createMOTD(config, onlinePlayers, maxPlayers);
-    final Favicon favicon = pair.icon();
-    if (favicon != null) {
-      pong.favicon(favicon);
-    }
-
-    final Component motdComponent = pair.motd();
-    if (motdComponent != null) {
-      pong.description(motdComponent);
-    }
-
-    if (config.disablePlayerListHover()) {
-      pong.clearSamplePlayers();
-    }
-    if (config.hidePlayerCount()) {
-      pong.nullPlayers();
-    }
-
-    event.setPing(pong.build());
   }
 
   @Override

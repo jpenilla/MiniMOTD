@@ -12,6 +12,8 @@ dependencies {
   api(libs.slf4jApi)
   api(libs.configurateHocon)
   api(platform(libs.adventureBom))
+  api(libs.adventureApi)
+  api(libs.adventureTextSerializerPlain)
   api(libs.adventureTextSerializerGson) {
     exclude("com.google.code.gson", "gson")
   }

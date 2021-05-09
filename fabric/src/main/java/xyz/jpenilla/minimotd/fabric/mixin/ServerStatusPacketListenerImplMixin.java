@@ -24,7 +24,6 @@
 package xyz.jpenilla.minimotd.fabric.mixin;
 
 import com.mojang.authlib.GameProfile;
-import net.kyori.adventure.text.Component;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.status.ServerStatus;
 import net.minecraft.server.MinecraftServer;
@@ -32,7 +31,6 @@ import net.minecraft.server.network.ServerStatusPacketListenerImpl;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import xyz.jpenilla.minimotd.common.ComponentColorDownsampler;
@@ -44,7 +42,6 @@ import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig.PlayerCount;
 import xyz.jpenilla.minimotd.fabric.MiniMOTDFabric;
 import xyz.jpenilla.minimotd.fabric.access.ConnectionAccess;
 
-@Unique
 @Mixin(ServerStatusPacketListenerImpl.class)
 abstract class ServerStatusPacketListenerImplMixin {
   @Shadow @Final private Connection connection;
@@ -67,22 +64,14 @@ abstract class ServerStatusPacketListenerImplMixin {
     final int maxPlayers = count.maxPlayers();
 
     final MOTDIconPair<String> pair = miniMOTD.createMOTD(config, onlinePlayers, maxPlayers);
-
-    final Component motdComponent = pair.motd();
-    if (motdComponent != null) {
+    pair.motd(motd -> {
       if (((ConnectionAccess) this.connection).protocolVersion() >= Constants.MINECRAFT_1_16_PROTOCOL_VERSION) {
-        modifiedStatus.setDescription(miniMOTDFabric.audiences().toNative(motdComponent));
+        modifiedStatus.setDescription(miniMOTDFabric.audiences().toNative(motd));
       } else {
-        modifiedStatus.setDescription(miniMOTDFabric.audiences().toNative(
-          ComponentColorDownsampler.downsampler().downsample(motdComponent)
-        ));
+        modifiedStatus.setDescription(miniMOTDFabric.audiences().toNative(ComponentColorDownsampler.downsampler().downsample(motd)));
       }
-    }
-
-    final String favicon = pair.icon();
-    if (favicon != null) {
-      modifiedStatus.setFavicon(favicon);
-    }
+    });
+    pair.icon(modifiedStatus::setFavicon);
 
     if (!config.hidePlayerCount()) {
       final GameProfile[] oldSample = vanillaStatus.getPlayers().getSample();
