@@ -31,6 +31,6 @@ blossom {
     "src/main/java/xyz/jpenilla/minimotd/velocity/MiniMOTDPlugin.java",
     "project.name" to project.name,
     "description" to description!!,
-    "url" to rootProject.ext["url"].toString()
+    "url" to Constants.GITHUB_URL
   )
 }

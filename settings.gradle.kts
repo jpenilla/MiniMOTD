@@ -15,6 +15,8 @@ plugins {
 
 rootProject.name = "MiniMOTD"
 
+includeBuild("build-logic")
+
 setupSubproject("minimotd-common") {
   projectDir = file("common")
 }

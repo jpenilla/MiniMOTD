@@ -47,7 +47,7 @@ tasks {
         "{rootProject.name}" to rootProject.name,
         "{project.version}" to project.version.toString(),
         "{project.description}" to project.description.toString(),
-        "{project.github_url}" to rootProject.ext["url"].toString()
+        "{project.github_url}" to Constants.GITHUB_URL
       ).forEach { (k, v) ->
         filter { it.replace(k, v) }
       }

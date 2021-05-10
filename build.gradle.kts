@@ -4,24 +4,22 @@ import com.github.jengelman.gradle.plugins.shadow.ShadowPlugin
 import net.kyori.indra.IndraCheckstylePlugin
 import net.kyori.indra.IndraLicenseHeaderPlugin
 import net.kyori.indra.IndraPlugin
-import net.kyori.indra.sonatypeSnapshots
-import java.io.ByteArrayOutputStream
+import net.kyori.indra.repository.sonatypeSnapshots
 
 plugins {
-  `java-library`
-  id("net.kyori.indra")
-  id("com.github.johnrengelman.shadow")
+  id("minimotd-build-logic")
   id("com.adarshr.test-logger")
   id("net.kyori.blossom") apply false
 }
 
+val projectVersion = "2.0.3-SNAPSHOT"
+  .run { if (this.endsWith("-SNAPSHOT")) "$this+${lastCommitHash()}" else this }
+
 allprojects {
   group = "xyz.jpenilla"
-  version = "2.0.3+${lastCommitHash()}-SNAPSHOT"
+  version = projectVersion
   description = "Use MiniMessage text formatting in the server list MOTD."
 }
-
-ext["url"] = "https://github.com/jpenilla/MiniMOTD"
 
 subprojects {
   apply<JavaLibraryPlugin>()
@@ -51,12 +49,10 @@ subprojects {
 
   indra {
     javaVersions {
+      target(8)
       testWith(8, 11, 16)
-      target.set(8)
     }
-    github("jpenilla", "MiniMOTD") {
-      issues = true
-    }
+    github("jpenilla", "MiniMOTD")
     mitLicense()
   }
 
@@ -98,10 +94,3 @@ subprojects {
 tasks.withType<Jar> {
   onlyIf { false }
 }
-
-fun lastCommitHash(): String = ByteArrayOutputStream().apply {
-  exec {
-    commandLine = listOf("git", "rev-parse", "--short", "HEAD")
-    standardOutput = this@apply
-  }
-}.toString(Charsets.UTF_8.name()).trim()

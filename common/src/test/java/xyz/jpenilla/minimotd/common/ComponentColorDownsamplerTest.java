@@ -30,14 +30,15 @@ import org.junit.jupiter.api.Test;
 
 import static net.kyori.adventure.text.Component.text;
 import static net.kyori.adventure.text.format.NamedTextColor.nearestTo;
+import static net.kyori.adventure.text.format.TextColor.color;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ComponentColorDownsamplerTest {
-  private static final TextColor GREEN = TextColor.color(0x04E762);
-  private static final TextColor ORANGE_YELLOW = TextColor.color(0xF5B700);
-  private static final TextColor PINK = TextColor.color(0xDC0073);
-  private static final TextColor BLUE = TextColor.color(0x008BF8);
-  private static final TextColor LIME_GREEN = TextColor.color(0x89FC00);
+  private static final TextColor GREEN = color(0x04E762);
+  private static final TextColor ORANGE_YELLOW = color(0xF5B700);
+  private static final TextColor PINK = color(0xDC0073);
+  private static final TextColor BLUE = color(0x008BF8);
+  private static final TextColor LIME_GREEN = color(0x89FC00);
 
   @Test
   void testColorDownsampling() {
@@ -57,9 +58,6 @@ class ComponentColorDownsamplerTest {
     );
     final Component actualDownsample = ComponentColorDownsampler.downsampler().downsample(fullColor);
 
-    assertEquals(
-      expectedDownsample,
-      actualDownsample
-    );
+    assertEquals(expectedDownsample, actualDownsample);
   }
 }

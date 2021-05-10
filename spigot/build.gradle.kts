@@ -29,7 +29,7 @@ bukkit {
   name = rootProject.name
   main = "xyz.jpenilla.minimotd.spigot.MiniMOTDPlugin"
   apiVersion = "1.13"
-  website = rootProject.ext["url"].toString()
+  website = Constants.GITHUB_URL
   authors = listOf("jmp")
   softDepend = listOf("ViaVersion")
   commands {

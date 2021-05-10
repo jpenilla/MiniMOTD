@@ -32,6 +32,6 @@ blossom {
     "src/main/java/xyz/jpenilla/minimotd/common/Constants.java",
     "PLUGIN_NAME" to rootProject.name,
     "PLUGIN_VERSION" to project.version.toString(),
-    "PLUGIN_WEBSITE" to rootProject.ext["url"].toString()
+    "PLUGIN_WEBSITE" to Constants.GITHUB_URL
   )
 }

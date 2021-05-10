@@ -20,10 +20,9 @@ sponge {
     mainClass("xyz.jpenilla.minimotd.sponge8.MiniMOTDPlugin")
     description(project.description)
     links {
-      val url = rootProject.ext["url"] as String
-      homepage(url)
-      source(url)
-      issues("$url/issues")
+      homepage(Constants.GITHUB_URL)
+      source(Constants.GITHUB_URL)
+      issues("${Constants.GITHUB_URL}/issues")
     }
     contributor("jmp") {
       description("Lead Developer")
