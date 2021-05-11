@@ -29,6 +29,7 @@ versions:
   fabricMinecraft: 1.16.5
   spongeApi7: 7.2.0
   velocityApi: 1.1.4
+  jupiterEngine: 5.7.0
 
 dependencies:
   adventureBom:
@@ -146,5 +147,10 @@ dependencies:
     group: com.velocitypowered
     name: velocity-api
     version: { ref: velocityApi }
+
+  jupiterEngine:
+    group: org.junit.jupiter
+    name: junit-jupiter-engine
+    version: { ref: jupiterEngine }
 
 bundles:

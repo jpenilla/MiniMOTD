@@ -9,7 +9,6 @@ import net.kyori.indra.repository.sonatypeSnapshots
 plugins {
   id("minimotd-build-logic")
   id("com.adarshr.test-logger")
-  id("net.kyori.blossom") apply false
 }
 
 val projectVersion = "2.0.3-SNAPSHOT"
@@ -44,7 +43,7 @@ subprojects {
   }
 
   dependencies {
-    testImplementation("org.junit.jupiter", "junit-jupiter-engine", "5.7.0")
+    testImplementation(rootProject.libs.jupiterEngine)
   }
 
   indra {
