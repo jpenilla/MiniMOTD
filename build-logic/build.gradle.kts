@@ -7,7 +7,7 @@ repositories {
 }
 
 dependencies {
-  val indraVersion = "2.0.3"
+  val indraVersion = "2.0.4"
   implementation("net.kyori", "indra-common", indraVersion)
   implementation("net.kyori", "indra-git", indraVersion)
   val shadowVersion = "7.0.0"
