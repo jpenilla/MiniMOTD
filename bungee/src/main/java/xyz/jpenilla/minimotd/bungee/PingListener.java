@@ -38,7 +38,7 @@ import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig.PlayerCount;
 
-final class PingListener implements Listener {
+public final class PingListener implements Listener {
   private final MiniMOTD<Favicon> miniMOTD;
 
   PingListener(final @NonNull MiniMOTD<Favicon> miniMOTD) {
