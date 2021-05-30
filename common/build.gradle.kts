@@ -25,13 +25,14 @@ dependencies {
 }
 
 blossom {
-  fun replaceTokens(file: String, vararg tokens: Pair<String, String>) = tokens.forEach { (k, v) ->
-    replaceToken("\${$k}", v, file)
-  }
-  replaceTokens(
-    "src/main/java/xyz/jpenilla/minimotd/common/Constants.java",
+  val file = "src/main/java/xyz/jpenilla/minimotd/common/Constants.java"
+  mapOf(
     "PLUGIN_NAME" to rootProject.name,
     "PLUGIN_VERSION" to project.version.toString(),
-    "PLUGIN_WEBSITE" to Constants.GITHUB_URL
-  )
+    "PLUGIN_WEBSITE" to Constants.GITHUB_URL,
+    "GITHUB_USER" to Constants.GITHUB_USER,
+    "GITHUB_REPO" to Constants.GITHUB_REPO
+  ).forEach { (k, v) ->
+    replaceToken("\${$k}", v, file)
+  }
 }

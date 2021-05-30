@@ -27,7 +27,7 @@ import net.kyori.adventure.audience.Audience;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import xyz.jpenilla.minimotd.common.CommandHandlerFactory;
+import xyz.jpenilla.minimotd.common.CommandHandler;
 
 import static net.kyori.adventure.text.Component.text;
 import static net.kyori.adventure.text.event.ClickEvent.runCommand;
@@ -35,12 +35,12 @@ import static net.kyori.adventure.text.format.NamedTextColor.RED;
 
 final class BungeeCommand extends Command {
   private final MiniMOTDPlugin plugin;
-  private final CommandHandlerFactory handlerFactory;
+  private final CommandHandler handler;
 
   BungeeCommand(final @NonNull MiniMOTDPlugin plugin) {
     super("minimotd");
     this.plugin = plugin;
-    this.handlerFactory = new CommandHandlerFactory(plugin.miniMOTD());
+    this.handler = new CommandHandler(plugin.miniMOTD());
   }
 
   @Override
@@ -58,13 +58,13 @@ final class BungeeCommand extends Command {
 
     switch (args[0]) {
       case "about":
-        this.handlerFactory.about().execute(audience);
+        this.handler.about(audience);
         return;
       case "help":
-        this.handlerFactory.help().execute(audience);
+        this.handler.help(audience);
         return;
       case "reload":
-        this.handlerFactory.reload().execute(audience);
+        this.handler.reload(audience);
         return;
     }
 

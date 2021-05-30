@@ -1,3 +1,7 @@
+plugins {
+  id("minimotd.shadow-platform")
+}
+
 dependencies {
   implementation(projects.minimotdCommon) {
     exclude("org.slf4j", "slf4j-api")

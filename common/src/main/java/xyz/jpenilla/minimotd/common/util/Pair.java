@@ -23,10 +23,9 @@
  */
 package xyz.jpenilla.minimotd.common.util;
 
+import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-
-import java.util.Objects;
 
 public final class Pair<L, R> {
   private final L left;
@@ -63,7 +62,7 @@ public final class Pair<L, R> {
     return Objects.hash(this.left, this.right);
   }
 
-  public static <L, R> @NonNull Pair<L, R> of(final @NonNull L left, final @NonNull R right) {
+  public static <L, R> @NonNull Pair<L, R> pair(final @NonNull L left, final @NonNull R right) {
     return new Pair<>(left, right);
   }
 }

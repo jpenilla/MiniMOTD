@@ -5,11 +5,9 @@ metadata:
 
 plugins:
   net.kyori.blossom: 1.2.0
-  org.spongepowered.gradle.plugin: 1.0.3
-  com.adarshr.test-logger: 3.0.0
-  fabric-loom: 0.7-SNAPSHOT
-  net.minecrell.plugin-yml.bungee: 0.4.0
-  net.minecrell.plugin-yml.bukkit: 0.4.0
+  org.spongepowered.gradle.plugin: 1.1.1
+  net.minecrell.plugin-yml.bungee: &plugin-yml 0.4.0
+  net.minecrell.plugin-yml.bukkit: *plugin-yml
 
 versions:
   adventure: 4.7.0

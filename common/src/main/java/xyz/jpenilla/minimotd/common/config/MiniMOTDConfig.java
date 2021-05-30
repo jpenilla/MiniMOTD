@@ -23,13 +23,15 @@
  */
 package xyz.jpenilla.minimotd.common.config;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Comment;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+import org.spongepowered.configurate.objectmapping.meta.Comment;
+import xyz.jpenilla.minimotd.common.PingResponse;
+
+import static xyz.jpenilla.minimotd.common.PingResponse.PlayerCount.playerCount;
 
 @ConfigSerializable
 public final class MiniMOTDConfig {
@@ -196,30 +198,12 @@ public final class MiniMOTDConfig {
     return maxPlayers;
   }
 
-  public @NonNull PlayerCount modifyPlayerCount(final int onlinePlayers, final int maxPlayers) {
+  public PingResponse.@NonNull PlayerCount modifyPlayerCount(final int onlinePlayers, final int maxPlayers) {
     final int online = this.calculateOnlinePlayers(onlinePlayers);
     final int max = this.calculateMaxPlayers(online, maxPlayers);
     if (!this.playerCountSettings.allowExceedingMaximum) {
-      return new PlayerCount(Math.min(online, max), max);
+      return playerCount(Math.min(online, max), max);
     }
-    return new PlayerCount(online, max);
-  }
-
-  public static final class PlayerCount {
-    private final int onlinePlayers;
-    private final int maxPlayers;
-
-    private PlayerCount(final int onlinePlayers, final int maxPlayers) {
-      this.onlinePlayers = onlinePlayers;
-      this.maxPlayers = maxPlayers;
-    }
-
-    public int onlinePlayers() {
-      return this.onlinePlayers;
-    }
-
-    public int maxPlayers() {
-      return this.maxPlayers;
-    }
+    return playerCount(online, max);
   }
 }

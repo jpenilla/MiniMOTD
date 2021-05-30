@@ -23,7 +23,13 @@
  */
 package xyz.jpenilla.minimotd.sponge7;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.TypeLiteral;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.nio.file.Path;
 import net.kyori.adventure.platform.spongeapi.SpongeAudiences;
 import org.bstats.sponge.Metrics;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -42,14 +48,10 @@ import org.spongepowered.api.event.server.ClientPingServerEvent;
 import org.spongepowered.api.network.status.Favicon;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.scheduler.Task;
-import xyz.jpenilla.minimotd.common.CommandHandlerFactory;
+import xyz.jpenilla.minimotd.common.CommandHandler;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
-import xyz.jpenilla.minimotd.common.UpdateChecker;
-
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.nio.file.Path;
+import xyz.jpenilla.minimotd.common.util.UpdateChecker;
 
 @Plugin(id = "minimotd-sponge7")
 public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
@@ -57,24 +59,33 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
   private final Path dataDirectory;
   private final MiniMOTD<Favicon> miniMOTD;
   private final SpongeAudiences audiences;
+  private final Injector injector;
 
   @Inject
   public MiniMOTDPlugin(
     final @NonNull Logger logger,
     @ConfigDir(sharedRoot = false) final @NonNull Path dataDirectory,
     final @NonNull SpongeAudiences audiences,
-    final Metrics.@NonNull Factory metricsFactory
+    final Metrics.@NonNull Factory metricsFactory,
+    final @NonNull Injector injector
   ) {
     this.logger = logger;
     this.dataDirectory = dataDirectory;
     this.audiences = audiences;
     this.miniMOTD = new MiniMOTD<>(this);
+    this.injector = injector.createChildInjector(new AbstractModule() {
+      @Override
+      protected void configure() {
+        this.bind(new TypeLiteral<MiniMOTD<Favicon>>() {
+        }).toInstance(MiniMOTDPlugin.this.miniMOTD);
+      }
+    });
     metricsFactory.make(10768);
   }
 
   @Listener
   public void gameStarted(final @NonNull GameStartedServerEvent event) {
-    Sponge.getEventManager().registerListener(this, ClientPingServerEvent.class, new ClientPingServerEventListener(this.miniMOTD));
+    Sponge.getEventManager().registerListener(this, ClientPingServerEvent.class, this.injector.getInstance(ClientPingServerEventListener.class));
     this.registerCommands();
     if (this.miniMOTD.configManager().pluginSettings().updateChecker()) {
       Task.builder()
@@ -91,28 +102,28 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
 
   private void registerCommands() {
     final class WrappingExecutor implements CommandExecutor {
-      private final CommandHandlerFactory.CommandHandler handler;
+      private final CommandHandler.Executor handler;
 
-      WrappingExecutor(final CommandHandlerFactory.@NonNull CommandHandler handler) {
+      WrappingExecutor(final CommandHandler.@NonNull Executor handler) {
         this.handler = handler;
       }
 
       @Override
-      public CommandResult execute(final @NonNull CommandSource src, final @NonNull CommandContext args) {
+      public @NonNull CommandResult execute(final @NonNull CommandSource src, final @NonNull CommandContext args) {
         this.handler.execute(MiniMOTDPlugin.this.audiences.receiver(src));
         return CommandResult.success();
       }
     }
 
-    final CommandHandlerFactory factory = new CommandHandlerFactory(this.miniMOTD);
+    final CommandHandler handler = new CommandHandler(this.miniMOTD);
     final CommandSpec help = CommandSpec.builder()
-      .executor(new WrappingExecutor(factory.help()))
+      .executor(new WrappingExecutor(handler::help))
       .build();
     final CommandSpec about = CommandSpec.builder()
-      .executor(new WrappingExecutor(factory.about()))
+      .executor(new WrappingExecutor(handler::about))
       .build();
     final CommandSpec reload = CommandSpec.builder()
-      .executor(new WrappingExecutor(factory.reload()))
+      .executor(new WrappingExecutor(handler::reload))
       .build();
     Sponge.getCommandManager().register(
       this,

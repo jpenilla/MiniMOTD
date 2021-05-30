@@ -1,4 +1,5 @@
 plugins {
+  id("minimotd.shadow-platform")
   id("net.minecrell.plugin-yml.bukkit")
 }
 
@@ -27,7 +28,7 @@ tasks {
 
 bukkit {
   name = rootProject.name
-  main = "xyz.jpenilla.minimotd.spigot.MiniMOTDPlugin"
+  main = "xyz.jpenilla.minimotd.bukkit.MiniMOTDPlugin"
   apiVersion = "1.13"
   website = Constants.GITHUB_URL
   authors = listOf("jmp")

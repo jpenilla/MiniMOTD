@@ -23,7 +23,11 @@
  */
 package xyz.jpenilla.minimotd.velocity;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.TypeLiteral;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -36,17 +40,17 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.util.Favicon;
+import java.awt.image.BufferedImage;
+import java.nio.file.Path;
+import java.util.Set;
 import org.bstats.velocity.Metrics;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
-import xyz.jpenilla.minimotd.common.CommandHandlerFactory;
+import xyz.jpenilla.minimotd.common.CommandHandler;
 import xyz.jpenilla.minimotd.common.Constants;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
-import xyz.jpenilla.minimotd.common.UpdateChecker;
-
-import java.awt.image.BufferedImage;
-import java.nio.file.Path;
+import xyz.jpenilla.minimotd.common.util.UpdateChecker;
 
 @Plugin(
   id = "${project.name}",
@@ -57,12 +61,17 @@ import java.nio.file.Path;
   authors = {"jmp"}
 )
 public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
+  private static final Set<Class<?>> LISTENER_CLASSES = ImmutableSet.of(
+    PingListener.class
+  );
+
   private final MiniMOTD<Favicon> miniMOTD;
   private final ProxyServer server;
   private final Logger logger;
   private final CommandManager commandManager;
   private final Path dataDirectory;
   private final Metrics.Factory metricsFactory;
+  private final Injector injector;
 
   @Inject
   public MiniMOTDPlugin(
@@ -70,7 +79,8 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
     final @NonNull Logger logger,
     final @NonNull CommandManager commandManager,
     @DataDirectory final @NonNull Path dataDirectory,
-    final Metrics.@NonNull Factory metricsFactory
+    final Metrics.@NonNull Factory metricsFactory,
+    final @NonNull Injector injector
   ) {
     this.server = server;
     this.logger = logger;
@@ -79,7 +89,16 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
     this.metricsFactory = metricsFactory;
     this.miniMOTD = new MiniMOTD<>(this);
     this.miniMOTD.configManager().loadExtraConfigs();
-    server.getEventManager().register(this, new PingListener(this.miniMOTD));
+    this.injector = injector.createChildInjector(new AbstractModule() {
+      @Override
+      protected void configure() {
+        this.bind(new TypeLiteral<MiniMOTD<Favicon>>() {
+        }).toInstance(MiniMOTDPlugin.this.miniMOTD);
+      }
+    });
+    for (final Class<?> clazz : LISTENER_CLASSES) {
+      server.getEventManager().register(this, this.injector.getInstance(clazz));
+    }
   }
 
   @Subscribe
@@ -96,9 +115,9 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
 
   private void registerCommand() {
     final class WrappingExecutor implements Command<CommandSource> {
-      private final CommandHandlerFactory.CommandHandler handler;
+      private final CommandHandler.Executor handler;
 
-      WrappingExecutor(final CommandHandlerFactory.@NonNull CommandHandler handler) {
+      WrappingExecutor(final CommandHandler.@NonNull Executor handler) {
         this.handler = handler;
       }
 
@@ -109,13 +128,13 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
       }
     }
 
-    final CommandHandlerFactory handlerFactory = new CommandHandlerFactory(this.miniMOTD);
+    final CommandHandler handler = new CommandHandler(this.miniMOTD);
     this.commandManager.register(this.commandManager.metaBuilder("minimotd").build(), new BrigadierCommand(
       LiteralArgumentBuilder.<CommandSource>literal("minimotd")
         .requires(source -> source.hasPermission("minimotd.admin"))
-        .then(LiteralArgumentBuilder.<CommandSource>literal("help").executes(new WrappingExecutor(handlerFactory.help())))
-        .then(LiteralArgumentBuilder.<CommandSource>literal("about").executes(new WrappingExecutor(handlerFactory.about())))
-        .then(LiteralArgumentBuilder.<CommandSource>literal("reload").executes(new WrappingExecutor(handlerFactory.reload())))
+        .then(LiteralArgumentBuilder.<CommandSource>literal("help").executes(new WrappingExecutor(handler::help)))
+        .then(LiteralArgumentBuilder.<CommandSource>literal("about").executes(new WrappingExecutor(handler::about)))
+        .then(LiteralArgumentBuilder.<CommandSource>literal("reload").executes(new WrappingExecutor(handler::reload)))
     ));
   }
 

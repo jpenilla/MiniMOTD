@@ -1,4 +1,6 @@
 plugins {
+  id("minimotd.platform-conventions")
+  id("com.github.johnrengelman.shadow")
   id("fabric-loom")
 }
 
@@ -28,9 +30,14 @@ dependencies {
   include(libs.log4jSlf4jImpl)
 }
 
+miniMOTDPlatformExtension {
+  jarTask.set(tasks.remapJar)
+}
+
 tasks {
   shadowJar {
     configurations = listOf(shade)
+    commonConfiguration()
     commonRelocation("io.leangen.geantyref")
     platformRelocation("fabric", "xyz.jpenilla.minimotd.common")
   }
@@ -38,7 +45,6 @@ tasks {
     dependsOn(shadowJar)
     input.set(shadowJar.get().archiveFile)
     archiveFileName.set("${project.name}-mc$minecraftVersion-${project.version}.jar")
-    destinationDirectory.set(rootProject.buildDir.resolve("libs"))
   }
   processResources {
     filesMatching("fabric.mod.json") {

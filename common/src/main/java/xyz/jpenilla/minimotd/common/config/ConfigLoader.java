@@ -23,6 +23,8 @@
  */
 package xyz.jpenilla.minimotd.common.config;
 
+import java.nio.file.Path;
+import java.util.function.UnaryOperator;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
@@ -31,9 +33,6 @@ import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 import org.spongepowered.configurate.objectmapping.ObjectMapper;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
-
-import java.nio.file.Path;
-import java.util.function.UnaryOperator;
 
 public final class ConfigLoader<C> {
   private static final TypeSerializerCollection SERIALIZERS;

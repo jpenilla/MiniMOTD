@@ -28,6 +28,13 @@ import com.mojang.brigadier.context.CommandContext;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
+import java.awt.image.BufferedImage;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.Base64;
+import java.util.concurrent.CompletableFuture;
+import javax.imageio.ImageIO;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -37,18 +44,10 @@ import net.minecraft.commands.CommandSourceStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import xyz.jpenilla.minimotd.common.CommandHandlerFactory;
+import xyz.jpenilla.minimotd.common.CommandHandler;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
-import xyz.jpenilla.minimotd.common.UpdateChecker;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.util.Base64;
-import java.util.concurrent.CompletableFuture;
+import xyz.jpenilla.minimotd.common.util.UpdateChecker;
 
 import static net.minecraft.commands.Commands.literal;
 
@@ -86,9 +85,9 @@ public final class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<St
 
   private void registerCommand() {
     final class WrappingExecutor implements Command<CommandSourceStack> {
-      private final CommandHandlerFactory.CommandHandler handler;
+      private final CommandHandler.Executor handler;
 
-      WrappingExecutor(final CommandHandlerFactory.@NonNull CommandHandler handler) {
+      WrappingExecutor(final CommandHandler.@NonNull Executor handler) {
         this.handler = handler;
       }
 
@@ -99,13 +98,13 @@ public final class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<St
       }
     }
 
-    final CommandHandlerFactory handlerFactory = new CommandHandlerFactory(this.miniMOTD);
+    final CommandHandler handler = new CommandHandler(this.miniMOTD);
     CommandRegistrationCallback.EVENT.register((dispatcher, $) -> dispatcher.register(
       literal("minimotd")
         .requires(source -> source.hasPermission(4))
-        .then(literal("reload").executes(new WrappingExecutor(handlerFactory.reload())))
-        .then(literal("about").executes(new WrappingExecutor(handlerFactory.about())))
-        .then(literal("help").executes(new WrappingExecutor(handlerFactory.help())))
+        .then(literal("reload").executes(new WrappingExecutor(handler::reload)))
+        .then(literal("about").executes(new WrappingExecutor(handler::about)))
+        .then(literal("help").executes(new WrappingExecutor(handler::help)))
     ));
   }
 

@@ -33,12 +33,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import xyz.jpenilla.minimotd.common.ComponentColorDownsampler;
 import xyz.jpenilla.minimotd.common.Constants;
-import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
+import xyz.jpenilla.minimotd.common.PingResponse;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
-import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig.PlayerCount;
+import xyz.jpenilla.minimotd.common.util.ComponentColorDownsampler;
 import xyz.jpenilla.minimotd.fabric.MiniMOTDFabric;
 import xyz.jpenilla.minimotd.fabric.access.ConnectionAccess;
 
@@ -59,24 +58,21 @@ abstract class ServerStatusPacketListenerImplMixin {
     final MiniMOTD<String> miniMOTD = miniMOTDFabric.miniMOTD();
     final MiniMOTDConfig config = miniMOTD.configManager().mainConfig();
 
-    final PlayerCount count = config.modifyPlayerCount(minecraftServer.getPlayerCount(), vanillaStatus.getPlayers().getMaxPlayers());
-    final int onlinePlayers = count.onlinePlayers();
-    final int maxPlayers = count.maxPlayers();
+    final PingResponse<String> response = miniMOTD.createMOTD(config, minecraftServer.getPlayerCount(), vanillaStatus.getPlayers().getMaxPlayers());
 
-    final MOTDIconPair<String> pair = miniMOTD.createMOTD(config, onlinePlayers, maxPlayers);
-    pair.motd(motd -> {
+    response.motd(motd -> {
       if (((ConnectionAccess) this.connection).protocolVersion() >= Constants.MINECRAFT_1_16_PROTOCOL_VERSION) {
         modifiedStatus.setDescription(miniMOTDFabric.audiences().toNative(motd));
       } else {
         modifiedStatus.setDescription(miniMOTDFabric.audiences().toNative(ComponentColorDownsampler.downsampler().downsample(motd)));
       }
     });
-    pair.icon(modifiedStatus::setFavicon);
+    response.icon(modifiedStatus::setFavicon);
 
-    if (!config.hidePlayerCount()) {
+    if (!response.hidePlayerCount()) {
       final GameProfile[] oldSample = vanillaStatus.getPlayers().getSample();
-      final ServerStatus.Players newPlayers = new ServerStatus.Players(maxPlayers, onlinePlayers);
-      if (config.disablePlayerListHover()) {
+      final ServerStatus.Players newPlayers = new ServerStatus.Players(response.playerCount().maxPlayers(), response.playerCount().onlinePlayers());
+      if (response.disablePlayerListHover()) {
         newPlayers.setSample(new GameProfile[]{});
       } else {
         newPlayers.setSample(oldSample);

@@ -1,4 +1,5 @@
 plugins {
+  id("minimotd.shadow-platform")
   id("net.minecrell.plugin-yml.bungee")
 }
 

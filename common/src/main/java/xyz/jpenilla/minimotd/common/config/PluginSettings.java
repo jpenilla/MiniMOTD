@@ -23,13 +23,12 @@
  */
 package xyz.jpenilla.minimotd.common.config;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @ConfigSerializable
 public final class PluginSettings {

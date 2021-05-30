@@ -23,20 +23,21 @@
  */
 package xyz.jpenilla.minimotd.sponge7;
 
+import com.google.inject.Inject;
 import net.kyori.adventure.text.serializer.spongeapi.SpongeComponentSerializer;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.spongepowered.api.event.EventListener;
 import org.spongepowered.api.event.server.ClientPingServerEvent;
 import org.spongepowered.api.network.status.Favicon;
-import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
+import xyz.jpenilla.minimotd.common.PingResponse;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
-import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig.PlayerCount;
 
 final class ClientPingServerEventListener implements EventListener<ClientPingServerEvent> {
   private final MiniMOTD<Favicon> miniMOTD;
 
-  ClientPingServerEventListener(final @NonNull MiniMOTD<Favicon> miniMOTD) {
+  @Inject
+  private ClientPingServerEventListener(final @NonNull MiniMOTD<Favicon> miniMOTD) {
     this.miniMOTD = miniMOTD;
   }
 
@@ -59,20 +60,15 @@ final class ClientPingServerEventListener implements EventListener<ClientPingSer
 
     final MiniMOTDConfig config = this.miniMOTD.configManager().mainConfig();
 
-    final PlayerCount count = config.modifyPlayerCount(players.getOnline(), players.getMax());
-    final int onlinePlayers = count.onlinePlayers();
-    final int maxPlayers = count.maxPlayers();
-    players.setOnline(onlinePlayers);
-    players.setMax(maxPlayers);
+    final PingResponse<Favicon> mini = this.miniMOTD.createMOTD(config, players.getOnline(), players.getMax());
+    mini.playerCount().applyCount(players::setOnline, players::setMax);
+    mini.motd(motd -> response.setDescription(SpongeComponentSerializer.get().serialize(motd)));
+    mini.icon(response::setFavicon);
 
-    final MOTDIconPair<Favicon> pair = this.miniMOTD.createMOTD(config, onlinePlayers, maxPlayers);
-    pair.motd(motd -> response.setDescription(SpongeComponentSerializer.get().serialize(motd)));
-    pair.icon(response::setFavicon);
-
-    if (config.disablePlayerListHover()) {
+    if (mini.disablePlayerListHover()) {
       players.getProfiles().clear();
     }
-    if (config.hidePlayerCount()) {
+    if (mini.hidePlayerCount()) {
       response.setHidePlayers(true);
     }
   }

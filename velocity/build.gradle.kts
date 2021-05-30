@@ -1,4 +1,5 @@
 plugins {
+  id("minimotd.shadow-platform")
   id("net.kyori.blossom")
 }
 
@@ -18,19 +19,15 @@ tasks {
     platformRelocation("velocity", "xyz.jpenilla.minimotd.common")
     commonRelocation("org.bstats")
   }
-  build {
-    dependsOn(shadowJar)
-  }
 }
 
 blossom {
-  fun replaceTokens(file: String, vararg tokens: Pair<String, String>) = tokens.forEach { (k, v) ->
+  val file = "src/main/java/xyz/jpenilla/minimotd/velocity/MiniMOTDPlugin.java"
+  mapOf(
+    "project.name" to project.name,
+    "description" to description as String,
+    "url" to Constants.GITHUB_URL
+  ).forEach { (k, v) ->
     replaceToken("\${$k}", v, file)
   }
-  replaceTokens(
-    "src/main/java/xyz/jpenilla/minimotd/velocity/MiniMOTDPlugin.java",
-    "project.name" to project.name,
-    "description" to description!!,
-    "url" to Constants.GITHUB_URL
-  )
 }

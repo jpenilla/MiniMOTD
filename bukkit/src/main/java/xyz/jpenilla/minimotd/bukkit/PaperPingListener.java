@@ -21,46 +21,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package xyz.jpenilla.minimotd.spigot;
+package xyz.jpenilla.minimotd.bukkit;
 
+import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.util.CachedServerIcon;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import xyz.jpenilla.minimotd.common.MOTDIconPair;
+import xyz.jpenilla.minimotd.common.Constants;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
+import xyz.jpenilla.minimotd.common.PingResponse;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
-import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig.PlayerCount;
 
-final class PingListener implements Listener {
-  private final MiniMOTD<CachedServerIcon> miniMOTD;
-  private final LegacyComponentSerializer unusualHexSerializer = LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build();
+final class PaperPingListener implements Listener {
   private final MiniMOTDPlugin plugin;
+  private final LegacyComponentSerializer unusualHexSerializer = LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build();
+  private final MiniMOTD<CachedServerIcon> miniMOTD;
 
-  PingListener(final @NonNull MiniMOTDPlugin plugin, final @NonNull MiniMOTD<CachedServerIcon> miniMOTD) {
-    this.plugin = plugin;
+  PaperPingListener(final @NonNull MiniMOTDPlugin plugin, final @NonNull MiniMOTD<CachedServerIcon> miniMOTD) {
     this.miniMOTD = miniMOTD;
+    this.plugin = plugin;
   }
 
   @EventHandler
-  public void handlePing(final @NonNull ServerListPingEvent event) {
+  public void handlePing(final @NonNull PaperServerListPingEvent event) {
     final MiniMOTDConfig cfg = this.miniMOTD.configManager().mainConfig();
-    final int onlinePlayers = event.getNumPlayers();
 
-    final PlayerCount count = cfg.modifyPlayerCount(onlinePlayers, event.getMaxPlayers());
-    final int maxPlayers = count.maxPlayers();
-    event.setMaxPlayers(maxPlayers);
+    final PingResponse<CachedServerIcon> response = this.miniMOTD.createMOTD(cfg, event.getNumPlayers(), event.getMaxPlayers());
 
-    final MOTDIconPair<CachedServerIcon> pair = this.miniMOTD.createMOTD(cfg, onlinePlayers, maxPlayers);
-    pair.motd(motd -> {
-      if (this.plugin.majorMinecraftVersion() > 15) {
-        event.setMotd(this.unusualHexSerializer.serialize(motd));
-      } else {
+    response.playerCount().applyCount(event::setNumPlayers, event::setMaxPlayers);
+    response.motd(motd -> {
+      if (event.getClient().getProtocolVersion() < Constants.MINECRAFT_1_16_PROTOCOL_VERSION || this.plugin.majorMinecraftVersion() < 16) {
         event.setMotd(LegacyComponentSerializer.legacySection().serialize(motd));
+      } else {
+        event.setMotd(this.unusualHexSerializer.serialize(motd));
       }
     });
-    pair.icon(event::setServerIcon);
+    response.icon(event::setServerIcon);
+
+    if (response.disablePlayerListHover()) {
+      event.getPlayerSample().clear();
+    }
+    if (response.hidePlayerCount()) {
+      event.setHidePlayers(true);
+    }
   }
 }

@@ -2,6 +2,7 @@ import org.spongepowered.gradle.plugin.config.PluginLoaders
 import org.spongepowered.plugin.metadata.PluginDependency
 
 plugins {
+  id("minimotd.shadow-platform")
   id("org.spongepowered.gradle.plugin")
 }
 
@@ -13,6 +14,7 @@ dependencies {
 }
 
 sponge {
+  injectRepositories(false)
   apiVersion("8.0.0")
   plugin(project.name) {
     loader(PluginLoaders.JAVA_PLAIN)
@@ -43,11 +45,5 @@ tasks {
     dependencies {
       exclude(dependency("io.leangen.geantyref:geantyref"))
     }
-  }
-  runServer {
-    classpath(shadowJar)
-  }
-  build {
-    dependsOn(shadowJar)
   }
 }

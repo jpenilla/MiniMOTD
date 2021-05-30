@@ -24,6 +24,9 @@
 package xyz.jpenilla.minimotd.bungee;
 
 import com.google.gson.Gson;
+import java.awt.image.BufferedImage;
+import java.lang.reflect.Field;
+import java.nio.file.Path;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.Favicon;
@@ -36,11 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
-import xyz.jpenilla.minimotd.common.UpdateChecker;
-
-import java.awt.image.BufferedImage;
-import java.lang.reflect.Field;
-import java.nio.file.Path;
+import xyz.jpenilla.minimotd.common.util.UpdateChecker;
 
 public final class MiniMOTDPlugin extends Plugin implements MiniMOTDPlatform<Favicon> {
   private Logger logger;

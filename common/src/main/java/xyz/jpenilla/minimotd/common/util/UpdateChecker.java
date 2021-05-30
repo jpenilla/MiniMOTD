@@ -21,15 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package xyz.jpenilla.minimotd.common;
+package xyz.jpenilla.minimotd.common.util;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Collections;
@@ -37,16 +36,19 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import xyz.jpenilla.minimotd.common.Constants;
 
 public final class UpdateChecker {
   private final JsonParser parser = new JsonParser();
 
   public @NonNull List<String> checkVersion() {
     final JsonArray result;
-    try {
-      result = this.parser.parse(new InputStreamReader(new URL("https://api.github.com/repos/jpenilla/MiniMOTD/releases").openStream(), Charsets.UTF_8)).getAsJsonArray();
-    } catch (final IOException exception) {
-      return Collections.singletonList("Cannot look for updates: " + exception.getMessage());
+    final String url = String.format("https://api.github.com/repos/%s/%s/releases", Constants.PluginMetadata.GITHUB_USER, Constants.PluginMetadata.GITHUB_REPO);
+    try (final InputStream is = new URL(url).openStream(); InputStreamReader reader = new InputStreamReader(is, Charsets.UTF_8)) {
+      result = this.parser.parse(reader).getAsJsonArray();
+    } catch (final IOException ex) {
+      return Collections.singletonList("Cannot look for updates: " + ex.getMessage());
     }
     final Map<String, String> versionMap = new LinkedHashMap<>();
     result.forEach(element -> versionMap.put(element.getAsJsonObject().get("tag_name").getAsString(), element.getAsJsonObject().get("html_url").getAsString()));

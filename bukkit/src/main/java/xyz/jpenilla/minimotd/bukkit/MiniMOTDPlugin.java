@@ -21,8 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package xyz.jpenilla.minimotd.spigot;
+package xyz.jpenilla.minimotd.bukkit;
 
+import java.awt.image.BufferedImage;
+import java.nio.file.Path;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -35,10 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
-import xyz.jpenilla.minimotd.common.UpdateChecker;
-
-import java.awt.image.BufferedImage;
-import java.nio.file.Path;
+import xyz.jpenilla.minimotd.common.util.UpdateChecker;
 
 public final class MiniMOTDPlugin extends JavaPlugin implements MiniMOTDPlatform<CachedServerIcon> {
   private static final boolean PAPER_PING_EVENT_EXISTS = findClass("com.destroystokyo.paper.event.server.PaperServerListPingEvent") != null;
@@ -70,9 +69,9 @@ public final class MiniMOTDPlugin extends JavaPlugin implements MiniMOTDPlatform
 
     final PluginCommand command = this.getCommand("minimotd");
     if (command != null) {
-      final SpigotCommand spigotCommand = new SpigotCommand(this);
-      command.setExecutor(spigotCommand);
-      command.setTabCompleter(spigotCommand);
+      final BukkitCommand bukkitCommand = new BukkitCommand(this);
+      command.setExecutor(bukkitCommand);
+      command.setTabCompleter(bukkitCommand);
     }
 
     final Metrics metrics = new Metrics(this, 8132);

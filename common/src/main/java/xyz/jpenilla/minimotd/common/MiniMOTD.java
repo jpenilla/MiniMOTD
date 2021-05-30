@@ -23,75 +23,95 @@
  */
 package xyz.jpenilla.minimotd.common;
 
+import java.nio.file.Path;
+import java.util.concurrent.ThreadLocalRandom;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.framework.qual.DefaultQualifier;
 import org.slf4j.Logger;
 import xyz.jpenilla.minimotd.common.config.ConfigManager;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 
-import java.nio.file.Path;
-import java.util.concurrent.ThreadLocalRandom;
+import static net.kyori.adventure.text.Component.newline;
 
+@DefaultQualifier(NonNull.class)
 public final class MiniMOTD<I> {
   private final ConfigManager configManager;
   private final IconManager<I> iconManager;
   private final MiniMOTDPlatform<I> platform;
 
-  public MiniMOTD(final @NonNull MiniMOTDPlatform<I> platform) {
+  public MiniMOTD(final MiniMOTDPlatform<I> platform) {
     this.platform = platform;
     this.iconManager = new IconManager<>(this);
     this.configManager = new ConfigManager(this);
     this.configManager.loadConfigs();
   }
 
-  public @NonNull MiniMOTDPlatform<I> platform() {
+  public MiniMOTDPlatform<I> platform() {
     return this.platform;
   }
 
-  public final @NonNull Path dataDirectory() {
+  public final Path dataDirectory() {
     return this.platform.dataDirectory();
   }
 
-  public final @NonNull IconManager<I> iconManager() {
+  public final IconManager<I> iconManager() {
     return this.iconManager;
   }
 
-  public final @NonNull Logger logger() {
+  public final Logger logger() {
     return this.platform.logger();
   }
 
-  public final @NonNull ConfigManager configManager() {
+  public final ConfigManager configManager() {
     return this.configManager;
   }
 
-  public final @NonNull MOTDIconPair<I> createMOTD(final @NonNull MiniMOTDConfig config, final int onlinePlayers, final int maxPlayers) {
-    I icon = null;
-    Component motd = null;
-    String iconString = null;
+  public final PingResponse<I> createMOTD(final MiniMOTDConfig config, final int onlinePlayers, final int maxPlayers) {
+    final PingResponse.PlayerCount count = config.modifyPlayerCount(onlinePlayers, maxPlayers);
+    final PingResponse.Builder<I> response = PingResponse.<I>builder()
+      .playerCount(count)
+      .disablePlayerListHover(config.disablePlayerListHover())
+      .hidePlayerCount(config.hidePlayerCount());
+
+    @Nullable String iconString = null;
     if (config.motdEnabled()) {
-      if (config.motds().size() == 0) {
+      if (config.motds().isEmpty()) {
         throw new IllegalStateException("MOTD is enabled, but there are no MOTDs in the config file?");
       }
       final int index = config.motds().size() == 1 ? 0 : ThreadLocalRandom.current().nextInt(config.motds().size());
       final MiniMOTDConfig.MOTD motdConfig = config.motds().get(index);
-      motd = TextComponent.ofChildren(
-        MiniMessage.get().parse(replacePlayerCount(motdConfig.line1(), onlinePlayers, maxPlayers)),
-        Component.newline(),
-        MiniMessage.get().parse(replacePlayerCount(motdConfig.line2(), onlinePlayers, maxPlayers))
+      final Component motd = TextComponent.ofChildren(
+        parse(motdConfig.line1(), count),
+        newline(),
+        parse(motdConfig.line2(), count)
       );
+      response.motd(motd);
       iconString = motdConfig.icon();
     }
+
     if (config.iconEnabled()) {
-      icon = this.iconManager().icon(iconString);
+      response.icon(this.iconManager().icon(iconString));
     }
-    return new MOTDIconPair<>(icon, motd);
+
+    return response.build();
   }
 
-  private static @NonNull String replacePlayerCount(final @NonNull String input, final int onlinePlayers, final int maxPlayers) {
-    return input.replace("{onlinePlayers}", String.valueOf(onlinePlayers))
-      .replace("{maxPlayers}", String.valueOf(maxPlayers));
+  private static Component parse(final String input, final PingResponse.PlayerCount count) {
+    final String online = Integer.toString(count.onlinePlayers());
+    final String max = Integer.toString(count.maxPlayers());
+    return MiniMessage.get().parse(
+      replacePlayerCount(input, online, max),
+      "online_players", online,
+      "max_players", max
+    );
+  }
+
+  private static String replacePlayerCount(final String input, final String online, final String max) {
+    return input.replace("{onlinePlayers}", online).replace("{maxPlayers}", max);
   }
 
   public void reload() {

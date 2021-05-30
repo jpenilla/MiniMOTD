@@ -33,10 +33,9 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.minimotd.common.Constants;
-import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
+import xyz.jpenilla.minimotd.common.PingResponse;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
-import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig.PlayerCount;
 
 public final class PingListener implements Listener {
   private final MiniMOTD<Favicon> miniMOTD;
@@ -52,25 +51,20 @@ public final class PingListener implements Listener {
       return;
     }
 
-    final MiniMOTDConfig cfg = this.miniMOTD.configManager().resolveConfig(e.getConnection().getVirtualHost());
     final ServerPing.Players players = response.getPlayers();
-    final PlayerCount count = cfg.modifyPlayerCount(players.getOnline(), players.getMax());
-    final int onlinePlayers = count.onlinePlayers();
-    final int maxPlayers = count.maxPlayers();
+    final MiniMOTDConfig cfg = this.miniMOTD.configManager().resolveConfig(e.getConnection().getVirtualHost());
+    final PingResponse<Favicon> mini = this.miniMOTD.createMOTD(cfg, players.getOnline(), players.getMax());
 
-    if (cfg.hidePlayerCount()) {
+    if (mini.hidePlayerCount()) {
       response.setPlayers(null);
     } else {
-      players.setOnline(onlinePlayers);
-      players.setMax(maxPlayers);
-      if (cfg.disablePlayerListHover()) {
+      mini.playerCount().applyCount(players::setOnline, players::setMax);
+      if (mini.disablePlayerListHover()) {
         players.setSample(new ServerPing.PlayerInfo[]{});
       }
     }
 
-    final MOTDIconPair<Favicon> pair = this.miniMOTD.createMOTD(cfg, onlinePlayers, maxPlayers);
-
-    pair.motd(motd -> {
+    mini.motd(motd -> {
       final BaseComponent[] bungee;
       if (e.getConnection().getVersion() < Constants.MINECRAFT_1_16_PROTOCOL_VERSION) {
         bungee = BungeeComponentSerializer.legacy().serialize(motd);
@@ -83,7 +77,7 @@ public final class PingListener implements Listener {
         response.setDescriptionComponent(new TextComponent(bungee));
       }
     });
-    pair.icon(response::setFavicon);
+    mini.icon(response::setFavicon);
 
     e.setResponse(response);
   }

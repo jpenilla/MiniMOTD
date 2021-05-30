@@ -23,22 +23,21 @@
  */
 package xyz.jpenilla.minimotd.common;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
-
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Stream;
+import javax.imageio.ImageIO;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class IconManager<I> {
-
   private final Map<String, I> icons = new HashMap<>();
   private final MiniMOTD<I> miniMOTD;
   private final Path iconsDirectory;
@@ -55,27 +54,27 @@ public final class IconManager<I> {
       if (!Files.exists(this.iconsDirectory)) {
         Files.createDirectories(this.iconsDirectory);
       }
-      Files.list(this.iconsDirectory)
-        .map(Path::toFile)
-        .filter(File::isFile)
-        .filter(file -> file.getName().endsWith(".png"))
-        .forEach(this::loadIcon);
+      try (final Stream<Path> stream = Files.list(this.iconsDirectory)) {
+        stream.filter(Files::isRegularFile)
+          .filter(file -> file.getFileName().toString().endsWith(".png"))
+          .forEach(this::loadIcon);
+      }
     } catch (final IOException ex) {
       throw new RuntimeException("Exception loading server icons", ex);
     }
   }
 
-  private void loadIcon(final @NonNull File iconFile) {
-    try {
-      final BufferedImage bufferedImage = ImageIO.read(iconFile);
+  private void loadIcon(final @NonNull Path iconFile) {
+    try (final InputStream inputStream = Files.newInputStream(iconFile)) {
+      final BufferedImage bufferedImage = ImageIO.read(inputStream);
       if (bufferedImage.getHeight() == 64 && bufferedImage.getWidth() == 64) {
         final I newIcon = this.miniMOTD.platform().loadIcon(bufferedImage);
-        this.icons.put(iconFile.getName().split("\\.")[0], newIcon);
+        this.icons.put(iconFile.getFileName().toString().split("\\.")[0], newIcon);
       } else {
-        this.miniMOTD.logger().warn("Could not load " + iconFile.getName() + ": image must be 64x64px");
+        this.miniMOTD.logger().warn("Could not load {}: image must be 64x64px", iconFile.getFileName());
       }
     } catch (final Exception ex) {
-      this.miniMOTD.logger().warn("Could not load " + iconFile.getName() + ": invalid image file", ex);
+      this.miniMOTD.logger().warn("Could not load {}: invalid image file", iconFile.getFileName(), ex);
     }
   }
 
@@ -95,5 +94,4 @@ public final class IconManager<I> {
 
     return this.icons.get(iconString);
   }
-
 }

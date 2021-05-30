@@ -23,13 +23,12 @@
  */
 package xyz.jpenilla.minimotd.common;
 
+import java.util.stream.Stream;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.checkerframework.checker.nullness.qual.NonNull;
-
-import java.util.stream.Stream;
+import org.checkerframework.framework.qual.DefaultQualifier;
 
 import static net.kyori.adventure.text.Component.space;
 import static net.kyori.adventure.text.Component.text;
@@ -37,49 +36,47 @@ import static net.kyori.adventure.text.LinearComponents.linear;
 import static net.kyori.adventure.text.event.ClickEvent.openUrl;
 import static net.kyori.adventure.text.event.ClickEvent.runCommand;
 import static net.kyori.adventure.text.format.NamedTextColor.GRAY;
+import static net.kyori.adventure.text.format.NamedTextColor.GREEN;
 import static net.kyori.adventure.text.format.NamedTextColor.WHITE;
 import static net.kyori.adventure.text.format.TextColor.color;
 import static net.kyori.adventure.text.format.TextDecoration.STRIKETHROUGH;
 
-public final class CommandHandlerFactory {
+@DefaultQualifier(NonNull.class)
+public final class CommandHandler {
   private final MiniMOTD<?> miniMOTD;
 
-  public CommandHandlerFactory(final @NonNull MiniMOTD<?> miniMOTD) {
+  public CommandHandler(final MiniMOTD<?> miniMOTD) {
     this.miniMOTD = miniMOTD;
   }
 
-  public @NonNull CommandHandler about() {
-    return audience -> {
-      final Component header = miniMessage("<gradient:white:#007FFF:white>                               ").decorate(STRIKETHROUGH);
-      Stream.of(
-        header,
-        text()
-          .hoverEvent(miniMessage("<rainbow>click me!"))
-          .clickEvent(openUrl(Constants.PluginMetadata.WEBSITE))
-          .content(Constants.PluginMetadata.NAME)
-          .color(WHITE)
-          .append(space())
-          .append(miniMessage("<gradient:#0047AB:#007FFF>" + Constants.PluginMetadata.VERSION))
-          .build(),
-        text()
-          .content("By ")
-          .color(GRAY)
-          .append(text("jmp", WHITE))
-          .build(),
-        header
-      ).forEach(audience::sendMessage);
-    };
+  public void about(final Audience audience) {
+    final Component header = miniMessage("<gradient:white:#007FFF:white>                               ").decorate(STRIKETHROUGH);
+    Stream.of(
+      header,
+      text()
+        .hoverEvent(miniMessage("<rainbow>click me!"))
+        .clickEvent(openUrl(Constants.PluginMetadata.WEBSITE))
+        .content(Constants.PluginMetadata.NAME)
+        .color(WHITE)
+        .append(space())
+        .append(miniMessage("<gradient:#0047AB:#007FFF>" + Constants.PluginMetadata.VERSION))
+        .build(),
+      text()
+        .content("By ")
+        .color(GRAY)
+        .append(text("jmp", WHITE))
+        .build(),
+      header
+    ).forEach(audience::sendMessage);
   }
 
-  public @NonNull CommandHandler reload() {
-    return audience -> {
-      this.miniMOTD.reload();
-      audience.sendMessage(linear(Constants.COMMAND_PREFIX, space(), text("Done reloading configuration.", NamedTextColor.GREEN)));
-    };
+  public void reload(final Audience audience) {
+    this.miniMOTD.reload();
+    audience.sendMessage(linear(Constants.COMMAND_PREFIX, space(), text("Done reloading configuration.", GREEN)));
   }
 
-  public @NonNull CommandHandler help() {
-    return audience -> Stream.of(
+  public void help(final Audience audience) {
+    Stream.of(
       linear(Constants.COMMAND_PREFIX, space(), text(Constants.PluginMetadata.NAME + " command help", WHITE)),
       commandInfo("/minimotd about", "Show information about MiniMOTD"),
       commandInfo("/minimotd reload", "Reload MiniMOTD configuration files"),
@@ -87,7 +84,7 @@ public final class CommandHandlerFactory {
     ).forEach(audience::sendMessage);
   }
 
-  private static @NonNull Component commandInfo(final @NonNull String command, final @NonNull String description) {
+  private static Component commandInfo(final String command, final String description) {
     return text()
       .content(" - ")
       .color(GRAY)
@@ -101,24 +98,22 @@ public final class CommandHandlerFactory {
       .append(text(':', GRAY))
       .append(space())
       .append(text(description, WHITE))
-      .hoverEvent(
-        text()
-          .content("Click to execute '")
-          .color(GRAY)
-          .append(text(command, WHITE))
-          .append(text("'"))
-          .build()
-      )
+      .hoverEvent(text()
+        .content("Click to execute '")
+        .color(GRAY)
+        .append(text(command, WHITE))
+        .append(text("'"))
+        .build())
       .clickEvent(runCommand(command))
       .build();
   }
 
-  private static @NonNull Component miniMessage(final @NonNull String message) {
+  private static Component miniMessage(final String message) {
     return MiniMessage.get().parse(message);
   }
 
   @FunctionalInterface
-  public interface CommandHandler {
-    void execute(@NonNull Audience audience);
+  public interface Executor {
+    void execute(Audience audience);
   }
 }

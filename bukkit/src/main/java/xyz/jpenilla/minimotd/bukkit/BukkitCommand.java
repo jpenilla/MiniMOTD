@@ -21,31 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package xyz.jpenilla.minimotd.spigot;
+package xyz.jpenilla.minimotd.bukkit;
 
 import com.google.common.collect.ImmutableList;
+import java.util.Collections;
+import java.util.List;
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import xyz.jpenilla.minimotd.common.CommandHandlerFactory;
-
-import java.util.Collections;
-import java.util.List;
+import xyz.jpenilla.minimotd.common.CommandHandler;
 
 import static net.kyori.adventure.text.Component.text;
 import static net.kyori.adventure.text.event.ClickEvent.runCommand;
 import static net.kyori.adventure.text.format.NamedTextColor.RED;
 
-final class SpigotCommand implements CommandExecutor, TabCompleter {
+final class BukkitCommand implements CommandExecutor, TabCompleter {
   private final MiniMOTDPlugin plugin;
-  private final CommandHandlerFactory handlerFactory;
+  private final CommandHandler handler;
 
-  SpigotCommand(final @NonNull MiniMOTDPlugin plugin) {
+  BukkitCommand(final @NonNull MiniMOTDPlugin plugin) {
     this.plugin = plugin;
-    this.handlerFactory = new CommandHandlerFactory(plugin.miniMOTD());
+    this.handler = new CommandHandler(plugin.miniMOTD());
   }
 
   @Override
@@ -63,13 +62,13 @@ final class SpigotCommand implements CommandExecutor, TabCompleter {
 
     switch (args[0]) {
       case "about":
-        this.handlerFactory.about().execute(audience);
+        this.handler.about(audience);
         return true;
       case "help":
-        this.handlerFactory.help().execute(audience);
+        this.handler.help(audience);
         return true;
       case "reload":
-        this.handlerFactory.reload().execute(audience);
+        this.handler.reload(audience);
         return true;
     }
 

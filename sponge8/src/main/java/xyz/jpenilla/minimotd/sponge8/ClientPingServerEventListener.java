@@ -23,26 +23,26 @@
  */
 package xyz.jpenilla.minimotd.sponge8;
 
+import com.google.inject.Inject;
+import java.lang.reflect.Method;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.spongepowered.api.MinecraftVersion;
 import org.spongepowered.api.event.EventListener;
 import org.spongepowered.api.event.server.ClientPingServerEvent;
 import org.spongepowered.api.network.status.Favicon;
-import xyz.jpenilla.minimotd.common.ComponentColorDownsampler;
 import xyz.jpenilla.minimotd.common.Constants;
-import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
+import xyz.jpenilla.minimotd.common.PingResponse;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
-import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig.PlayerCount;
-
-import java.lang.reflect.Method;
+import xyz.jpenilla.minimotd.common.util.ComponentColorDownsampler;
 
 final class ClientPingServerEventListener implements EventListener<ClientPingServerEvent> {
   private final MiniMOTD<Favicon> miniMOTD;
   private @MonotonicNonNull Method SpongeMinecraftVersion_getProtocol;
 
-  ClientPingServerEventListener(final @NonNull MiniMOTD<Favicon> miniMOTD) {
+  @Inject
+  private ClientPingServerEventListener(final @NonNull MiniMOTD<Favicon> miniMOTD) {
     this.miniMOTD = miniMOTD;
   }
 
@@ -65,26 +65,21 @@ final class ClientPingServerEventListener implements EventListener<ClientPingSer
 
     final MiniMOTDConfig config = this.miniMOTD.configManager().mainConfig();
 
-    final PlayerCount count = config.modifyPlayerCount(players.online(), players.max());
-    final int onlinePlayers = count.onlinePlayers();
-    final int maxPlayers = count.maxPlayers();
-    players.setOnline(onlinePlayers);
-    players.setMax(maxPlayers);
-
-    final MOTDIconPair<Favicon> pair = this.miniMOTD.createMOTD(config, onlinePlayers, maxPlayers);
-    pair.motd(motd -> {
+    final PingResponse<Favicon> mini = this.miniMOTD.createMOTD(config, players.online(), players.max());
+    mini.playerCount().applyCount(players::setOnline, players::setMax);
+    mini.motd(motd -> {
       if (this.legacy(event.client().version())) {
         response.setDescription(ComponentColorDownsampler.downsampler().downsample(motd));
       } else {
         response.setDescription(motd);
       }
     });
-    pair.icon(response::setFavicon);
+    mini.icon(response::setFavicon);
 
-    if (config.disablePlayerListHover()) {
+    if (mini.disablePlayerListHover()) {
       players.profiles().clear();
     }
-    if (config.hidePlayerCount()) {
+    if (mini.hidePlayerCount()) {
       response.setHidePlayers(true);
     }
   }

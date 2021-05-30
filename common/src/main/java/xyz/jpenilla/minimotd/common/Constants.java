@@ -37,6 +37,9 @@ public final class Constants {
     public static final String NAME = "${PLUGIN_NAME}";
     public static final String VERSION = "${PLUGIN_VERSION}";
     public static final String WEBSITE = "${PLUGIN_WEBSITE}";
+    public static final String GITHUB_USER = "${GITHUB_USER}";
+    public static final String GITHUB_REPO = "${GITHUB_REPO}";
+    public static final String GITHUB_REPO_URL = "https://github.com/" + GITHUB_USER + "/" + GITHUB_REPO;
   }
 
   public static final int MINECRAFT_1_16_PROTOCOL_VERSION = 735;

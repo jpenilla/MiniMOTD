@@ -23,7 +23,12 @@
  */
 package xyz.jpenilla.minimotd.sponge8;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.TypeLiteral;
+import java.awt.image.BufferedImage;
+import java.nio.file.Path;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,13 +48,10 @@ import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.jvm.Plugin;
 import org.spongepowered.plugin.metadata.PluginMetadata;
-import xyz.jpenilla.minimotd.common.CommandHandlerFactory;
+import xyz.jpenilla.minimotd.common.CommandHandler;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
-import xyz.jpenilla.minimotd.common.UpdateChecker;
-
-import java.awt.image.BufferedImage;
-import java.nio.file.Path;
+import xyz.jpenilla.minimotd.common.util.UpdateChecker;
 
 @Plugin("minimotd-sponge8")
 public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
@@ -58,21 +60,30 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
   private final Logger logger;
   private final PluginContainer pluginContainer;
   private final MiniMOTD<Favicon> miniMOTD;
+  private final Injector injector;
 
   @Inject
   public MiniMOTDPlugin(
     @ConfigDir(sharedRoot = false) final @NonNull Path dataDirectory,
-    final @NonNull PluginContainer pluginContainer
+    final @NonNull PluginContainer pluginContainer,
+    final @NonNull Injector injector
   ) {
     this.dataDirectory = dataDirectory;
     this.pluginContainer = pluginContainer;
     this.pluginMetadata = pluginContainer.metadata();
     this.logger = LoggerFactory.getLogger(this.pluginMetadata.id());
     this.miniMOTD = new MiniMOTD<>(this);
+    this.injector = injector.createChildInjector(new AbstractModule() {
+      @Override
+      protected void configure() {
+        this.bind(new TypeLiteral<MiniMOTD<Favicon>>() {
+        }).toInstance(MiniMOTDPlugin.this.miniMOTD);
+      }
+    });
     Sponge.eventManager().registerListener(
       pluginContainer,
       ClientPingServerEvent.class,
-      new ClientPingServerEventListener(this.miniMOTD)
+      this.injector.getInstance(ClientPingServerEventListener.class)
     );
   }
 
@@ -89,9 +100,9 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
   @Listener
   public void registerCommands(final @NonNull RegisterCommandEvent<Command.Parameterized> event) {
     final class WrappingExecutor implements CommandExecutor {
-      private final CommandHandlerFactory.CommandHandler handler;
+      private final CommandHandler.Executor handler;
 
-      WrappingExecutor(final CommandHandlerFactory.@NonNull CommandHandler handler) {
+      WrappingExecutor(final CommandHandler.@NonNull Executor handler) {
         this.handler = handler;
       }
 
@@ -102,15 +113,15 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
       }
     }
 
-    final CommandHandlerFactory handlerFactory = new CommandHandlerFactory(this.miniMOTD);
+    final CommandHandler handler = new CommandHandler(this.miniMOTD);
     final Command.Parameterized about = Command.builder()
-      .executor(new WrappingExecutor(handlerFactory.about()))
+      .executor(new WrappingExecutor(handler::about))
       .build();
     final Command.Parameterized help = Command.builder()
-      .executor(new WrappingExecutor(handlerFactory.help()))
+      .executor(new WrappingExecutor(handler::help))
       .build();
     final Command.Parameterized reload = Command.builder()
-      .executor(new WrappingExecutor(handlerFactory.reload()))
+      .executor(new WrappingExecutor(handler::reload))
       .build();
     event.register(
       this.pluginContainer,

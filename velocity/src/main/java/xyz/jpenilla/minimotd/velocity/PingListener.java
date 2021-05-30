@@ -23,42 +23,38 @@
  */
 package xyz.jpenilla.minimotd.velocity;
 
+import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.api.util.Favicon;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import xyz.jpenilla.minimotd.common.MOTDIconPair;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
+import xyz.jpenilla.minimotd.common.PingResponse;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 
 final class PingListener {
   private final MiniMOTD<Favicon> miniMOTD;
 
-  PingListener(final @NonNull MiniMOTD<Favicon> miniMOTD) {
+  @Inject
+  private PingListener(final @NonNull MiniMOTD<Favicon> miniMOTD) {
     this.miniMOTD = miniMOTD;
   }
 
   @Subscribe
   public void handlePing(final @NonNull ProxyPingEvent event) {
     final MiniMOTDConfig config = this.miniMOTD.configManager().resolveConfig(event.getConnection().getVirtualHost().orElse(null));
-
     final ServerPing.Builder pong = event.getPing().asBuilder();
 
-    final MiniMOTDConfig.PlayerCount count = config.modifyPlayerCount(pong.getOnlinePlayers(), pong.getMaximumPlayers());
-    final int onlinePlayers = count.onlinePlayers();
-    final int maxPlayers = count.maxPlayers();
-    pong.onlinePlayers(onlinePlayers);
-    pong.maximumPlayers(maxPlayers);
+    final PingResponse<Favicon> response = this.miniMOTD.createMOTD(config, pong.getOnlinePlayers(), pong.getMaximumPlayers());
+    response.icon(pong::favicon);
+    response.motd(pong::description);
+    response.playerCount().applyCount(pong::onlinePlayers, pong::maximumPlayers);
 
-    final MOTDIconPair<Favicon> pair = this.miniMOTD.createMOTD(config, onlinePlayers, maxPlayers);
-    pair.icon(pong::favicon);
-    pair.motd(pong::description);
-
-    if (config.disablePlayerListHover()) {
+    if (response.disablePlayerListHover()) {
       pong.clearSamplePlayers();
     }
-    if (config.hidePlayerCount()) {
+    if (response.hidePlayerCount()) {
       pong.nullPlayers();
     }
 

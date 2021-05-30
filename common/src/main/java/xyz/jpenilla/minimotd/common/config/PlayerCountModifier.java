@@ -23,15 +23,14 @@
  */
 package xyz.jpenilla.minimotd.common.config;
 
+import java.lang.reflect.Type;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Predicate;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.serialize.ScalarSerializer;
 import org.spongepowered.configurate.serialize.SerializationException;
 import xyz.jpenilla.minimotd.common.util.Int2IntFunction;
-
-import java.lang.reflect.Type;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Predicate;
 
 public final class PlayerCountModifier implements Int2IntFunction {
   private final String input;
