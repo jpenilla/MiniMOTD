@@ -6,12 +6,13 @@ tasks.jar {
   archiveClassifier.set("empty")
 }
 
-val shadowPlatforms = setOf(
-  rootProject.projects.minimotdBukkit,
-  rootProject.projects.minimotdBungeecord,
-  rootProject.projects.minimotdVelocity,
-  rootProject.projects.minimotdSponge7,
-  //rootProject.projects.minimotdSponge8
+val platforms = setOf(
+  projects.minimotdBukkit,
+  projects.minimotdBungeecord,
+  projects.minimotdVelocity,
+  projects.minimotdFabric,
+  projects.minimotdSponge7,
+  //projects.minimotdSponge8
 ).map { it.dependencyProject }
 
 val universal = tasks.register<Jar>("universal") {
@@ -19,18 +20,13 @@ val universal = tasks.register<Jar>("universal") {
   archiveClassifier.set(null as String?)
   duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
-  for (platform in shadowPlatforms) {
-    val shadowJar = platform.tasks.getByName("shadowJar", AbstractArchiveTask::class)
-    from(zipTree(shadowJar.archiveFile))
-    dependsOn(shadowJar)
+  for (platform in platforms) {
+    val jarTask = platform.miniMOTDPlatform.jarTask
+    from(zipTree(jarTask.flatMap { it.archiveFile }))
+    dependsOn(jarTask) // todo: remove when updating Gradle to 7.1 (https://github.com/gradle/gradle/issues/15569)
   }
-
-  val fabric = rootProject.projects.minimotdFabric.dependencyProject
-  val fabricRemapJarTask = fabric.tasks.getByName("remapJar", AbstractArchiveTask::class)
-  from(zipTree(fabricRemapJarTask.archiveFile))
-  dependsOn(fabricRemapJarTask)
 }
 
-miniMOTDPlatformExtension {
+miniMOTDPlatform {
   jarTask.set(universal)
 }

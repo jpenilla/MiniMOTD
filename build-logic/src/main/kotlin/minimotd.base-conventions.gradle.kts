@@ -23,6 +23,10 @@ testlogger {
   showPassed = false
 }
 
+dependencies {
+  testImplementation(libs.jupiterEngine)
+}
+
 tasks {
   tasks {
     withType<JavaCompile> {

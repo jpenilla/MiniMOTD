@@ -21,9 +21,6 @@ tasks {
     commonRelocation("net.kyori")
     commonRelocation("org.bstats")
   }
-  build {
-    dependsOn(shadowJar)
-  }
 }
 
 bungee {

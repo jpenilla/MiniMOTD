@@ -27,7 +27,6 @@ import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.CachedServerIcon;
@@ -59,9 +58,9 @@ public final class MiniMOTDPlugin extends JavaPlugin implements MiniMOTDPlatform
     this.majorMinecraftVersion = Integer.parseInt(this.serverApiVersion.split("_")[1]);
 
     if (PAPER_PING_EVENT_EXISTS) {
-      Bukkit.getPluginManager().registerEvents(new PaperPingListener(this, this.miniMOTD), this);
+      this.getServer().getPluginManager().registerEvents(new PaperPingListener(this, this.miniMOTD), this);
     } else {
-      Bukkit.getPluginManager().registerEvents(new PingListener(this, this.miniMOTD), this);
+      this.getServer().getPluginManager().registerEvents(new PingListener(this, this.miniMOTD), this);
       if (this.majorMinecraftVersion >= 12) { // PaperServerListPingEvent was added in 1.12
         this.suggestPaper();
       }
@@ -77,7 +76,7 @@ public final class MiniMOTDPlugin extends JavaPlugin implements MiniMOTDPlatform
     final Metrics metrics = new Metrics(this, 8132);
 
     if (this.miniMOTD.configManager().pluginSettings().updateChecker()) {
-      Bukkit.getScheduler().runTaskAsynchronously(this, () ->
+      this.getServer().getScheduler().runTaskAsynchronously(this, () ->
         new UpdateChecker().checkVersion().forEach(this.logger::info));
     }
   }
@@ -98,7 +97,7 @@ public final class MiniMOTDPlugin extends JavaPlugin implements MiniMOTDPlatform
 
   @Override
   public @NonNull CachedServerIcon loadIcon(final @NonNull BufferedImage image) throws Exception {
-    return Bukkit.loadServerIcon(image);
+    return this.getServer().loadServerIcon(image);
   }
 
   public int majorMinecraftVersion() {

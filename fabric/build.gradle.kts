@@ -30,7 +30,7 @@ dependencies {
   include(libs.log4jSlf4jImpl)
 }
 
-miniMOTDPlatformExtension {
+miniMOTDPlatform {
   jarTask.set(tasks.remapJar)
 }
 
@@ -42,8 +42,7 @@ tasks {
     platformRelocation("fabric", "xyz.jpenilla.minimotd.common")
   }
   remapJar {
-    dependsOn(shadowJar)
-    input.set(shadowJar.get().archiveFile)
+    input.set(shadowJar.flatMap { it.archiveFile })
     archiveFileName.set("${project.name}-mc$minecraftVersion-${project.version}.jar")
   }
   processResources {

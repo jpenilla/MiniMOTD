@@ -1,5 +1,6 @@
 plugins {
   id("net.kyori.blossom")
+  id("minimotd.base-conventions")
 }
 
 tasks.jar {

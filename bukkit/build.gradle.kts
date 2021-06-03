@@ -1,6 +1,7 @@
 plugins {
   id("minimotd.shadow-platform")
   id("net.minecrell.plugin-yml.bukkit")
+  id("xyz.jpenilla.run-paper")
 }
 
 dependencies {
@@ -12,6 +13,9 @@ dependencies {
 }
 
 tasks {
+  runServer {
+    minecraftVersion("1.16.5")
+  }
   generateBukkitPluginDescription {
     mustRunAfter(clean)
   }
@@ -20,9 +24,6 @@ tasks {
     commonRelocation("io.leangen.geantyref")
     commonRelocation("net.kyori")
     commonRelocation("org.bstats")
-  }
-  build {
-    dependsOn(shadowJar)
   }
 }
 

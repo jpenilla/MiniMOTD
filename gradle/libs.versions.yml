@@ -8,8 +8,12 @@ plugins:
   org.spongepowered.gradle.plugin: 1.1.1
   net.minecrell.plugin-yml.bungee: &plugin-yml 0.4.0
   net.minecrell.plugin-yml.bukkit: *plugin-yml
+  xyz.jpenilla.run-paper: 1.0.1
 
 versions:
+  indra: 2.0.5
+  shadow: 7.0.0
+  testLoggerPlugin: 3.0.0
   adventure: 4.7.0
   adventurePlatform: 4.0.0-SNAPSHOT
   minimessage: 4.1.0-SNAPSHOT
@@ -150,5 +154,19 @@ dependencies:
     group: org.junit.jupiter
     name: junit-jupiter-engine
     version: { ref: jupiterEngine }
+
+  # build-logic
+  indraCommon:
+    group: net.kyori
+    name: indra-common
+    version: { ref: indra }
+  shadow:
+    group: gradle.plugin.com.github.jengelman.gradle.plugins
+    name: shadow
+    version: { ref: shadow }
+  testLoggerPlugin:
+    group: com.adarshr
+    name: gradle-test-logger-plugin
+    version: { ref: testLoggerPlugin }
 
 bundles:
