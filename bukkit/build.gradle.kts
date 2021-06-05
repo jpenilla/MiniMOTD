@@ -38,6 +38,7 @@ bukkit {
     create("minimotd") {
       description = "MiniMOTD Command"
       usage = "/minimotd help"
+      permission = "minimotd.admin"
     }
   }
 }
