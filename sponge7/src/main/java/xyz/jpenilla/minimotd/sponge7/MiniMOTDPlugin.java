@@ -34,6 +34,7 @@ import net.kyori.adventure.platform.spongeapi.SpongeAudiences;
 import org.bstats.sponge.Metrics;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
+import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -59,6 +60,7 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
   private final Path dataDirectory;
   private final MiniMOTD<Favicon> miniMOTD;
   private final SpongeAudiences audiences;
+  private final Game game;
   private final Injector injector;
 
   @Inject
@@ -67,11 +69,13 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
     @ConfigDir(sharedRoot = false) final @NonNull Path dataDirectory,
     final @NonNull SpongeAudiences audiences,
     final Metrics.@NonNull Factory metricsFactory,
-    final @NonNull Injector injector
+    final @NonNull Injector injector,
+    final @NonNull Game game
   ) {
     this.logger = logger;
     this.dataDirectory = dataDirectory;
     this.audiences = audiences;
+    this.game = game;
     this.miniMOTD = new MiniMOTD<>(this);
     this.injector = injector.createChildInjector(new AbstractModule() {
       @Override
@@ -149,6 +153,6 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
 
   @Override
   public @NonNull Favicon loadIcon(final @NonNull BufferedImage image) throws IOException {
-    return Sponge.getRegistry().loadFavicon(image);
+    return this.game.getRegistry().loadFavicon(image);
   }
 }

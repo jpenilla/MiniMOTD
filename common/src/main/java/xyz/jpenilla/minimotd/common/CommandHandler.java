@@ -26,6 +26,7 @@ package xyz.jpenilla.minimotd.common;
 import java.util.stream.Stream;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
@@ -72,15 +73,19 @@ public final class CommandHandler {
 
   public void reload(final Audience audience) {
     this.miniMOTD.reload();
-    audience.sendMessage(linear(Constants.COMMAND_PREFIX, space(), text("Done reloading configuration.", GREEN)));
+    audience.sendMessage(TextComponent.ofChildren(
+      Constants.COMMAND_PREFIX,
+      space(),
+      text("Done reloading configuration.", GREEN)
+    ));
   }
 
   public void help(final Audience audience) {
     Stream.of(
       linear(Constants.COMMAND_PREFIX, space(), text(Constants.PluginMetadata.NAME + " command help", WHITE)),
-      commandInfo("/minimotd about", "Show information about MiniMOTD"),
-      commandInfo("/minimotd reload", "Reload MiniMOTD configuration files"),
-      commandInfo("/minimotd help", "Show this help menu")
+      commandInfo("minimotd about", "Show information about MiniMOTD"),
+      commandInfo("minimotd reload", "Reload MiniMOTD configuration files"),
+      commandInfo("minimotd help", "Show this help menu")
     ).forEach(audience::sendMessage);
   }
 
@@ -88,23 +93,18 @@ public final class CommandHandler {
     return text()
       .content(" - ")
       .color(GRAY)
-      .append(
-        text(command, color(0x007FFF))
-          .replaceText(config -> {
-            config.matchLiteral("/");
-            config.replacement(builder -> builder.color(WHITE));
-          })
-      )
-      .append(text(':', GRAY))
+      .append(text('/', WHITE))
+      .append(text(command, color(0x007FFF)))
+      .append(text(':'))
       .append(space())
       .append(text(description, WHITE))
       .hoverEvent(text()
         .content("Click to execute '")
         .color(GRAY)
-        .append(text(command, WHITE))
+        .append(text("/" + command, WHITE))
         .append(text("'"))
         .build())
-      .clickEvent(runCommand(command))
+      .clickEvent(runCommand("/" + command))
       .build();
   }
 
