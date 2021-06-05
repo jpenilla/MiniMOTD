@@ -12,7 +12,6 @@ plugins {
 indra {
   javaVersions {
     target(8)
-    minimumToolchain(16)
   }
   github(Constants.GITHUB_USER, Constants.GITHUB_REPO)
   mitLicense()

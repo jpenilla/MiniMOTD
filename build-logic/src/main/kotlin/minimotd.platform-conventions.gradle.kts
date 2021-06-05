@@ -11,7 +11,9 @@ val platformExtension = extensions.create<MiniMOTDPlatformExtension>("miniMOTDPl
 tasks {
   val copyJar = register<FileCopyTask>("copyJar") {
     fileToCopy.set(platformExtension.jarTask.flatMap { it.archiveFile })
-    destinationDirectory.set(rootProject.layout.buildDirectory.dir("libs"))
+    destination.set(rootProject.layout.buildDirectory.dir("libs").flatMap {
+      it.file(fileToCopy.map { file -> file.asFile.name })
+    })
   }
   build {
     dependsOn(copyJar)
