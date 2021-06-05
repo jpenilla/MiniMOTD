@@ -9,6 +9,9 @@ plugins {
   id("com.adarshr.test-logger")
 }
 
+version = (version as String)
+  .run { if (this.endsWith("-SNAPSHOT")) "$this+${lastCommitHash()}" else this }
+
 indra {
   javaVersions {
     target(8)
