@@ -1,5 +1,6 @@
 ![MiniMOTD logo](https://i.imgur.com/CXWwjOJ.png)
 
+[![build](https://img.shields.io/github/checks-status/jpenilla/MiniMOTD/master?label=build)](https://github.com/jpenilla/MiniMOTD/actions) [![latest release](https://img.shields.io/github/v/release/jpenilla/MiniMOTD)](https://github.com/jpenilla/MiniMOTD/releases)
 
 ### MiniMOTD is a basic server list MOTD plugin/mod for Minecraft servers and proxies
 
