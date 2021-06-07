@@ -101,7 +101,7 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
   @Subscribe
   public void onProxyInitialization(final @NonNull ProxyInitializeEvent event) {
     for (final Class<?> clazz : LISTENER_CLASSES) {
-      server.getEventManager().register(this, this.injector.getInstance(clazz));
+      this.server.getEventManager().register(this, this.injector.getInstance(clazz));
     }
     this.registerCommand();
     this.metricsFactory.make(this, 10257);
