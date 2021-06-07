@@ -96,13 +96,13 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
         }).toInstance(MiniMOTDPlugin.this.miniMOTD);
       }
     });
-    for (final Class<?> clazz : LISTENER_CLASSES) {
-      server.getEventManager().register(this, this.injector.getInstance(clazz));
-    }
   }
 
   @Subscribe
   public void onProxyInitialization(final @NonNull ProxyInitializeEvent event) {
+    for (final Class<?> clazz : LISTENER_CLASSES) {
+      server.getEventManager().register(this, this.injector.getInstance(clazz));
+    }
     this.registerCommand();
     this.metricsFactory.make(this, 10257);
     if (this.miniMOTD.configManager().pluginSettings().updateChecker()) {

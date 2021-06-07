@@ -33,7 +33,7 @@ import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.PingResponse;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 
-final class PingListener {
+public final class PingListener {
   private final MiniMOTD<Favicon> miniMOTD;
 
   @Inject
