@@ -32,15 +32,15 @@ import xyz.jpenilla.minimotd.fabric.access.ConnectionAccess;
 
 @Unique
 @Mixin(Connection.class)
-@Implements({@Interface(iface = ConnectionAccess.class, prefix = "tabtps$")})
+@Implements({@Interface(iface = ConnectionAccess.class, prefix = "miniMOTD$")})
 abstract class ConnectionMixin {
-  private int protocolVersion = -1;
+  private int miniMOTD$protocolVersion = -1;
 
-  public void tabtps$protocolVersion(final int protocolVersion) {
-    this.protocolVersion = protocolVersion;
+  public void miniMOTD$protocolVersion(final int protocolVersion) {
+    this.miniMOTD$protocolVersion = protocolVersion;
   }
 
-  public int tabtps$protocolVersion() {
-    return this.protocolVersion;
+  public int miniMOTD$protocolVersion() {
+    return this.miniMOTD$protocolVersion;
   }
 }
