@@ -13,16 +13,16 @@ dependencies {
 
 tasks {
   processResources {
+    val replacements = mapOf(
+      "modid" to project.name,
+      "name" to rootProject.name,
+      "version" to project.version.toString(),
+      "description" to project.description.toString(),
+      "url" to Constants.GITHUB_URL
+    )
+    inputs.properties(replacements)
     filesMatching("mcmod.info") {
-      mapOf(
-        "{project.name}" to project.name,
-        "{rootProject.name}" to rootProject.name,
-        "{project.version}" to project.version.toString(),
-        "{project.description}" to project.description.toString(),
-        "{url}" to Constants.GITHUB_URL
-      ).forEach { (k, v) ->
-        filter { resource -> resource.replace(k, v) }
-      }
+      expand(replacements)
     }
   }
   shadowJar {

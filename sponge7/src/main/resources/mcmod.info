@@ -1,10 +1,10 @@
 [
     {
-        "modid": "{project.name}",
-        "name": "{rootProject.name}",
-        "version": "{project.version}",
-        "description": "{project.description}",
-        "url": "{url}",
+        "modid": "${modid}",
+        "name": "${name}",
+        "version": "${version}",
+        "description": "${description}",
+        "url": "${url}",
         "authorList": [
             "jmp"
         ],

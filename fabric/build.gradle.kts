@@ -50,16 +50,16 @@ tasks {
     archiveFileName.set("${project.name}-mc$minecraftVersion-${project.version}.jar")
   }
   processResources {
+    val replacements = mapOf(
+      "modid" to project.name,
+      "name" to rootProject.name,
+      "version" to project.version.toString(),
+      "description" to project.description.toString(),
+      "github_url" to Constants.GITHUB_URL
+    )
+    inputs.properties(replacements)
     filesMatching("fabric.mod.json") {
-      mapOf(
-        "{project.name}" to project.name,
-        "{rootProject.name}" to rootProject.name,
-        "{project.version}" to project.version.toString(),
-        "{project.description}" to project.description.toString(),
-        "{project.github_url}" to Constants.GITHUB_URL
-      ).forEach { (k, v) ->
-        filter { it.replace(k, v) }
-      }
+      expand(replacements)
     }
   }
 }
