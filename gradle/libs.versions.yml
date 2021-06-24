@@ -14,10 +14,10 @@ versions:
   indra: 2.0.5
   shadow: 7.0.0
   testLoggerPlugin: 3.0.0
-  adventure: 4.8.0
+  adventure: 4.8.1
   adventurePlatform: 4.0.0-SNAPSHOT
   adventurePlatformFabric: 4.1.0-SNAPSHOT
-  minimessage: 4.1.0-SNAPSHOT
+  minimessage: 4.2.0-SNAPSHOT
   configurate: 4.1.1
   checkerQual: 3.14.0
   slf4j: 1.7.30
