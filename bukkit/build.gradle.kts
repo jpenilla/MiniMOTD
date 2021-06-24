@@ -14,7 +14,7 @@ dependencies {
 
 tasks {
   runServer {
-    minecraftVersion("1.16.5")
+    minecraftVersion("1.17")
   }
   generateBukkitPluginDescription {
     mustRunAfter(clean)
