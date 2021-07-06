@@ -31,7 +31,7 @@ versions:
   fabricLoader: 0.11.3
   fabricMinecraft: 1.17
   spongeApi7: 7.2.0
-  velocityApi: 1.1.7
+  velocityApi: 3.0.0
   jupiterEngine: 5.7.0
 
 dependencies:
