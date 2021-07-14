@@ -57,7 +57,7 @@ public final class PluginSettings {
 
     @Comment("Set whether to enable virtual host testing mode.\n"
       + "When enabled, MiniMOTD will print virtual host debug info to the console on each server ping.")
-    private final boolean virtualHostTestMode = false;
+    private boolean virtualHostTestMode = false;
 
     public boolean virtualHostTestMode() {
       return this.virtualHostTestMode;
