@@ -38,6 +38,7 @@ import org.spongepowered.api.command.CommandExecutor;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.config.ConfigDir;
+import org.spongepowered.api.event.EventListenerRegistration;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.lifecycle.LoadedGameEvent;
 import org.spongepowered.api.event.lifecycle.RefreshGameEvent;
@@ -81,9 +82,10 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
       }
     });
     Sponge.eventManager().registerListener(
-      pluginContainer,
-      ClientPingServerEvent.class,
-      this.injector.getInstance(ClientPingServerEventListener.class)
+      EventListenerRegistration.builder(ClientPingServerEvent.class)
+        .plugin(pluginContainer)
+        .listener(this.injector.getInstance(ClientPingServerEventListener.class))
+        .build()
     );
   }
 
