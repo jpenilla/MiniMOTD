@@ -3,5 +3,5 @@ plugins {
 }
 
 group = "xyz.jpenilla"
-version = "2.0.4-SNAPSHOT"
+version = "2.0.4"
 description = "Use MiniMessage text formatting in the server list MOTD."
