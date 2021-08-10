@@ -33,7 +33,7 @@ import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.PingResponse;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 
-final class PingListener implements Listener {
+public final class PingListener implements Listener {
   private final MiniMOTD<CachedServerIcon> miniMOTD;
   private final LegacyComponentSerializer unusualHexSerializer = LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build();
   private final MiniMOTDPlugin plugin;

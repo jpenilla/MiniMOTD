@@ -54,23 +54,23 @@ public final class MiniMOTD<I> {
     return this.platform;
   }
 
-  public final Path dataDirectory() {
+  public Path dataDirectory() {
     return this.platform.dataDirectory();
   }
 
-  public final IconManager<I> iconManager() {
+  public IconManager<I> iconManager() {
     return this.iconManager;
   }
 
-  public final Logger logger() {
+  public Logger logger() {
     return this.platform.logger();
   }
 
-  public final ConfigManager configManager() {
+  public ConfigManager configManager() {
     return this.configManager;
   }
 
-  public final PingResponse<I> createMOTD(final MiniMOTDConfig config, final int onlinePlayers, final int maxPlayers) {
+  public PingResponse<I> createMOTD(final MiniMOTDConfig config, final int onlinePlayers, final int maxPlayers) {
     final PingResponse.PlayerCount count = config.modifyPlayerCount(onlinePlayers, maxPlayers);
     final PingResponse.Builder<I> response = PingResponse.<I>builder()
       .playerCount(count)

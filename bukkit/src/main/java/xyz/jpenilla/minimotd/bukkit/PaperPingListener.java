@@ -34,7 +34,7 @@ import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.PingResponse;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 
-final class PaperPingListener implements Listener {
+public final class PaperPingListener implements Listener {
   private final MiniMOTDPlugin plugin;
   private final LegacyComponentSerializer unusualHexSerializer = LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build();
   private final MiniMOTD<CachedServerIcon> miniMOTD;

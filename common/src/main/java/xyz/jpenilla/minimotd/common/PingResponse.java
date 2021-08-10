@@ -60,7 +60,7 @@ public final class PingResponse<I> {
 
   /**
    * If {@link #icon()} is non-null, the provided {@link Consumer} will be called using
-   * it's return value. If {@link #icon()} is {@code null}, do nothing.
+   * its return value. If {@link #icon()} is {@code null}, do nothing.
    *
    * @param iconConsumer icon consumer
    */
@@ -76,7 +76,7 @@ public final class PingResponse<I> {
 
   /**
    * If {@link #motd()} is non-null, the provided {@link Consumer} will be called using
-   * it's return value. If {@link #motd()} is {@code null}, do nothing.
+   * its return value. If {@link #motd()} is {@code null}, do nothing.
    *
    * @param motdConsumer motd consumer
    */

@@ -38,8 +38,7 @@ public final class ConfigLoader<C> {
   private static final TypeSerializerCollection SERIALIZERS;
 
   static {
-    SERIALIZERS = TypeSerializerCollection.defaults()
-      .childBuilder()
+    SERIALIZERS = TypeSerializerCollection.builder()
       .register(PlayerCountModifier.serializer())
       .build();
   }
@@ -50,11 +49,13 @@ public final class ConfigLoader<C> {
   public ConfigLoader(
     final @NonNull Class<C> configClass,
     final @NonNull Path configPath,
-    final @NonNull ConfigurationOptions options
+    final @NonNull UnaryOperator<ConfigurationOptions> optionsModifier
   ) {
     this.loader = HoconConfigurationLoader.builder()
       .path(configPath)
-      .defaultOptions(options.serializers(SERIALIZERS))
+      .defaultOptions(options ->
+        optionsModifier.apply(options)
+          .serializers(builder -> builder.registerAll(SERIALIZERS)))
       .build();
     try {
       this.mapper = ObjectMapper.factory().get(configClass);
@@ -68,17 +69,9 @@ public final class ConfigLoader<C> {
 
   public ConfigLoader(
     final @NonNull Class<C> configClass,
-    final @NonNull Path configPath,
-    final @NonNull UnaryOperator<ConfigurationOptions> options
-  ) {
-    this(configClass, configPath, options.apply(ConfigurationOptions.defaults()));
-  }
-
-  public ConfigLoader(
-    final @NonNull Class<C> configClass,
     final @NonNull Path configPath
   ) {
-    this(configClass, configPath, ConfigurationOptions.defaults());
+    this(configClass, configPath, options -> options);
   }
 
   public @NonNull C load() throws ConfigurateException {
