@@ -101,7 +101,11 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
 
   @Listener
   public void reloaded(final @NonNull GameReloadEvent event) {
-    this.miniMOTD.reload();
+    try {
+      this.miniMOTD.reload();
+    } catch (final Exception ex) {
+      this.miniMOTD.logger().warn("Failed to reload MiniMOTD.", ex);
+    }
   }
 
   private void registerCommands() {

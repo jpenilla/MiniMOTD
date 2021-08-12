@@ -139,7 +139,11 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
 
   @Listener
   public void onRefresh(final @NonNull RefreshGameEvent event) {
-    this.miniMOTD.reload();
+    try {
+      this.miniMOTD.reload();
+    } catch (final Exception ex) {
+      this.miniMOTD.logger().warn("Failed to reload MiniMOTD.", ex);
+    }
   }
 
   @Override

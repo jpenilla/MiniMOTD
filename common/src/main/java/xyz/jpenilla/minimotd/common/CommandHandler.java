@@ -38,6 +38,7 @@ import static net.kyori.adventure.text.event.ClickEvent.openUrl;
 import static net.kyori.adventure.text.event.ClickEvent.runCommand;
 import static net.kyori.adventure.text.format.NamedTextColor.GRAY;
 import static net.kyori.adventure.text.format.NamedTextColor.GREEN;
+import static net.kyori.adventure.text.format.NamedTextColor.RED;
 import static net.kyori.adventure.text.format.NamedTextColor.WHITE;
 import static net.kyori.adventure.text.format.TextColor.color;
 import static net.kyori.adventure.text.format.TextDecoration.STRIKETHROUGH;
@@ -72,7 +73,18 @@ public final class CommandHandler {
   }
 
   public void reload(final Audience audience) {
-    this.miniMOTD.reload();
+    try {
+      this.miniMOTD.reload();
+    } catch (final Exception ex) {
+      this.miniMOTD.logger().warn("Failed to reload MiniMOTD. Ensure there are no errors in your config files.", ex);
+      audience.sendMessage(TextComponent.ofChildren(
+        Constants.COMMAND_PREFIX,
+        space(),
+        text("Failed to reload MiniMOTD. Ensure there are no errors in your config files. See console for more details.", RED)
+      ));
+      return;
+    }
+
     audience.sendMessage(TextComponent.ofChildren(
       Constants.COMMAND_PREFIX,
       space(),

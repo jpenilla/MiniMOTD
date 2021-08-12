@@ -1,3 +1,3 @@
 plugins {
-  id("base")
+  base
 }

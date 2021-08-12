@@ -45,9 +45,14 @@ public final class MiniMOTD<I> {
 
   public MiniMOTD(final MiniMOTDPlatform<I> platform) {
     this.platform = platform;
-    this.iconManager = new IconManager<>(this);
-    this.configManager = new ConfigManager(this);
-    this.configManager.loadConfigs();
+
+    try {
+      this.iconManager = new IconManager<>(this);
+      this.configManager = new ConfigManager(this);
+      this.configManager.loadConfigs();
+    } catch (final Exception ex) {
+      throw new IllegalStateException("Failed to load MiniMOTD. Ensure your config files are without errors.", ex);
+    }
   }
 
   public MiniMOTDPlatform<I> platform() {

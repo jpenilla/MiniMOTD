@@ -14,5 +14,5 @@ tasks {
 }
 
 extensions.configure<MiniMOTDPlatformExtension> {
-  jarTask.set(tasks.named<AbstractArchiveTask>("shadowJar"))
+  jarTask.set(tasks.shadowJar)
 }
