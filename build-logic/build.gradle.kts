@@ -9,7 +9,7 @@ repositories {
 dependencies {
   implementation(libs.indraCommon)
   implementation(libs.shadow)
-  implementation(libs.testLoggerPlugin)
+  implementation(libs.testLogger)
 
   // https://github.com/gradle/gradle/issues/15383#issuecomment-779893192
   implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))

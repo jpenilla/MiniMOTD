@@ -165,7 +165,7 @@ dependencies:
     group: gradle.plugin.com.github.jengelman.gradle.plugins
     name: shadow
     version: { ref: shadow }
-  testLoggerPlugin:
+  testLogger:
     group: com.adarshr
     name: gradle-test-logger-plugin
     version: { ref: testLoggerPlugin }
