@@ -16,9 +16,6 @@ tasks {
   runServer {
     minecraftVersion("1.17.1")
   }
-  generateBukkitPluginDescription {
-    mustRunAfter(clean)
-  }
   shadowJar {
     commonRelocation("org.slf4j")
     commonRelocation("io.leangen.geantyref")

@@ -6,7 +6,7 @@ metadata:
 plugins:
   net.kyori.blossom: 1.3.0
   org.spongepowered.gradle.plugin: 1.1.1
-  net.minecrell.plugin-yml.bungee: &plugin-yml 0.4.0
+  net.minecrell.plugin-yml.bungee: &plugin-yml 0.5.0
   net.minecrell.plugin-yml.bukkit: *plugin-yml
   xyz.jpenilla.run-paper: 1.0.3
 

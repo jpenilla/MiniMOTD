@@ -12,9 +12,6 @@ dependencies {
 }
 
 tasks {
-  generateBungeePluginDescription {
-    mustRunAfter(clean)
-  }
   shadowJar {
     commonRelocation("org.slf4j")
     commonRelocation("io.leangen.geantyref")
