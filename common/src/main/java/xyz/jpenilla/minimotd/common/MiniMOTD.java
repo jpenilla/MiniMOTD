@@ -26,7 +26,6 @@ package xyz.jpenilla.minimotd.common;
 import java.nio.file.Path;
 import java.util.concurrent.ThreadLocalRandom;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -34,6 +33,7 @@ import org.checkerframework.framework.qual.DefaultQualifier;
 import org.slf4j.Logger;
 import xyz.jpenilla.minimotd.common.config.ConfigManager;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
+import xyz.jpenilla.minimotd.common.util.Components;
 
 import static net.kyori.adventure.text.Component.newline;
 
@@ -89,7 +89,7 @@ public final class MiniMOTD<I> {
       }
       final int index = config.motds().size() == 1 ? 0 : ThreadLocalRandom.current().nextInt(config.motds().size());
       final MiniMOTDConfig.MOTD motdConfig = config.motds().get(index);
-      final Component motd = TextComponent.ofChildren(
+      final Component motd = Components.ofChildren(
         parse(motdConfig.line1(), count),
         newline(),
         parse(motdConfig.line2(), count)

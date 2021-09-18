@@ -1,5 +1,5 @@
 import org.spongepowered.gradle.plugin.config.PluginLoaders
-import org.spongepowered.plugin.metadata.PluginDependency
+import org.spongepowered.plugin.metadata.model.PluginDependency
 
 plugins {
   id("minimotd.shadow-platform")
@@ -15,11 +15,15 @@ dependencies {
 
 sponge {
   injectRepositories(false)
-  apiVersion("8.0.0")
+  apiVersion("8.0.0-SNAPSHOT")
   plugin(project.name) {
-    loader(PluginLoaders.JAVA_PLAIN)
+    loader {
+      name(PluginLoaders.JAVA_PLAIN)
+      version("1.0")
+    }
+    license("MIT")
     displayName(rootProject.name)
-    mainClass("xyz.jpenilla.minimotd.sponge8.MiniMOTDPlugin")
+    entrypoint("xyz.jpenilla.minimotd.sponge8.MiniMOTDPlugin")
     description(project.description)
     links {
       homepage(Constants.GITHUB_URL)

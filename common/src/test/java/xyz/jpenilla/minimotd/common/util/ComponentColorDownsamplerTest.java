@@ -24,7 +24,6 @@
 package xyz.jpenilla.minimotd.common.util;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
 import org.junit.jupiter.api.Test;
 
@@ -42,14 +41,14 @@ class ComponentColorDownsamplerTest {
 
   @Test
   void testColorDownsampling() {
-    final Component fullColor = TextComponent.ofChildren(
+    final Component fullColor = Components.ofChildren(
       text("Green ", GREEN),
       text("Orange Yellow ", ORANGE_YELLOW),
       text("Pink ", PINK),
       text("Blue ", BLUE),
       text("Lime Green", LIME_GREEN)
     );
-    final Component expectedDownsample = TextComponent.ofChildren(
+    final Component expectedDownsample = Components.ofChildren(
       text("Green ", nearestTo(GREEN)),
       text("Orange Yellow ", nearestTo(ORANGE_YELLOW)),
       text("Pink ", nearestTo(PINK)),

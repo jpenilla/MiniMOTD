@@ -40,6 +40,7 @@ import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.EventListenerRegistration;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.lifecycle.LoadedGameEvent;
 import org.spongepowered.api.event.lifecycle.RefreshGameEvent;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
@@ -47,7 +48,7 @@ import org.spongepowered.api.event.server.ClientPingServerEvent;
 import org.spongepowered.api.network.status.Favicon;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.plugin.PluginContainer;
-import org.spongepowered.plugin.jvm.Plugin;
+import org.spongepowered.plugin.builtin.jvm.Plugin;
 import org.spongepowered.plugin.metadata.PluginMetadata;
 import xyz.jpenilla.minimotd.common.CommandHandler;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
@@ -85,6 +86,7 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
       EventListenerRegistration.builder(ClientPingServerEvent.class)
         .plugin(pluginContainer)
         .listener(this.injector.getInstance(ClientPingServerEventListener.class))
+        .order(Order.DEFAULT)
         .build()
     );
   }

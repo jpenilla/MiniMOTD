@@ -5,21 +5,21 @@ metadata:
 
 plugins:
   net.kyori.blossom: 1.3.0
-  org.spongepowered.gradle.plugin: 1.1.1
+  org.spongepowered.gradle.plugin: 2.0.0
   net.minecrell.plugin-yml.bungee: &plugin-yml 0.5.0
   net.minecrell.plugin-yml.bukkit: *plugin-yml
-  xyz.jpenilla.run-paper: 1.0.3
+  xyz.jpenilla.run-paper: 1.0.4
 
 versions:
   indra: 2.0.6
   shadow: 7.0.0
   testLoggerPlugin: 3.0.0
-  adventure: 4.8.1
-  adventurePlatform: 4.0.0-SNAPSHOT
+  adventure: 4.9.1
+  adventurePlatform: 4.0.0
   adventurePlatformFabric: 4.1.0-SNAPSHOT
   minimessage: 4.2.0-SNAPSHOT
-  configurate: 4.1.1
-  checkerQual: 3.14.0
+  configurate: 4.1.2
+  checkerQual: 3.18.0
   slf4j: 1.7.30
   log4jSlf4jImpl: 2.8.1
   gson: 2.8.0
