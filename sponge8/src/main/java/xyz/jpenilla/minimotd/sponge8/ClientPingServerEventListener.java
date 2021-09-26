@@ -25,7 +25,6 @@ package xyz.jpenilla.minimotd.sponge8;
 
 import com.google.inject.Inject;
 import java.lang.reflect.Method;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.spongepowered.api.MinecraftVersion;
 import org.spongepowered.api.event.EventListener;
@@ -38,8 +37,18 @@ import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 import xyz.jpenilla.minimotd.common.util.ComponentColorDownsampler;
 
 final class ClientPingServerEventListener implements EventListener<ClientPingServerEvent> {
+  private static final Method GET_PROTOCOL;
+
+  static {
+    try {
+      final Class<?> protocolMinecraftVersion = Class.forName("org.spongepowered.common.ProtocolMinecraftVersion");
+      GET_PROTOCOL = protocolMinecraftVersion.getMethod("getProtocol");
+    } catch (final ReflectiveOperationException ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+
   private final MiniMOTD<Favicon> miniMOTD;
-  private @MonotonicNonNull Method SpongeMinecraftVersion_getProtocol;
 
   @Inject
   private ClientPingServerEventListener(final @NonNull MiniMOTD<Favicon> miniMOTD) {
@@ -86,11 +95,8 @@ final class ClientPingServerEventListener implements EventListener<ClientPingSer
 
   private boolean legacy(final @NonNull MinecraftVersion version) {
     try {
-      if (!version.isLegacy() && this.SpongeMinecraftVersion_getProtocol == null) {
-        this.SpongeMinecraftVersion_getProtocol = version.getClass().getMethod("getProtocol");
-      }
       return version.isLegacy()
-        || (int) this.SpongeMinecraftVersion_getProtocol.invoke(version) < Constants.MINECRAFT_1_16_PROTOCOL_VERSION;
+        || (int) GET_PROTOCOL.invoke(version) < Constants.MINECRAFT_1_16_PROTOCOL_VERSION;
     } catch (final ReflectiveOperationException e) {
       throw new IllegalStateException("Failed to get protocol version", e);
     }
