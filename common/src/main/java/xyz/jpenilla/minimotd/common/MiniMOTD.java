@@ -108,7 +108,7 @@ public final class MiniMOTD<I> {
   private static Component parse(final String input, final PingResponse.PlayerCount count) {
     final String online = Integer.toString(count.onlinePlayers());
     final String max = Integer.toString(count.maxPlayers());
-    return MiniMessage.get().parse(
+    return MiniMessage.miniMessage().parse(
       replacePlayerCount(input, online, max),
       "online_players", online,
       "max_players", max

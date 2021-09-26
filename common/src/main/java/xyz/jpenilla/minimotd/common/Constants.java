@@ -44,5 +44,5 @@ public final class Constants {
 
   public static final int MINECRAFT_1_16_PROTOCOL_VERSION = 735;
 
-  public static final Component COMMAND_PREFIX = MiniMessage.get().parse("<white>[</white><gradient:#0047AB:#ADD8E6>" + PluginMetadata.NAME + "</gradient><white>]</white>");
+  public static final Component COMMAND_PREFIX = MiniMessage.miniMessage().parse("<white>[</white><gradient:#0047AB:#ADD8E6>" + PluginMetadata.NAME + "</gradient><white>]</white>");
 }
