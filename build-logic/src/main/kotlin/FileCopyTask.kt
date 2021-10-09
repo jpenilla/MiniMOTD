@@ -1,17 +1,18 @@
 import org.gradle.api.DefaultTask
+import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 
 abstract class FileCopyTask : DefaultTask() {
-  @InputFile
-  val fileToCopy = project.objects.fileProperty()
+  @get:InputFile
+  abstract val fileToCopy: RegularFileProperty
 
-  @OutputFile
-  val destination = project.objects.fileProperty()
+  @get:OutputFile
+  abstract val destination: RegularFileProperty
 
   @TaskAction
-  private fun copyFile() {
+  fun copyFile() {
     destination.get().asFile.parentFile.mkdirs()
     fileToCopy.get().asFile.copyTo(destination.get().asFile, overwrite = true)
   }

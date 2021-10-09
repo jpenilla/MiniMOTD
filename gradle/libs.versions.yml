@@ -12,9 +12,9 @@ plugins:
 
 versions:
   indra: 2.0.6
-  shadow: 7.0.0
+  shadow: 7.1.0
   testLoggerPlugin: 3.0.0
-  adventure: 4.9.1
+  adventure: 4.9.2
   adventurePlatform: 4.0.0
   adventurePlatformFabric: 4.1.0-SNAPSHOT
   minimessage: 4.2.0-SNAPSHOT
@@ -32,7 +32,7 @@ versions:
   fabricMinecraft: 1.17.1
   spongeApi7: 7.2.0
   velocityApi: 3.0.0
-  jupiterEngine: 5.7.0
+  jupiterEngine: 5.8.1
 
 dependencies:
   adventureBom:
@@ -162,7 +162,7 @@ dependencies:
     name: indra-common
     version: { ref: indra }
   shadow:
-    group: gradle.plugin.com.github.jengelman.gradle.plugins
+    group: gradle.plugin.com.github.johnrengelman
     name: shadow
     version: { ref: shadow }
   testLogger:
