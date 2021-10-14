@@ -1,5 +1,6 @@
 import org.spongepowered.gradle.plugin.config.PluginLoaders
 import org.spongepowered.plugin.metadata.model.PluginDependency
+import java.util.Locale
 
 plugins {
   id("minimotd.shadow-platform")
@@ -16,7 +17,7 @@ dependencies {
 sponge {
   injectRepositories(false)
   apiVersion("8.0.0-SNAPSHOT")
-  plugin(project.name) {
+  plugin(rootProject.name.toLowerCase(Locale.ENGLISH)) {
     loader {
       name(PluginLoaders.JAVA_PLAIN)
       version("1.0")

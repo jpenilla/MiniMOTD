@@ -1,3 +1,5 @@
+import java.util.Locale
+
 plugins {
   id("minimotd.shadow-platform")
 }
@@ -14,7 +16,7 @@ dependencies {
 tasks {
   processResources {
     val replacements = mapOf(
-      "modid" to project.name,
+      "modid" to rootProject.name.toLowerCase(Locale.ENGLISH),
       "name" to rootProject.name,
       "version" to project.version.toString(),
       "description" to project.description.toString(),
