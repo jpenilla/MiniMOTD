@@ -36,6 +36,8 @@ import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 import xyz.jpenilla.minimotd.common.util.Components;
 
 import static net.kyori.adventure.text.Component.newline;
+import static net.kyori.adventure.text.minimessage.Template.template;
+import static net.kyori.adventure.text.minimessage.template.TemplateResolver.templates;
 
 @DefaultQualifier(NonNull.class)
 public final class MiniMOTD<I> {
@@ -108,10 +110,9 @@ public final class MiniMOTD<I> {
   private static Component parse(final String input, final PingResponse.PlayerCount count) {
     final String online = Integer.toString(count.onlinePlayers());
     final String max = Integer.toString(count.maxPlayers());
-    return MiniMessage.miniMessage().parse(
+    return MiniMessage.miniMessage().deserialize(
       replacePlayerCount(input, online, max),
-      "online_players", online,
-      "max_players", max
+      templates(template("online_players", online), template("max_players", max))
     );
   }
 
