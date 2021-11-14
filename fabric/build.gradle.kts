@@ -10,7 +10,7 @@ val minecraftVersion = libs.versions.fabricMinecraft.get()
 
 dependencies {
   minecraft(libs.fabricMinecraft)
-  mappings(minecraft.officialMojangMappings())
+  mappings(loom.officialMojangMappings())
   modImplementation(libs.fabricLoader)
   modImplementation(libs.fabricApi)
 
