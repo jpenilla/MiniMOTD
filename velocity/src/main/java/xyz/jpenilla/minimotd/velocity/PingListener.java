@@ -24,25 +24,32 @@
 package xyz.jpenilla.minimotd.velocity;
 
 import com.google.inject.Inject;
+import com.velocitypowered.api.event.EventTask;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.api.util.Favicon;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.PingResponse;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 
+@DefaultQualifier(NonNull.class)
 public final class PingListener {
   private final MiniMOTD<Favicon> miniMOTD;
 
   @Inject
-  private PingListener(final @NonNull MiniMOTD<Favicon> miniMOTD) {
+  private PingListener(final MiniMOTD<Favicon> miniMOTD) {
     this.miniMOTD = miniMOTD;
   }
 
   @Subscribe
-  public void handlePing(final @NonNull ProxyPingEvent event) {
+  public EventTask onProxyPingEvent(final ProxyPingEvent event) {
+    return EventTask.async(() -> this.handle(event));
+  }
+
+  private void handle(final ProxyPingEvent event) {
     final MiniMOTDConfig config = this.miniMOTD.configManager().resolveConfig(event.getConnection().getVirtualHost().orElse(null));
     final ServerPing.Builder pong = event.getPing().asBuilder();
 
