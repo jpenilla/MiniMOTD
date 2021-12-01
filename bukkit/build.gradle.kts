@@ -14,7 +14,7 @@ dependencies {
 
 tasks {
   runServer {
-    minecraftVersion("1.17.1")
+    minecraftVersion("1.18")
   }
   shadowJar {
     commonRelocation("org.slf4j")
