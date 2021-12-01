@@ -16,7 +16,7 @@ versions:
   testLoggerPlugin: 3.0.0
   adventure: 4.9.3
   adventurePlatform: 4.0.1-SNAPSHOT
-  adventurePlatformFabric: 4.1.0-SNAPSHOT
+  adventurePlatformFabric: 5.0.0-SNAPSHOT
   minimessage: 4.2.0-SNAPSHOT
   configurate: 4.1.2
   checkerQual: 3.19.0
@@ -27,9 +27,9 @@ versions:
   bstats: 2.2.1
   paperApi: 1.16.5-R0.1-SNAPSHOT
   waterfallApi: 1.16-R0.4-SNAPSHOT
-  fabricApi: 0.37.0+1.17
-  fabricLoader: 0.11.6
-  fabricMinecraft: 1.17.1
+  fabricApi: 0.43.1+1.18
+  fabricLoader: 0.12.8
+  fabricMinecraft: 1.18
   spongeApi7: 7.2.0
   velocityApi: 3.0.0
   jupiterEngine: 5.8.1

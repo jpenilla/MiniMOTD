@@ -1,8 +1,8 @@
 {
   "required": true,
-  "minVersion": "0.8",
+  "minVersion": "0.8.4",
   "package": "xyz.jpenilla.minimotd.fabric.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_16",
   "mixins": [
     "ConnectionMixin",
     "ServerHandshakePacketListenerImplMixin",
