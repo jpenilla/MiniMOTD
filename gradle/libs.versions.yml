@@ -15,7 +15,7 @@ versions:
   shadow: 7.1.0
   testLoggerPlugin: 3.0.0
   adventure: 4.9.3
-  adventurePlatform: 4.0.1-SNAPSHOT
+  adventurePlatform: 4.0.1
   adventurePlatformFabric: 5.0.0
   minimessage: 4.2.0-SNAPSHOT
   configurate: 4.1.2
