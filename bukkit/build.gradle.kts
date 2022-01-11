@@ -14,7 +14,7 @@ dependencies {
 
 tasks {
   runServer {
-    minecraftVersion("1.18")
+    minecraftVersion("1.18.1")
   }
   shadowJar {
     commonRelocation("org.slf4j")
@@ -32,7 +32,7 @@ bukkit {
   authors = listOf("jmp")
   softDepend = listOf("ViaVersion")
   commands {
-    create("minimotd") {
+    register("minimotd") {
       description = "MiniMOTD Command"
       usage = "/minimotd help"
       permission = "minimotd.admin"
