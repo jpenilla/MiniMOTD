@@ -14,6 +14,7 @@ version = (version as String)
 
 indra {
   javaVersions {
+    minimumToolchain(17)
     target(8)
   }
   github(Constants.GITHUB_USER, Constants.GITHUB_REPO)

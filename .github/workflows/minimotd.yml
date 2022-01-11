@@ -11,8 +11,8 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v2
       with:
-        distribution: 'adopt'
-        java-version: '16'
+        distribution: 'temurin'
+        java-version: '17'
     - name: Build with Gradle
       run: ./gradlew build
     - run: mkdir staging && cp build/libs/*.jar staging
