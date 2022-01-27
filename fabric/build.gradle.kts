@@ -35,6 +35,10 @@ indra {
   }
 }
 
+loom {
+  serverOnlyMinecraftJar()
+}
+
 tasks {
   runServer {
     standardInput = System.`in`
@@ -46,7 +50,6 @@ tasks {
     platformRelocation("fabric", "xyz.jpenilla.minimotd.common")
   }
   remapJar {
-    input.set(shadowJar.flatMap { it.archiveFile })
     archiveFileName.set("${project.name}-mc$minecraftVersion-${project.version}.jar")
   }
   processResources {
