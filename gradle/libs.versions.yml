@@ -11,7 +11,7 @@ plugins:
   xyz.jpenilla.run-paper: 1.0.6
 
 versions:
-  indra: 2.0.6
+  indra: 2.1.1
   shadow: 7.1.2
   testLoggerPlugin: 3.0.0
   adventure: 4.9.3
@@ -19,7 +19,7 @@ versions:
   adventurePlatformFabric: 5.0.0
   minimessage: 4.2.0-SNAPSHOT
   configurate: 4.1.2
-  checkerQual: 3.21.1
+  checkerQual: 3.21.2
   slf4j: 1.7.32
   log4jSlf4jImpl: 2.8.1
   gson: 2.8.0
@@ -27,8 +27,8 @@ versions:
   bstats: 2.2.1
   paperApi: 1.16.5-R0.1-SNAPSHOT
   waterfallApi: 1.16-R0.4-SNAPSHOT
-  fabricApi: 0.45.0+1.18
-  fabricLoader: 0.12.12
+  fabricApi: 0.46.4+1.18
+  fabricLoader: 0.13.1
   fabricMinecraft: 1.18.1
   spongeApi7: 7.2.0
   velocityApi: 3.1.0
