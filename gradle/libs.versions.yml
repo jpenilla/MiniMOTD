@@ -13,7 +13,7 @@ plugins:
 versions:
   indra: 2.1.1
   shadow: 7.1.2
-  testLoggerPlugin: 3.0.0
+  testLoggerPlugin: 3.2.0
   adventure: 4.9.3
   adventurePlatform: 4.0.1
   adventurePlatformFabric: 5.0.0
@@ -28,11 +28,11 @@ versions:
   paperApi: 1.16.5-R0.1-SNAPSHOT
   waterfallApi: 1.16-R0.4-SNAPSHOT
   fabricApi: 0.46.4+1.18
-  fabricLoader: 0.13.1
+  fabricLoader: 0.13.3
   fabricMinecraft: 1.18.1
   spongeApi7: 7.2.0
   velocityApi: 3.1.0
-  jupiterEngine: 5.8.1
+  jupiterEngine: 5.8.2
 
 dependencies:
   adventureBom:
