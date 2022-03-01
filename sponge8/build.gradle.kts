@@ -9,14 +9,11 @@ plugins {
 
 dependencies {
   implementation(projects.minimotdCommon)
-  implementation(libs.log4jSlf4jImpl) {
-    isTransitive = false
-  }
 }
 
 sponge {
   injectRepositories(false)
-  apiVersion("8.0.0")
+  apiVersion("8.1.0-SNAPSHOT")
   plugin(rootProject.name.toLowerCase(Locale.ENGLISH)) {
     loader {
       name(PluginLoaders.JAVA_PLAIN)
@@ -44,8 +41,6 @@ sponge {
 tasks {
   shadowJar {
     configureForNativeAdventurePlatform()
-    commonRelocation("org.apache.logging.slf4j")
-    platformRelocation("log4j", "org.slf4j")
     platformRelocation("sponge8", "xyz.jpenilla.minimotd.common")
     dependencies {
       exclude(dependency("io.leangen.geantyref:geantyref"))

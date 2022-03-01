@@ -5,7 +5,7 @@ metadata:
 
 plugins:
   net.kyori.blossom: 1.3.0
-  org.spongepowered.gradle.plugin: 2.0.0
+  org.spongepowered.gradle.plugin: 2.0.1
   net.minecrell.plugin-yml.bungee: &plugin-yml 0.5.1
   net.minecrell.plugin-yml.bukkit: *plugin-yml
   xyz.jpenilla.run-paper: 1.0.6
@@ -14,24 +14,22 @@ versions:
   indra: 2.1.1
   shadow: 7.1.2
   testLoggerPlugin: 3.2.0
-  adventure: 4.9.3
-  adventurePlatform: 4.0.1
-  adventurePlatformFabric: 5.0.0
-  minimessage: 4.2.0-SNAPSHOT
+  adventure: 4.10.0
+  adventurePlatform: 4.1.0
+  adventurePlatformFabric: 5.2.0
   configurate: 4.1.2
-  checkerQual: 3.21.2
+  checkerQual: 3.21.3
   slf4j: 1.7.32
-  log4jSlf4jImpl: 2.8.1
   gson: 2.8.0
   guava: 21.0
   bstats: 2.2.1
   paperApi: 1.16.5-R0.1-SNAPSHOT
   waterfallApi: 1.16-R0.4-SNAPSHOT
-  fabricApi: 0.46.4+1.18
+  fabricApi: 0.47.8+1.18.2
   fabricLoader: 0.13.3
-  fabricMinecraft: 1.18.1
+  fabricMinecraft: 1.18.2
   spongeApi7: 7.2.0
-  velocityApi: 3.1.0
+  velocityApi: 3.1.2-SNAPSHOT
   jupiterEngine: 5.8.2
 
 dependencies:
@@ -67,7 +65,6 @@ dependencies:
   minimessage:
     group: net.kyori
     name: adventure-text-minimessage
-    version: { ref: minimessage }
 
   configurateHocon:
     group: org.spongepowered
@@ -87,10 +84,6 @@ dependencies:
     group: org.slf4j
     name: slf4j-jdk14
     version: { ref: slf4j }
-  log4jSlf4jImpl:
-    group: org.apache.logging.log4j
-    name: log4j-slf4j-impl
-    version: { ref: log4jSlf4jImpl }
 
   gson:
     group: com.google.code.gson

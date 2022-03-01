@@ -16,13 +16,10 @@ dependencies {
 
   shade(implementation(projects.minimotdCommon) {
     exclude("net.kyori")
-    exclude("org.slf4j")
   })
 
   modImplementation(libs.adventurePlatformFabric)
   include(libs.adventurePlatformFabric)
-  implementation(libs.minimessage)
-  include(libs.minimessage)
 }
 
 miniMOTDPlatform {
@@ -40,9 +37,6 @@ loom {
 }
 
 tasks {
-  runServer {
-    standardInput = System.`in`
-  }
   shadowJar {
     configurations = listOf(shade)
     commonConfiguration()

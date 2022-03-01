@@ -5,9 +5,7 @@ plugins {
 }
 
 dependencies {
-  implementation(projects.minimotdCommon) {
-    exclude("org.slf4j", "slf4j-api")
-  }
+  implementation(projects.minimotdCommon)
   implementation(libs.adventurePlatformSpongeApi)
   compileOnly(libs.spongeApi7)
   implementation(libs.bstatsSponge)

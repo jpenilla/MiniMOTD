@@ -27,6 +27,8 @@ import java.nio.file.Path;
 import java.util.concurrent.ThreadLocalRandom;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
@@ -36,8 +38,6 @@ import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 import xyz.jpenilla.minimotd.common.util.Components;
 
 import static net.kyori.adventure.text.Component.newline;
-import static net.kyori.adventure.text.minimessage.Template.template;
-import static net.kyori.adventure.text.minimessage.template.TemplateResolver.templates;
 
 @DefaultQualifier(NonNull.class)
 public final class MiniMOTD<I> {
@@ -112,7 +112,7 @@ public final class MiniMOTD<I> {
     final String max = Integer.toString(count.maxPlayers());
     return MiniMessage.miniMessage().deserialize(
       replacePlayerCount(input, online, max),
-      templates(template("online_players", online), template("max_players", max))
+      TagResolver.resolver(Placeholder.unparsed("online_players", online), Placeholder.unparsed("max_players", max))
     );
   }
 

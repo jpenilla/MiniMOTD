@@ -10,7 +10,6 @@ tasks.jar {
 }
 
 dependencies {
-  api(libs.slf4jApi)
   api(libs.configurateHocon)
   api(platform(libs.adventureBom))
   api(libs.adventureApi)
@@ -19,6 +18,7 @@ dependencies {
     exclude("com.google.code.gson", "gson")
   }
   api(libs.minimessage)
+  compileOnlyApi(libs.slf4jApi)
   compileOnlyApi(libs.checkerQual)
   compileOnlyApi(libs.gson)
   testImplementation(libs.gson)

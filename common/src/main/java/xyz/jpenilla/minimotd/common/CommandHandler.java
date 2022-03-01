@@ -121,7 +121,7 @@ public final class CommandHandler {
   }
 
   private static Component miniMessage(final String message) {
-    return MiniMessage.miniMessage().parse(message);
+    return MiniMessage.miniMessage().deserialize(message);
   }
 
   @FunctionalInterface

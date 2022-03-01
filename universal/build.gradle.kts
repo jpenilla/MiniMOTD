@@ -12,7 +12,7 @@ val platforms = setOf(
   projects.minimotdVelocity,
   projects.minimotdFabric,
   projects.minimotdSponge7,
-  //projects.minimotdSponge8
+  projects.minimotdSponge8
 ).map { it.dependencyProject }
 
 val universal = tasks.register<Jar>("universal") {
@@ -23,7 +23,6 @@ val universal = tasks.register<Jar>("universal") {
   for (platform in platforms) {
     val jarTask = platform.miniMOTDPlatform.jarTask
     from(zipTree(jarTask.flatMap { it.archiveFile }))
-    dependsOn(jarTask) // todo: remove when updating Gradle to 7.1 (https://github.com/gradle/gradle/issues/15569)
   }
 }
 

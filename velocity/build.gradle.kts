@@ -4,9 +4,7 @@ plugins {
 }
 
 dependencies {
-  implementation(projects.minimotdCommon) {
-    exclude("org.slf4j", "slf4j-api")
-  }
+  implementation(projects.minimotdCommon)
   implementation(libs.bstatsVelocity)
   compileOnly(libs.velocityApi)
   annotationProcessor(libs.velocityApi)

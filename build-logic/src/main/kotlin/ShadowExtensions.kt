@@ -9,13 +9,6 @@ fun ShadowJar.platformRelocation(platform: String, pkg: String) {
   relocate(pkg, "${Constants.RELOCATION_BASE_PACKAGE}.platform_$platform.$pkg")
 }
 
-fun ShadowJar.configureForNativeAdventurePlatform() {
-  platformRelocation("kyori", "net.kyori.adventure.text.minimessage")
-  dependencies {
-    excludeAdventureExceptMiniMessage()
-  }
-}
-
 fun ShadowJar.commonConfiguration() {
   commonRelocation("org.spongepowered.configurate")
   commonRelocation("com.typesafe.config")
@@ -25,9 +18,8 @@ fun ShadowJar.commonConfiguration() {
   }
 }
 
-private fun DependencyFilter.excludeAdventureExceptMiniMessage() {
-  exclude { dependency ->
-    dependency.moduleGroup == "net.kyori"
-      && dependency.moduleName != "adventure-text-minimessage"
+fun ShadowJar.configureForNativeAdventurePlatform() {
+  dependencies {
+    exclude { dependency -> dependency.moduleGroup == "net.kyori" }
   }
 }
