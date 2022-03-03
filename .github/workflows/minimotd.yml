@@ -16,7 +16,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
     - run: mkdir staging && cp build/libs/*.jar staging
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: Package
         path: staging
