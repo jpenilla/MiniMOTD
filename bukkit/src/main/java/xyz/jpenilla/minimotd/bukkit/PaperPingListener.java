@@ -24,6 +24,7 @@
 package xyz.jpenilla.minimotd.bukkit;
 
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
+import io.papermc.lib.PaperLib;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,13 +36,11 @@ import xyz.jpenilla.minimotd.common.PingResponse;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 
 public final class PaperPingListener implements Listener {
-  private final MiniMOTDPlugin plugin;
   private final LegacyComponentSerializer unusualHexSerializer = LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build();
   private final MiniMOTD<CachedServerIcon> miniMOTD;
 
-  PaperPingListener(final @NonNull MiniMOTDPlugin plugin, final @NonNull MiniMOTD<CachedServerIcon> miniMOTD) {
+  PaperPingListener(final @NonNull MiniMOTD<CachedServerIcon> miniMOTD) {
     this.miniMOTD = miniMOTD;
-    this.plugin = plugin;
   }
 
   @EventHandler
@@ -52,7 +51,7 @@ public final class PaperPingListener implements Listener {
 
     response.playerCount().applyCount(event::setNumPlayers, event::setMaxPlayers);
     response.motd(motd -> {
-      if (event.getClient().getProtocolVersion() < Constants.MINECRAFT_1_16_PROTOCOL_VERSION || this.plugin.majorMinecraftVersion() < 16) {
+      if (event.getClient().getProtocolVersion() < Constants.MINECRAFT_1_16_PROTOCOL_VERSION || PaperLib.getMinecraftVersion() < 16) {
         event.setMotd(LegacyComponentSerializer.legacySection().serialize(motd));
       } else {
         event.setMotd(this.unusualHexSerializer.serialize(motd));

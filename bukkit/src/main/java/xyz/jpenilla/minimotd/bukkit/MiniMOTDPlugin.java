@@ -23,6 +23,7 @@
  */
 package xyz.jpenilla.minimotd.bukkit;
 
+import io.papermc.lib.PaperLib;
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
@@ -44,24 +45,18 @@ public final class MiniMOTDPlugin extends JavaPlugin implements MiniMOTDPlatform
   private Logger logger;
   private MiniMOTD<CachedServerIcon> miniMOTD;
   private BukkitAudiences audiences;
-  private String serverPackageName;
-  private String serverApiVersion;
-  private int majorMinecraftVersion;
 
   @Override
   public void onEnable() {
     this.logger = LoggerFactory.getLogger(this.getName());
     this.miniMOTD = new MiniMOTD<>(this);
     this.audiences = BukkitAudiences.create(this);
-    this.serverPackageName = this.getServer().getClass().getPackage().getName();
-    this.serverApiVersion = this.serverPackageName.substring(this.serverPackageName.lastIndexOf('.') + 1);
-    this.majorMinecraftVersion = Integer.parseInt(this.serverApiVersion.split("_")[1]);
 
     if (PAPER_PING_EVENT_EXISTS) {
-      this.getServer().getPluginManager().registerEvents(new PaperPingListener(this, this.miniMOTD), this);
+      this.getServer().getPluginManager().registerEvents(new PaperPingListener(this.miniMOTD), this);
     } else {
-      this.getServer().getPluginManager().registerEvents(new PingListener(this, this.miniMOTD), this);
-      if (this.majorMinecraftVersion >= 12) { // PaperServerListPingEvent was added in 1.12
+      this.getServer().getPluginManager().registerEvents(new PingListener(this.miniMOTD), this);
+      if (PaperLib.getMinecraftVersion() >= 12) { // PaperServerListPingEvent was added in 1.12
         this.suggestPaper();
       }
     }
@@ -98,10 +93,6 @@ public final class MiniMOTDPlugin extends JavaPlugin implements MiniMOTDPlatform
   @Override
   public @NonNull CachedServerIcon loadIcon(final @NonNull BufferedImage image) throws Exception {
     return this.getServer().loadServerIcon(image);
-  }
-
-  public int majorMinecraftVersion() {
-    return this.majorMinecraftVersion;
   }
 
   public @NonNull BukkitAudiences audiences() {

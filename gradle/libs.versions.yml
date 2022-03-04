@@ -24,6 +24,7 @@ versions:
   guava: 21.0
   bstats: 2.2.1
   paperApi: 1.16.5-R0.1-SNAPSHOT
+  paperlib: 1.0.8-SNAPSHOT
   waterfallApi: 1.16-R0.4-SNAPSHOT
   fabricApi: 0.47.8+1.18.2
   fabricLoader: 0.13.3
@@ -115,6 +116,10 @@ dependencies:
     group: com.destroystokyo.paper
     name: paper-api
     version: { ref: paperApi }
+  paperlib:
+    group: io.papermc
+    name: paperlib
+    version: { ref: paperlib }
 
   waterfallApi:
     group: io.github.waterfallmc

@@ -9,6 +9,7 @@ dependencies {
   implementation(libs.slf4jJdk14)
   implementation(libs.adventurePlatformBukkit)
   implementation(libs.bstatsBukkit)
+  implementation(libs.paperlib)
   compileOnly(libs.paperApi)
 }
 
@@ -21,6 +22,7 @@ tasks {
     commonRelocation("io.leangen.geantyref")
     commonRelocation("net.kyori")
     commonRelocation("org.bstats")
+    commonRelocation("io.papermc.lib")
   }
 }
 

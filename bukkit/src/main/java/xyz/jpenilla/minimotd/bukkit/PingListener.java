@@ -23,6 +23,7 @@
  */
 package xyz.jpenilla.minimotd.bukkit;
 
+import io.papermc.lib.PaperLib;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -36,10 +37,8 @@ import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 public final class PingListener implements Listener {
   private final MiniMOTD<CachedServerIcon> miniMOTD;
   private final LegacyComponentSerializer unusualHexSerializer = LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build();
-  private final MiniMOTDPlugin plugin;
 
-  PingListener(final @NonNull MiniMOTDPlugin plugin, final @NonNull MiniMOTD<CachedServerIcon> miniMOTD) {
-    this.plugin = plugin;
+  PingListener(final @NonNull MiniMOTD<CachedServerIcon> miniMOTD) {
     this.miniMOTD = miniMOTD;
   }
 
@@ -51,7 +50,7 @@ public final class PingListener implements Listener {
 
     event.setMaxPlayers(response.playerCount().maxPlayers());
     response.motd(motd -> {
-      if (this.plugin.majorMinecraftVersion() > 15) {
+      if (PaperLib.getMinecraftVersion() > 15) {
         event.setMotd(this.unusualHexSerializer.serialize(motd));
       } else {
         event.setMotd(LegacyComponentSerializer.legacySection().serialize(motd));
