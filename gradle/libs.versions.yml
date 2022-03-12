@@ -14,7 +14,7 @@ versions:
   indra: 2.1.1
   shadow: 7.1.2
   testLoggerPlugin: 3.2.0
-  adventure: 4.10.0
+  adventure: 4.10.1
   adventurePlatform: 4.1.0
   adventurePlatformFabric: 5.2.0
   configurate: 4.1.2

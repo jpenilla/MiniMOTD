@@ -3,10 +3,11 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 dependencyResolutionManagement {
   repositories {
     mavenCentral()
-    maven("https://oss.sonatype.org/content/repositories/snapshots/")
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://repo.spongepowered.org/repository/maven-public/")
-    maven("https://repo.jpenilla.xyz/snapshots/")
+    maven("https://repo.jpenilla.xyz/snapshots/") {
+      mavenContent { snapshotsOnly() }
+    }
   }
   repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
 }
