@@ -18,7 +18,7 @@ versions:
   adventurePlatform: 4.1.0
   adventurePlatformFabric: 5.2.1
   configurate: 4.1.2
-  checkerQual: 3.21.4
+  checkerQual: 3.22.0
   slf4j: 1.7.32
   gson: 2.8.0
   guava: 21.0
@@ -27,7 +27,7 @@ versions:
   paperlib: 1.0.8-SNAPSHOT
   waterfallApi: 1.16-R0.4-SNAPSHOT
   fabricApi: 0.51.0+1.18.2
-  fabricLoader: 0.14.0
+  fabricLoader: 0.14.4
   fabricMinecraft: 1.18.2
   spongeApi7: 7.2.0
   velocityApi: 3.1.2-SNAPSHOT
