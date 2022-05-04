@@ -49,7 +49,7 @@ public final class MiniMOTDConfig {
 
   @Comment("The list of MOTDs to display\n"
     + "\n"
-    + " - Supported placeholders: {onlinePlayers}, {maxPlayers}\n"
+    + " - Supported placeholders: <online_players>, <max_players>\n"
     + " - Putting more than one will cause one to be randomly chosen each refresh")
   private final List<MOTD> motds = new ArrayList<>();
 

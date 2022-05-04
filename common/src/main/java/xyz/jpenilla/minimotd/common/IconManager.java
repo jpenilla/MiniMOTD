@@ -28,9 +28,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 import javax.imageio.ImageIO;
@@ -38,7 +38,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class IconManager<I> {
-  private final Map<String, I> icons = new HashMap<>();
+  private final Map<String, I> icons = new ConcurrentHashMap<>();
   private final MiniMOTD<I> miniMOTD;
   private final Path iconsDirectory;
 

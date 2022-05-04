@@ -1,4 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.internal.DependencyFilter
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 fun ShadowJar.commonRelocation(pkg: String) {

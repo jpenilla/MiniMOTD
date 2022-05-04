@@ -46,7 +46,7 @@ public final class PlayerCountModifier implements Int2IntFunction {
     return this.function.apply(actualPlayers);
   }
 
-  public final @NonNull String input() {
+  public @NonNull String input() {
     return this.input;
   }
 
