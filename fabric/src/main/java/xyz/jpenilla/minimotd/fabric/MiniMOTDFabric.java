@@ -36,7 +36,7 @@ import java.util.Base64;
 import java.util.concurrent.CompletableFuture;
 import javax.imageio.ImageIO;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.kyori.adventure.platform.fabric.FabricServerAudiences;
@@ -99,7 +99,7 @@ public final class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<St
     }
 
     final CommandHandler handler = new CommandHandler(this.miniMOTD);
-    CommandRegistrationCallback.EVENT.register((dispatcher, $) -> dispatcher.register(
+    CommandRegistrationCallback.EVENT.register((dispatcher, commandBuildContext, commandSelection) -> dispatcher.register(
       literal("minimotd")
         .requires(source -> source.hasPermission(4))
         .then(literal("reload").executes(new WrappingExecutor(handler::reload)))

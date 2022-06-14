@@ -1,7 +1,7 @@
 plugins {
+  id("quiet-fabric-loom")
   id("minimotd.platform-conventions")
   id("com.github.johnrengelman.shadow")
-  id("quiet-fabric-loom")
 }
 
 val shade: Configuration by configurations.creating
@@ -30,10 +30,6 @@ indra {
   javaVersions {
     target(17)
   }
-}
-
-loom {
-  serverOnlyMinecraftJar()
 }
 
 tasks {

@@ -23,8 +23,8 @@
     "minimotd-fabric.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.12.8",
-    "fabric": ">=0.31.0",
-    "minecraft": ">=1.18"
+    "fabricloader": ">=0.14.6",
+    "fabric": "*",
+    "minecraft": "1.19.x"
   }
 }
