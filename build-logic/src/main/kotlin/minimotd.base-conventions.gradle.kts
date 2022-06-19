@@ -3,7 +3,7 @@ import com.adarshr.gradle.testlogger.theme.ThemeType
 plugins {
   id("java-library")
   id("net.kyori.indra")
-  id("net.kyori.indra.publishing")
+  id("net.kyori.indra.git")
   id("net.kyori.indra.checkstyle")
   id("net.kyori.indra.license-header")
   id("com.adarshr.test-logger")
