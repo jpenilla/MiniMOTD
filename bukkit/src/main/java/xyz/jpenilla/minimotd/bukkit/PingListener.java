@@ -56,6 +56,11 @@ public final class PingListener implements Listener {
         event.setMotd(LegacyComponentSerializer.legacySection().serialize(motd));
       }
     });
-    response.icon(event::setServerIcon);
+    response.icon(icon -> {
+      try {
+        event.setServerIcon(icon);
+      } catch (final UnsupportedOperationException ignore) {
+      }
+    });
   }
 }
