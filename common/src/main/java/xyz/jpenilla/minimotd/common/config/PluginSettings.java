@@ -24,6 +24,7 @@
 package xyz.jpenilla.minimotd.common.config;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -64,7 +65,7 @@ public final class PluginSettings {
     }
 
     public @Nullable String findConfigStringForHost(final @NonNull String host) {
-      return this.virtualHostConfigs.get(host);
+      return this.virtualHostConfigs.get(host.toLowerCase(Locale.ENGLISH));
     }
   }
 
@@ -76,4 +77,10 @@ public final class PluginSettings {
     return this.updateChecker;
   }
 
+  @PostProcessor
+  private void lowercaseVirtualHosts() {
+    final Map<String, String> virtualHosts = new HashMap<>(this.proxySettings.virtualHostConfigs);
+    this.proxySettings.virtualHostConfigs.clear();
+    virtualHosts.forEach((host, config) -> this.proxySettings.virtualHostConfigs.put(host.toLowerCase(Locale.ENGLISH), config));
+  }
 }
