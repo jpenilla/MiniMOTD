@@ -27,7 +27,7 @@ versions:
   paperlib: 1.0.8-SNAPSHOT
   waterfallApi: 1.16-R0.4-SNAPSHOT
   fabricApi: 0.60.0+1.19.2
-  fabricLoader: 0.14.8
+  fabricLoader: 0.14.9
   fabricMinecraft: 1.19.2
   spongeApi7: 7.2.0
   velocityApi: 3.1.2-SNAPSHOT
