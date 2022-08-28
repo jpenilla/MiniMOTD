@@ -12,6 +12,7 @@ dependencies {
 
 tasks {
   shadowJar {
+    platformRelocation("bungee", "xyz.jpenilla.minimotd.common")
     commonRelocation("io.leangen.geantyref")
     commonRelocation("net.kyori")
     commonRelocation("org.bstats")

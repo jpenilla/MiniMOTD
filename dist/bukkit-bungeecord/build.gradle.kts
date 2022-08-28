@@ -9,13 +9,9 @@ tasks.jar {
 val platforms = setOf(
   projects.minimotdBukkit,
   projects.minimotdBungeecord,
-  projects.minimotdVelocity,
-  projects.minimotdFabric,
-  projects.minimotdSponge7,
-  projects.minimotdSponge8
 ).map { it.dependencyProject }
 
-val universal = tasks.register<Jar>("universal") {
+val dist = tasks.register<Jar>("bukkitAndBungeeJar") {
   artifacts.add("archives", this)
   archiveClassifier.set(null as String?)
   duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -27,5 +23,5 @@ val universal = tasks.register<Jar>("universal") {
 }
 
 miniMOTDPlatform {
-  jarTask.set(universal)
+  jarTask.set(dist)
 }

@@ -14,7 +14,6 @@ tasks {
   shadowJar {
     configureForNativeAdventurePlatform()
     commonRelocation("io.leangen.geantyref")
-    platformRelocation("velocity", "xyz.jpenilla.minimotd.common")
     commonRelocation("org.bstats")
   }
 }

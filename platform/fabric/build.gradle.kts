@@ -37,7 +37,6 @@ tasks {
     configurations = listOf(shade)
     commonConfiguration()
     commonRelocation("io.leangen.geantyref")
-    platformRelocation("fabric", "xyz.jpenilla.minimotd.common")
   }
   remapJar {
     archiveFileName.set("${project.name}-mc$minecraftVersion-${project.version}.jar")

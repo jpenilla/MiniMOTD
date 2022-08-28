@@ -41,7 +41,6 @@ sponge {
 tasks {
   shadowJar {
     configureForNativeAdventurePlatform()
-    platformRelocation("sponge8", "xyz.jpenilla.minimotd.common")
     dependencies {
       exclude(dependency("io.leangen.geantyref:geantyref"))
     }

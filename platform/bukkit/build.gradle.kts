@@ -18,6 +18,7 @@ tasks {
     minecraftVersion("1.19.2")
   }
   shadowJar {
+    platformRelocation("bukkit", "xyz.jpenilla.minimotd.common")
     commonRelocation("org.slf4j")
     commonRelocation("io.leangen.geantyref")
     commonRelocation("net.kyori")

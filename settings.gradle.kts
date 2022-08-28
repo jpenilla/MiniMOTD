@@ -32,16 +32,23 @@ plugins {
 
 rootProject.name = "MiniMOTD"
 
+fun setup(name: String, dir: String) {
+  include(name)
+  project(":$name").projectDir = file(dir)
+}
+
+fun platform(name: String) = setup("minimotd-$name", "platform/$name")
+fun dist(name: String) = setup("minimotd-$name", "dist/$name")
+
+setup("minimotd-common", "common")
+
 sequenceOf(
-  "common",
   "bukkit",
   "sponge8",
   "sponge7",
   "bungeecord",
   "velocity",
   "fabric",
-  "universal"
-).forEach {
-  include("minimotd-$it")
-  project(":minimotd-$it").projectDir = file(it)
-}
+).forEach(::platform)
+
+dist("bukkit-bungeecord")
