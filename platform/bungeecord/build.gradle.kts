@@ -1,6 +1,7 @@
 plugins {
   id("minimotd.shadow-platform")
   id("net.minecrell.plugin-yml.bungee")
+  id("xyz.jpenilla.run-waterfall")
 }
 
 dependencies {
@@ -16,6 +17,9 @@ tasks {
     commonRelocation("io.leangen.geantyref")
     commonRelocation("net.kyori")
     commonRelocation("org.bstats")
+  }
+  runWaterfall {
+    waterfallVersion("1.19")
   }
 }
 

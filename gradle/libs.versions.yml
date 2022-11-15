@@ -8,7 +8,9 @@ plugins:
   org.spongepowered.gradle.plugin: 2.0.2
   net.minecrell.plugin-yml.bungee: &plugin-yml 0.5.2
   net.minecrell.plugin-yml.bukkit: *plugin-yml
-  xyz.jpenilla.run-paper: 1.0.6
+  xyz.jpenilla.run-paper: &run-task 2.0.0
+  xyz.jpenilla.run-velocity: *run-task
+  xyz.jpenilla.run-waterfall: *run-task
 
 versions:
   indra: 2.1.1

@@ -1,6 +1,7 @@
 plugins {
   id("minimotd.shadow-platform")
   id("net.kyori.blossom")
+  id("xyz.jpenilla.run-velocity")
 }
 
 dependencies {
@@ -15,6 +16,9 @@ tasks {
     configureForNativeAdventurePlatform()
     commonRelocation("io.leangen.geantyref")
     commonRelocation("org.bstats")
+  }
+  runVelocity {
+    velocityVersion(libs.versions.velocityApi.get())
   }
 }
 
