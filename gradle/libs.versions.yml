@@ -33,7 +33,7 @@ versions:
   fabricMinecraft: 1.19.2
   spongeApi7: 7.2.0
   velocityApi: 3.1.2-SNAPSHOT
-  jupiterEngine: 5.8.2
+  jupiterEngine: 5.9.0
 
 dependencies:
   adventureBom:
