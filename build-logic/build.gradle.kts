@@ -8,6 +8,7 @@ repositories {
 
 dependencies {
   implementation(libs.indraCommon)
+  implementation(libs.indraLicenser)
   implementation(libs.shadow)
   implementation(libs.testLogger)
 
