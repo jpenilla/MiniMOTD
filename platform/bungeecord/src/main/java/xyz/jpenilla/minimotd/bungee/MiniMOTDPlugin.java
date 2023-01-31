@@ -39,6 +39,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
+import xyz.jpenilla.minimotd.common.PingResponse;
+import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 import xyz.jpenilla.minimotd.common.util.UpdateChecker;
 
 public final class MiniMOTDPlugin extends Plugin implements MiniMOTDPlatform<Favicon> {
@@ -65,6 +67,9 @@ public final class MiniMOTDPlugin extends Plugin implements MiniMOTDPlatform<Fav
       this.getProxy().getScheduler().runAsync(this, () ->
         new UpdateChecker().checkVersion().forEach(this.logger::info));
     }
+
+    // preload some stuff, so the first ping is as fast as the rest
+    this.preload();
   }
 
   @Override
@@ -108,5 +113,11 @@ public final class MiniMOTDPlugin extends Plugin implements MiniMOTDPlatform<Fav
     } catch (final NoSuchFieldException ex) {
       return null;
     }
+  }
+
+  private void preload() {
+    final MiniMOTDConfig cfg = this.miniMOTD.configManager().mainConfig();
+    final PingResponse<Favicon> mini = this.miniMOTD.createMOTD(cfg, 0, 0);
+    mini.motd(motd -> BungeeComponentSerializer.get().serialize(motd));
   }
 }
