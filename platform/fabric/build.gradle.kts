@@ -6,10 +6,8 @@ plugins {
 
 val shade: Configuration by configurations.creating
 
-val minecraftVersion = libs.versions.fabricMinecraft.get()
-
 dependencies {
-  minecraft(libs.fabricMinecraft)
+  minecraft(libs.minecraft)
   mappings(loom.officialMojangMappings())
   modImplementation(libs.fabricLoader)
   modImplementation(libs.fabricApi)

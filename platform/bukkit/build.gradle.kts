@@ -15,7 +15,7 @@ dependencies {
 
 tasks {
   runServer {
-    minecraftVersion("1.19.3")
+    minecraftVersion(minecraftVersion)
   }
   shadowJar {
     platformRelocation("bukkit", "xyz.jpenilla.minimotd.common")
@@ -41,4 +41,8 @@ bukkit {
       permission = "minimotd.admin"
     }
   }
+}
+
+modrinth {
+  gameVersions.addAll(bukkitVersions)
 }

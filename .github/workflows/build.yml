@@ -5,10 +5,15 @@ on:
     branches: [ "**" ]
     tags-ignore: [ "**" ]
   pull_request:
+  release:
+    types: [ released ]
 
 jobs:
   call-build:
     uses: "jpenilla/actions/.github/workflows/shared-ci.yml@master"
+    secrets: inherit
     with:
       artifacts-path: 'build/libs/*.jar'
+      modrinth-publish: true
+      hangar-publish: true
       loom: true

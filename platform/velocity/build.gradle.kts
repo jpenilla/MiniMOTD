@@ -32,3 +32,7 @@ blossom {
     replaceToken("\${$k}", v, file)
   }
 }
+
+modrinth {
+  gameVersions.addAll(minecraftVersion)
+}

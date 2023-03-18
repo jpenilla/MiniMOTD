@@ -28,3 +28,7 @@ bungee {
   main = "xyz.jpenilla.minimotd.bungee.MiniMOTDPlugin"
   author = "jmp"
 }
+
+modrinth {
+  gameVersions.addAll(minecraftVersion)
+}

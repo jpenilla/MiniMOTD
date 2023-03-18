@@ -31,3 +31,8 @@ tasks {
     commonRelocation("org.bstats")
   }
 }
+
+modrinth {
+  loaders.add("sponge")
+  gameVersions.add("1.12.2")
+}

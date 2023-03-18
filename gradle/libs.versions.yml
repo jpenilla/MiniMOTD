@@ -13,6 +13,8 @@ plugins:
   xyz.jpenilla.run-waterfall: *run-task
 
 versions:
+  minotaur: 2.7.5
+  hangarPublishPlugin: 0.0.4
   indra: 3.0.1
   shadow: 8.1.0
   testLoggerPlugin: 3.2.0
@@ -30,7 +32,7 @@ versions:
   waterfallApi: 1.16-R0.4-SNAPSHOT
   fabricApi: 0.76.0+1.19.4
   fabricLoader: 0.14.17
-  fabricMinecraft: 1.19.4
+  minecraft: 1.19.4
   spongeApi7: 7.2.0
   velocityApi: 3.1.2-SNAPSHOT
   jupiterEngine: 5.9.2
@@ -136,10 +138,10 @@ dependencies:
     group: net.fabricmc
     name: fabric-loader
     version: { ref: fabricLoader }
-  fabricMinecraft:
+  minecraft:
     group: com.mojang
     name: minecraft
-    version: { ref: fabricMinecraft }
+    version: { ref: minecraft }
 
   spongeApi7:
     group: org.spongepowered
@@ -173,5 +175,13 @@ dependencies:
     group: com.adarshr
     name: gradle-test-logger-plugin
     version: { ref: testLoggerPlugin }
+  minotaur:
+    group: com.modrinth.minotaur
+    name: Minotaur
+    version: { ref: minotaur }
+  hangarPublishPlugin:
+    group: io.papermc
+    name: hangar-publish-plugin
+    version: { ref: hangarPublishPlugin }
 
 bundles:
