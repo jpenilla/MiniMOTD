@@ -30,5 +30,6 @@ bungee {
 }
 
 modrinth {
+  loaders.add("waterfall") // not sure why this isn't detected automatically from run-waterfall...
   gameVersions.addAll(minecraftVersion)
 }
