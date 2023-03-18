@@ -72,9 +72,11 @@ public final class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<Se
   @Override
   public void onInitialize() {
     this.registerCommand();
-    ServerLifecycleEvents.SERVER_STARTED.register(minecraftServer -> {
+    ServerLifecycleEvents.SERVER_STARTING.register(minecraftServer -> {
       this.server = minecraftServer;
       this.audiences = FabricServerAudiences.of(minecraftServer);
+    });
+    ServerLifecycleEvents.SERVER_STARTED.register(minecraftServer -> {
       if (this.miniMOTD.configManager().pluginSettings().updateChecker()) {
         CompletableFuture.runAsync(() -> new UpdateChecker().checkVersion().forEach(this.logger()::info));
       }
