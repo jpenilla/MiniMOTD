@@ -23,7 +23,9 @@
  */
 package xyz.jpenilla.minimotd.fabric.mixin;
 
-import com.mojang.authlib.GameProfile;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Optional;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.status.ServerStatus;
 import net.minecraft.server.MinecraftServer;
@@ -40,46 +42,53 @@ import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 import xyz.jpenilla.minimotd.common.util.ComponentColorDownsampler;
 import xyz.jpenilla.minimotd.fabric.MiniMOTDFabric;
 import xyz.jpenilla.minimotd.fabric.access.ConnectionAccess;
+import xyz.jpenilla.minimotd.fabric.util.MutableServerStatus;
 
 @Mixin(ServerStatusPacketListenerImpl.class)
 abstract class ServerStatusPacketListenerImplMixin {
   @Shadow @Final private Connection connection;
 
-  @Redirect(method = "handleStatusRequest", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;getStatus()Lnet/minecraft/network/protocol/status/ServerStatus;"))
-  public ServerStatus injectHandleStatusRequest(final MinecraftServer minecraftServer) {
-    final ServerStatus vanillaStatus = minecraftServer.getStatus();
-
-    final ServerStatus modifiedStatus = new ServerStatus();
-    modifiedStatus.setDescription(vanillaStatus.getDescription());
-    modifiedStatus.setFavicon(vanillaStatus.getFavicon());
-    modifiedStatus.setVersion(vanillaStatus.getVersion());
-
+  @Redirect(
+    method = "handleStatusRequest",
+    at = @At(value = "FIELD", target = "Lnet/minecraft/server/network/ServerStatusPacketListenerImpl;status:Lnet/minecraft/network/protocol/status/ServerStatus;")
+  )
+  public ServerStatus injectHandleStatusRequest(final ServerStatusPacketListenerImpl instance) {
     final MiniMOTDFabric miniMOTDFabric = MiniMOTDFabric.get();
-    final MiniMOTD<String> miniMOTD = miniMOTDFabric.miniMOTD();
+    final MinecraftServer minecraftServer = miniMOTDFabric.requireServer();
+    final ServerStatus vanillaStatus = Objects.requireNonNull(minecraftServer.getStatus(), "vanillaStatus");
+
+    final MiniMOTD<ServerStatus.Favicon> miniMOTD = miniMOTDFabric.miniMOTD();
     final MiniMOTDConfig config = miniMOTD.configManager().mainConfig();
 
-    final PingResponse<String> response = miniMOTD.createMOTD(config, minecraftServer.getPlayerCount(), vanillaStatus.getPlayers().getMaxPlayers());
+    final PingResponse<ServerStatus.Favicon> response = miniMOTD.createMOTD(
+      config,
+      minecraftServer.getPlayerCount(),
+      vanillaStatus.players().map(ServerStatus.Players::max).orElseGet(minecraftServer::getMaxPlayers)
+    );
 
+    final MutableServerStatus modifiedStatus = new MutableServerStatus(vanillaStatus);
     response.motd(motd -> {
       if (((ConnectionAccess) this.connection).protocolVersion() >= Constants.MINECRAFT_1_16_PROTOCOL_VERSION) {
-        modifiedStatus.setDescription(miniMOTDFabric.audiences().toNative(motd));
+        modifiedStatus.description(miniMOTDFabric.audiences().toNative(motd));
       } else {
-        modifiedStatus.setDescription(miniMOTDFabric.audiences().toNative(ComponentColorDownsampler.downsampler().downsample(motd)));
+        modifiedStatus.description(miniMOTDFabric.audiences().toNative(ComponentColorDownsampler.downsampler().downsample(motd)));
       }
     });
-    response.icon(modifiedStatus::setFavicon);
+    response.icon(favicon -> modifiedStatus.favicon(Optional.of(favicon)));
 
-    if (!response.hidePlayerCount()) {
-      final GameProfile[] oldSample = vanillaStatus.getPlayers().getSample();
-      final ServerStatus.Players newPlayers = new ServerStatus.Players(response.playerCount().maxPlayers(), response.playerCount().onlinePlayers());
-      if (response.disablePlayerListHover()) {
-        newPlayers.setSample(new GameProfile[]{});
-      } else {
-        newPlayers.setSample(oldSample);
-      }
-      modifiedStatus.setPlayers(newPlayers);
+    if (response.hidePlayerCount()) {
+      modifiedStatus.players(Optional.empty());
+    } else {
+      final ServerStatus.Players newPlayers = new ServerStatus.Players(
+        response.playerCount().maxPlayers(),
+        response.playerCount().onlinePlayers(),
+        response.disablePlayerListHover()
+          ? Collections.emptyList()
+          : vanillaStatus.players().map(ServerStatus.Players::sample).orElse(Collections.emptyList())
+      );
+      modifiedStatus.players(Optional.of(newPlayers));
     }
 
-    return modifiedStatus;
+    return modifiedStatus.toServerStatus();
   }
 }

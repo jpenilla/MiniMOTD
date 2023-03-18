@@ -25,14 +25,9 @@ package xyz.jpenilla.minimotd.fabric;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufOutputStream;
-import io.netty.buffer.Unpooled;
 import java.awt.image.BufferedImage;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
+import java.io.ByteArrayOutputStream;
 import java.nio.file.Path;
-import java.util.Base64;
 import java.util.concurrent.CompletableFuture;
 import javax.imageio.ImageIO;
 import net.fabricmc.api.ModInitializer;
@@ -41,6 +36,8 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.kyori.adventure.platform.fabric.FabricServerAudiences;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.protocol.status.ServerStatus;
+import net.minecraft.server.MinecraftServer;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,13 +48,14 @@ import xyz.jpenilla.minimotd.common.util.UpdateChecker;
 
 import static net.minecraft.commands.Commands.literal;
 
-public final class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<String> {
+public final class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<ServerStatus.Favicon> {
   private static MiniMOTDFabric instance = null;
 
   private final Logger logger = LoggerFactory.getLogger(MiniMOTD.class);
   private final Path dataDirectory = FabricLoader.getInstance().getConfigDir().resolve("MiniMOTD");
-  private final MiniMOTD<String> miniMOTD = new MiniMOTD<>(this);
+  private final MiniMOTD<ServerStatus.Favicon> miniMOTD = new MiniMOTD<>(this);
 
+  private MinecraftServer server;
   private FabricServerAudiences audiences;
 
   public MiniMOTDFabric() {
@@ -67,7 +65,7 @@ public final class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<St
     instance = this;
   }
 
-  public @NonNull MiniMOTD<String> miniMOTD() {
+  public @NonNull MiniMOTD<ServerStatus.Favicon> miniMOTD() {
     return this.miniMOTD;
   }
 
@@ -75,10 +73,15 @@ public final class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<St
   public void onInitialize() {
     this.registerCommand();
     ServerLifecycleEvents.SERVER_STARTED.register(minecraftServer -> {
+      this.server = minecraftServer;
       this.audiences = FabricServerAudiences.of(minecraftServer);
       if (this.miniMOTD.configManager().pluginSettings().updateChecker()) {
         CompletableFuture.runAsync(() -> new UpdateChecker().checkVersion().forEach(this.logger()::info));
       }
+    });
+    ServerLifecycleEvents.SERVER_STOPPED.register($ -> {
+      this.server = null;
+      this.audiences = null;
     });
     this.miniMOTD.logger().info("Done initializing MiniMOTD");
   }
@@ -116,6 +119,13 @@ public final class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<St
     return instance;
   }
 
+  public @NonNull MinecraftServer requireServer() {
+    if (this.server == null) {
+      throw new IllegalStateException("Server requested before started");
+    }
+    return this.server;
+  }
+
   @Override
   public @NonNull Path dataDirectory() {
     return this.dataDirectory;
@@ -127,16 +137,9 @@ public final class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<St
   }
 
   @Override
-  public @NonNull String loadIcon(final @NonNull BufferedImage bufferedImage) throws Exception {
-    final ByteBuf byteBuf = Unpooled.buffer();
-    final String icon;
-    try {
-      ImageIO.write(bufferedImage, "PNG", new ByteBufOutputStream(byteBuf));
-      final ByteBuffer base64 = Base64.getEncoder().encode(byteBuf.nioBuffer());
-      icon = "data:image/png;base64," + StandardCharsets.UTF_8.decode(base64);
-    } finally {
-      byteBuf.release();
-    }
-    return icon;
+  public ServerStatus.@NonNull Favicon loadIcon(final @NonNull BufferedImage bufferedImage) throws Exception {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    ImageIO.write(bufferedImage, "PNG", out);
+    return new ServerStatus.Favicon(out.toByteArray());
   }
 }

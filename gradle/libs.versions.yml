@@ -6,7 +6,7 @@ metadata:
 plugins:
   net.kyori.blossom: 1.3.0
   org.spongepowered.gradle.plugin: 2.1.1
-  net.minecrell.plugin-yml.bungee: &plugin-yml 0.5.2
+  net.minecrell.plugin-yml.bungee: &plugin-yml 0.5.3
   net.minecrell.plugin-yml.bukkit: *plugin-yml
   xyz.jpenilla.run-paper: &run-task 2.0.1
   xyz.jpenilla.run-velocity: *run-task
@@ -14,13 +14,13 @@ plugins:
 
 versions:
   indra: 3.0.1
-  shadow: 7.1.2
+  shadow: 8.1.0
   testLoggerPlugin: 3.2.0
-  adventure: 4.12.0
-  adventurePlatform: 4.2.0
-  adventurePlatformFabric: 5.6.1
+  adventure: 4.13.0
+  adventurePlatform: 4.3.0
+  adventurePlatformFabric: 5.8.0
   configurate: 4.1.2
-  checkerQual: 3.28.0
+  checkerQual: 3.32.0
   slf4j: 1.7.32
   gson: 2.8.0
   guava: 21.0
@@ -28,9 +28,9 @@ versions:
   paperApi: 1.16.5-R0.1-SNAPSHOT
   paperlib: 1.0.8-SNAPSHOT
   waterfallApi: 1.16-R0.4-SNAPSHOT
-  fabricApi: 0.73.2+1.19.3
-  fabricLoader: 0.14.12
-  fabricMinecraft: 1.19.3
+  fabricApi: 0.76.0+1.19.4
+  fabricLoader: 0.14.17
+  fabricMinecraft: 1.19.4
   spongeApi7: 7.2.0
   velocityApi: 3.1.2-SNAPSHOT
   jupiterEngine: 5.9.2
@@ -166,7 +166,7 @@ dependencies:
     name: indra-licenser-cadix
     version: { ref: indra }
   shadow:
-    group: gradle.plugin.com.github.johnrengelman
+    group: com.github.johnrengelman
     name: shadow
     version: { ref: shadow }
   testLogger:
