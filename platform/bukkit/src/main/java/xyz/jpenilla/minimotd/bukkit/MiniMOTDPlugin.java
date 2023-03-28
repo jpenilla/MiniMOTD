@@ -26,9 +26,11 @@ package xyz.jpenilla.minimotd.bukkit;
 import io.papermc.lib.PaperLib;
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
+import java.util.concurrent.CompletableFuture;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.entity.Entity;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.CachedServerIcon;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -71,8 +73,13 @@ public final class MiniMOTDPlugin extends JavaPlugin implements MiniMOTDPlatform
     final Metrics metrics = new Metrics(this, 8132);
 
     if (this.miniMOTD.configManager().pluginSettings().updateChecker()) {
-      this.getServer().getScheduler().runTaskAsynchronously(this, () ->
-        new UpdateChecker().checkVersion().forEach(this.logger::info));
+      try {
+        Entity.class.getDeclaredMethod("getScheduler");
+        CompletableFuture.runAsync(() -> new UpdateChecker().checkVersion().forEach(this.logger::info));
+      } catch (final ReflectiveOperationException ex) {
+        this.getServer().getScheduler().runTaskAsynchronously(this, () ->
+          new UpdateChecker().checkVersion().forEach(this.logger::info));
+      }
     }
   }
 

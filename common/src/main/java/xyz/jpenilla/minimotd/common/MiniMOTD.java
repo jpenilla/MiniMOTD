@@ -120,7 +120,7 @@ public final class MiniMOTD<I> {
     return input.replace("{onlinePlayers}", online).replace("{maxPlayers}", max);
   }
 
-  public void reload() {
+  public synchronized void reload() {
     this.iconManager.loadIcons();
     this.configManager.loadConfigs();
     this.platform.onReload();
