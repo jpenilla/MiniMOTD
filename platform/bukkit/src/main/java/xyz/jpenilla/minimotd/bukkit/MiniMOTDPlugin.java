@@ -75,7 +75,11 @@ public final class MiniMOTDPlugin extends JavaPlugin implements MiniMOTDPlatform
     if (this.miniMOTD.configManager().pluginSettings().updateChecker()) {
       try {
         Entity.class.getDeclaredMethod("getScheduler");
-        CompletableFuture.runAsync(() -> new UpdateChecker().checkVersion().forEach(this.logger::info));
+        CompletableFuture.runAsync(() -> new UpdateChecker().checkVersion().forEach(this.logger::info)).whenComplete(($, thr) -> {
+          if (thr != null) {
+            this.logger.warn("Exception checking for updates", thr);
+          }
+        });
       } catch (final ReflectiveOperationException ex) {
         this.getServer().getScheduler().runTaskAsynchronously(this, () ->
           new UpdateChecker().checkVersion().forEach(this.logger::info));
