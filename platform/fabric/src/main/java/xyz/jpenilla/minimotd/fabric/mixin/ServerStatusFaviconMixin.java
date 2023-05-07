@@ -45,12 +45,13 @@ abstract class ServerStatusFaviconMixin implements ServerStatusFaviconAccess {
     at = @At(
       target = "Lcom/mojang/serialization/codecs/PrimitiveCodec;comapFlatMap(Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;",
       value = "INVOKE"
-    )
+    ),
+    remap = false
   )
   private static Codec<ServerStatus.Favicon> makeCodec(
-    PrimitiveCodec<String> stringCodec,
-    Function<String, DataResult<ServerStatus.Favicon>> decode,
-    Function<ServerStatus.Favicon, String> encode
+    final PrimitiveCodec<String> stringCodec,
+    final Function<String, DataResult<ServerStatus.Favicon>> decode,
+    final Function<ServerStatus.Favicon, String> encode
   ) {
     VANILLA_ENCODE_TO_STRING = encode;
     return stringCodec.comapFlatMap(decode, favicon -> {
