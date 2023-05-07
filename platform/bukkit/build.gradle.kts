@@ -37,6 +37,8 @@ tasks {
   }
 }
 
+runPaper.folia.registerTask()
+
 modrinth {
   gameVersions.addAll(bukkitVersions)
 }
