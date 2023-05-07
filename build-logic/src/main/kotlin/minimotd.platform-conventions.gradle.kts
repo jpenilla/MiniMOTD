@@ -1,7 +1,8 @@
+import com.modrinth.minotaur.ModrinthExtension
+
 plugins {
   id("minimotd.base-conventions")
   id("net.kyori.indra.git")
-  id("com.modrinth.minotaur")
 }
 
 val platformExtension = extensions.create<MiniMOTDPlatformExtension>("miniMOTDPlatform")
@@ -18,10 +19,14 @@ tasks {
   }
 }
 
-modrinth {
-  projectId.set("16vhQOQN")
-  versionType.set("release")
-  file.set(platformExtension.jarTask.flatMap { it.archiveFile })
-  changelog.set(releaseNotes)
-  token.set(providers.environmentVariable("MODRINTH_TOKEN"))
+if (name != "minimotd-bukkit-bungeecord") {
+  plugins.apply("com.modrinth.minotaur")
+
+  the<ModrinthExtension>().apply {
+    projectId.set("16vhQOQN")
+    versionType.set("release")
+    file.set(platformExtension.jarTask.flatMap { it.archiveFile })
+    changelog.set(releaseNotes)
+    token.set(providers.environmentVariable("MODRINTH_TOKEN"))
+  }
 }
