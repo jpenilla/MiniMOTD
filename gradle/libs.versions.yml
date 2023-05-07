@@ -7,7 +7,7 @@ plugins:
   net.kyori.blossom: 1.3.0
   org.spongepowered.gradle.plugin: 2.1.1
   net.minecrell.plugin-yml.bungee: 0.5.3
-  xyz.jpenilla.run-paper: &run-task 2.0.1
+  xyz.jpenilla.run-paper: &run-task 2.1.0
   xyz.jpenilla.run-velocity: *run-task
   xyz.jpenilla.run-waterfall: *run-task
 
@@ -15,9 +15,9 @@ versions:
   minotaur: 2.7.5
   hangarPublishPlugin: 0.0.4
   indra: 3.0.1
-  shadow: 8.1.0
+  shadow: 8.1.1
   testLoggerPlugin: 3.2.0
-  adventure: 4.13.0
+  adventure: 4.13.1
   adventurePlatform: 4.3.0
   adventurePlatformFabric: 5.8.0
   configurate: 4.1.2
@@ -29,8 +29,8 @@ versions:
   paperApi: 1.16.5-R0.1-SNAPSHOT
   paperlib: 1.0.8-SNAPSHOT
   waterfallApi: 1.16-R0.4-SNAPSHOT
-  fabricApi: 0.76.0+1.19.4
-  fabricLoader: 0.14.17
+  fabricApi: 0.78.0+1.19.4
+  fabricLoader: 0.14.19
   minecraft: 1.19.4
   spongeApi7: 7.2.0
   velocityApi: 3.1.2-SNAPSHOT

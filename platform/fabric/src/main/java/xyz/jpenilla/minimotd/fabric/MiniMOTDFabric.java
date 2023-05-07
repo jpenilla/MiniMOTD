@@ -45,6 +45,7 @@ import xyz.jpenilla.minimotd.common.CommandHandler;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
 import xyz.jpenilla.minimotd.common.util.UpdateChecker;
+import xyz.jpenilla.minimotd.fabric.access.ServerStatusFaviconAccess;
 
 import static net.minecraft.commands.Commands.literal;
 
@@ -98,7 +99,7 @@ public final class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<Se
 
       @Override
       public int run(final @NonNull CommandContext<CommandSourceStack> context) {
-        this.handler.execute(MiniMOTDFabric.this.audiences.audience(context.getSource()));
+        this.handler.execute(context.getSource());
         return Command.SINGLE_SUCCESS;
       }
     }
@@ -142,6 +143,8 @@ public final class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<Se
   public ServerStatus.@NonNull Favicon loadIcon(final @NonNull BufferedImage bufferedImage) throws Exception {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     ImageIO.write(bufferedImage, "PNG", out);
-    return new ServerStatus.Favicon(out.toByteArray());
+    final ServerStatus.Favicon favicon = new ServerStatus.Favicon(out.toByteArray());
+    ((ServerStatusFaviconAccess) (Object) favicon).cacheEncodedIcon();
+    return favicon;
   }
 }
