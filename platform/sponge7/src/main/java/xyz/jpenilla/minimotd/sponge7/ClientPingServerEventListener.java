@@ -24,11 +24,13 @@
 package xyz.jpenilla.minimotd.sponge7;
 
 import com.google.inject.Inject;
+import java.util.UUID;
 import net.kyori.adventure.text.serializer.spongeapi.SpongeComponentSerializer;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.spongepowered.api.event.EventListener;
 import org.spongepowered.api.event.server.ClientPingServerEvent;
 import org.spongepowered.api.network.status.Favicon;
+import org.spongepowered.api.profile.GameProfile;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.PingResponse;
 import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
@@ -64,6 +66,9 @@ final class ClientPingServerEventListener implements EventListener<ClientPingSer
     mini.playerCount().applyCount(players::setOnline, players::setMax);
     mini.motd(motd -> response.setDescription(SpongeComponentSerializer.get().serialize(motd)));
     mini.icon(response::setFavicon);
+    mini.hover(strings -> strings.forEach(name ->
+      players.getProfiles().add(GameProfile.of(UUID.randomUUID(), name))
+    ));
 
     if (mini.disablePlayerListHover()) {
       players.getProfiles().clear();

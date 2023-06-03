@@ -23,9 +23,13 @@
  */
 package xyz.jpenilla.minimotd.fabric.mixin;
 
+import com.mojang.authlib.GameProfile;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.status.ServerStatus;
 import net.minecraft.server.MinecraftServer;
@@ -76,15 +80,23 @@ abstract class ServerStatusPacketListenerImplMixin {
     });
     response.icon(favicon -> modifiedStatus.favicon(Optional.of(favicon)));
 
+    final List<GameProfile> samples = new ArrayList<>();
+    if (!response.disablePlayerListHover()) {
+      if (response.hover() == null) {
+        samples.addAll(vanillaStatus.players().map(ServerStatus.Players::sample).orElse(Collections.emptyList()));
+      }
+      response.hover(strings -> strings.stream()
+        .map(name -> new GameProfile(UUID.randomUUID(), name))
+        .forEach(samples::add));
+    }
+
     if (response.hidePlayerCount()) {
       modifiedStatus.players(Optional.empty());
     } else {
       final ServerStatus.Players newPlayers = new ServerStatus.Players(
         response.playerCount().maxPlayers(),
         response.playerCount().onlinePlayers(),
-        response.disablePlayerListHover()
-          ? Collections.emptyList()
-          : vanillaStatus.players().map(ServerStatus.Players::sample).orElse(Collections.emptyList())
+        samples
       );
       modifiedStatus.players(Optional.of(newPlayers));
     }

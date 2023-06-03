@@ -23,6 +23,7 @@
  */
 package xyz.jpenilla.minimotd.bungee;
 
+import java.util.UUID;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.Favicon;
 import net.md_5.bungee.api.ServerPing;
@@ -61,6 +62,12 @@ public final class PingListener implements Listener {
       mini.playerCount().applyCount(players::setOnline, players::setMax);
       if (mini.disablePlayerListHover()) {
         players.setSample(new ServerPing.PlayerInfo[]{});
+      } else {
+        mini.hover(strings -> players.setSample(
+          strings.stream()
+            .map(name -> new ServerPing.PlayerInfo(name, UUID.randomUUID()))
+            .toArray(ServerPing.PlayerInfo[]::new)
+        ));
       }
     }
 

@@ -25,11 +25,13 @@ package xyz.jpenilla.minimotd.sponge8;
 
 import com.google.inject.Inject;
 import java.lang.reflect.Method;
+import java.util.UUID;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.spongepowered.api.MinecraftVersion;
 import org.spongepowered.api.event.EventListener;
 import org.spongepowered.api.event.server.ClientPingServerEvent;
 import org.spongepowered.api.network.status.Favicon;
+import org.spongepowered.api.profile.GameProfile;
 import xyz.jpenilla.minimotd.common.Constants;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.PingResponse;
@@ -84,6 +86,9 @@ final class ClientPingServerEventListener implements EventListener<ClientPingSer
       }
     });
     mini.icon(response::setFavicon);
+    mini.hover(strings -> strings.forEach(name ->
+      players.profiles().add(GameProfile.of(UUID.randomUUID(), name))
+    ));
 
     if (mini.disablePlayerListHover()) {
       players.profiles().clear();

@@ -25,7 +25,9 @@ package xyz.jpenilla.minimotd.bukkit;
 
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
 import io.papermc.lib.PaperLib;
+import java.util.UUID;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.util.CachedServerIcon;
@@ -58,6 +60,10 @@ public final class PaperPingListener implements Listener {
       }
     });
     response.icon(event::setServerIcon);
+    response.hover(lines -> {
+      event.getPlayerSample().clear();
+      lines.forEach(name -> event.getPlayerSample().add(Bukkit.createProfile(UUID.randomUUID(), name)));
+    });
 
     if (response.disablePlayerListHover()) {
       event.getPlayerSample().clear();

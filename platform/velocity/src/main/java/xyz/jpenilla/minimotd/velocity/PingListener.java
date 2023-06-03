@@ -28,7 +28,9 @@ import com.velocitypowered.api.event.EventTask;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 import com.velocitypowered.api.proxy.server.ServerPing;
+import com.velocitypowered.api.proxy.server.ServerPing.SamplePlayer;
 import com.velocitypowered.api.util.Favicon;
+import java.util.UUID;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
@@ -57,6 +59,12 @@ public final class PingListener {
     response.icon(pong::favicon);
     response.motd(pong::description);
     response.playerCount().applyCount(pong::onlinePlayers, pong::maximumPlayers);
+    response.hover(strings -> {
+      pong.clearSamplePlayers();
+      pong.samplePlayers(strings.stream().map(name ->
+        new SamplePlayer(name, UUID.randomUUID())
+      ).toArray(SamplePlayer[]::new));
+    });
 
     if (response.disablePlayerListHover()) {
       pong.clearSamplePlayers();
