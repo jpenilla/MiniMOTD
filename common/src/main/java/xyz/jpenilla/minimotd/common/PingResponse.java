@@ -23,6 +23,7 @@
  */
 package xyz.jpenilla.minimotd.common;
 
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 import net.kyori.adventure.text.Component;
@@ -37,6 +38,7 @@ public final class PingResponse<I> {
   private final @Nullable I icon;
   private final @Nullable Component motd;
   private final PlayerCount playerCount;
+  private final @Nullable List<String> hover;
   private final boolean hidePlayerCount;
   private final boolean disablePlayerListHover;
 
@@ -44,12 +46,14 @@ public final class PingResponse<I> {
     final @Nullable I icon,
     final @Nullable Component motd,
     final PlayerCount playerCount,
+    final @Nullable List<String> hover,
     final boolean hidePlayerCount,
     final boolean disablePlayerListHover
   ) {
     this.icon = icon;
     this.motd = motd;
     this.playerCount = playerCount;
+    this.hover = hover;
     this.hidePlayerCount = hidePlayerCount;
     this.disablePlayerListHover = disablePlayerListHover;
   }
@@ -98,11 +102,22 @@ public final class PingResponse<I> {
     return this.disablePlayerListHover;
   }
 
+  public @Nullable List<String> hover() {
+    return this.hover;
+  }
+
+  public void hover(final Consumer<List<String>> consumer) {
+    if (this.hover != null) {
+      consumer.accept(this.hover);
+    }
+  }
+
   public Builder<I> toBuilder() {
     return new BuilderImpl<>(
       this.motd,
       this.icon,
       this.playerCount,
+      this.hover,
       this.hidePlayerCount,
       this.disablePlayerListHover
     );
@@ -146,6 +161,8 @@ public final class PingResponse<I> {
 
     Builder<I> playerCount(PlayerCount playerCount);
 
+    Builder<I> hover(@Nullable List<String> playerNames);
+
     Builder<I> hidePlayerCount(boolean hidePlayerCount);
 
     Builder<I> disablePlayerListHover(boolean disablePlayerListHover);
@@ -157,6 +174,7 @@ public final class PingResponse<I> {
     private @Nullable Component motd;
     private @Nullable I icon;
     private @Nullable PlayerCount playerCount;
+    private @Nullable List<String> hover;
     private boolean hidePlayerCount = false;
     private boolean disablePlayerListHover = false;
 
@@ -167,12 +185,14 @@ public final class PingResponse<I> {
       final @Nullable Component motd,
       final @Nullable I icon,
       final @Nullable PlayerCount playerCount,
+      final @Nullable List<String> hover,
       final boolean hidePlayerCount,
       final boolean disablePlayerListHover
     ) {
       this.motd = motd;
       this.icon = icon;
       this.playerCount = playerCount;
+      this.hover = hover;
       this.hidePlayerCount = hidePlayerCount;
       this.disablePlayerListHover = disablePlayerListHover;
     }
@@ -196,6 +216,12 @@ public final class PingResponse<I> {
     }
 
     @Override
+    public Builder<I> hover(final @Nullable List<String> hover) {
+      this.hover = hover;
+      return this;
+    }
+
+    @Override
     public Builder<I> hidePlayerCount(final boolean hidePlayerCount) {
       this.hidePlayerCount = hidePlayerCount;
       return this;
@@ -214,6 +240,7 @@ public final class PingResponse<I> {
         this.icon,
         this.motd,
         this.playerCount,
+        this.hover,
         this.hidePlayerCount,
         this.disablePlayerListHover
       );

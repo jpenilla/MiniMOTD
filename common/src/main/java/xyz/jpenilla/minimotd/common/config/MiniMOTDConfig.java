@@ -59,6 +59,10 @@ public final class MiniMOTDConfig {
   @Comment("Enable server list icon related features")
   private boolean iconEnabled = true;
 
+  @Comment("Setting this to true will changes the text of the player list\n"
+    + "Requires setting `disablePlayerListHover` and `hidePlayerCount` to false")
+  private boolean hoverEnabled = false;
+
   private PlayerCountSettings playerCountSettings = new PlayerCountSettings();
 
   @ConfigSerializable
@@ -82,6 +86,9 @@ public final class MiniMOTDConfig {
       + "    ex: icon=\"myIconFile\"")
     private String icon = "random";
 
+    @Comment("Lines of text will shown when hovering over the online counter")
+    private List<String> hover = Arrays.asList("<green>Player", "<yellow>List");
+
     public @NonNull String line1() {
       return this.line1;
     }
@@ -94,6 +101,9 @@ public final class MiniMOTDConfig {
       return this.icon;
     }
 
+    public @NonNull List<String> hover() {
+      return this.hover;
+    }
   }
 
   @ConfigSerializable
@@ -167,6 +177,10 @@ public final class MiniMOTDConfig {
 
   public boolean motdEnabled() {
     return this.motdEnabled;
+  }
+
+  public boolean hoverEnabled() {
+    return this.hoverEnabled;
   }
 
   public boolean disablePlayerListHover() {

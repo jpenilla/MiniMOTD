@@ -25,10 +25,12 @@ package xyz.jpenilla.minimotd.common;
 
 import java.nio.file.Path;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
@@ -106,6 +108,16 @@ public final class MiniMOTD<I> {
 
     if (config.iconEnabled()) {
       response.icon(this.iconManager().icon(motdConfig == null ? null : motdConfig.icon()));
+    }
+
+    if (config.hoverEnabled()) {
+      if (config.disablePlayerListHover() || config.hidePlayerCount()) {
+        throw new IllegalStateException("Hover enabled requires setting `disable-player-list-hover` and `hide-player-count` to false!");
+      }
+      response.hover(motdConfig == null ? null : motdConfig.hover().stream()
+        .map(MiniMessage.miniMessage()::deserialize)
+        .map(LegacyComponentSerializer.legacySection()::serialize)
+        .collect(Collectors.toList()));
     }
 
     return response.build();
