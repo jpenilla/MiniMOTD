@@ -50,6 +50,9 @@ dependencies:
   adventureTextSerializerGson:
     group: net.kyori
     name: adventure-text-serializer-gson
+  adventureTextSerializerLegacy:
+    group: net.kyori
+    name: adventure-text-serializer-legacy
   adventurePlatformBungeecord:
     group: net.kyori
     name: adventure-platform-bungeecord

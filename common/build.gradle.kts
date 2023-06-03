@@ -17,6 +17,7 @@ dependencies {
   api(libs.adventureTextSerializerGson) {
     exclude("com.google.code.gson", "gson")
   }
+  api(libs.adventureTextSerializerLegacy)
   api(libs.minimessage)
   compileOnlyApi(libs.slf4jApi)
   compileOnlyApi(libs.checkerQual)
