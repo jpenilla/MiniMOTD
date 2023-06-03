@@ -14,7 +14,7 @@ dependencies {
 tasks {
   processResources {
     val replacements = mapOf(
-      "modid" to rootProject.name.toLowerCase(Locale.ENGLISH),
+      "modid" to rootProject.name.lowercase(Locale.ENGLISH),
       "name" to rootProject.name,
       "version" to project.version.toString(),
       "description" to project.description.toString(),

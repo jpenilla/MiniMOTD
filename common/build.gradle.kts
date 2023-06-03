@@ -5,7 +5,7 @@ plugins {
 
 tasks.jar {
   from(rootProject.file("license.txt")) {
-    rename { "license_${rootProject.name.toLowerCase()}.txt" }
+    rename { "license_${rootProject.name.lowercase()}.txt" }
   }
 }
 
