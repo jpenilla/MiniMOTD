@@ -84,24 +84,28 @@ public final class MiniMOTD<I> {
       .disablePlayerListHover(config.disablePlayerListHover())
       .hidePlayerCount(config.hidePlayerCount());
 
-    @Nullable String iconString = null;
+    final MiniMOTDConfig.@Nullable MOTD motdConfig;
+    if (config.motds().isEmpty()) {
+      motdConfig = null;
+    } else {
+      final int index = config.motds().size() == 1 ? 0 : ThreadLocalRandom.current().nextInt(config.motds().size());
+      motdConfig = config.motds().get(index);
+    }
+
     if (config.motdEnabled()) {
-      if (config.motds().isEmpty()) {
+      if (motdConfig == null) {
         throw new IllegalStateException("MOTD is enabled, but there are no MOTDs in the config file?");
       }
-      final int index = config.motds().size() == 1 ? 0 : ThreadLocalRandom.current().nextInt(config.motds().size());
-      final MiniMOTDConfig.MOTD motdConfig = config.motds().get(index);
       final Component motd = Components.ofChildren(
         parse(motdConfig.line1(), count),
         newline(),
         parse(motdConfig.line2(), count)
       );
       response.motd(motd);
-      iconString = motdConfig.icon();
     }
 
     if (config.iconEnabled()) {
-      response.icon(this.iconManager().icon(iconString));
+      response.icon(this.iconManager().icon(motdConfig == null ? null : motdConfig.icon()));
     }
 
     return response.build();
