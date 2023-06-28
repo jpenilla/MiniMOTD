@@ -40,5 +40,6 @@ tasks {
 runPaper.folia.registerTask()
 
 modrinth {
+  loaders.set(listOf("paper", "folia"))
   gameVersions.addAll(bukkitVersions)
 }

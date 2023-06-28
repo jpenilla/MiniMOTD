@@ -29,7 +29,7 @@ hangarPublish.publications.register("plugin") {
     }
     register(Platforms.WATERFALL) {
       jar.set(jar("bungeecord"))
-      platformVersions.addAll("1.19")
+      platformVersions.addAll("1.20")
     }
   }
 }
