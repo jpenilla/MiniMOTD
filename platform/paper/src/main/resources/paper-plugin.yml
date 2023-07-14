@@ -1,0 +1,7 @@
+name: MiniMOTD
+version: '${version}'
+author: jmp
+description: Use MiniMessage text formatting in the server list MOTD.
+main: xyz.jpenilla.minimotd.paper.MiniMOTDPlugin
+api-version: '1.19'
+folia-supported: true
