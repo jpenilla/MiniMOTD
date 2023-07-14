@@ -27,6 +27,7 @@ pluginManagement {
 plugins {
   id("ca.stellardrift.polyglot-version-catalogs") version "6.0.1"
   id("quiet-fabric-loom") version "1.2-SNAPSHOT"
+  id("org.gradle.toolchains.foojay-resolver-convention") version "0.6.0"
 }
 
 rootProject.name = "MiniMOTD"
@@ -43,6 +44,7 @@ setup("minimotd-common", "common")
 
 sequenceOf(
   "bukkit",
+  "paper",
   "sponge8",
   "sponge7",
   "bungeecord",

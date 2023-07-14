@@ -32,3 +32,5 @@ val bukkitVersions = listOf(
   "1.19.4",
   "1.20.1"
 )
+
+val paperVersions = bukkitVersions.subList(12, bukkitVersions.size-1)

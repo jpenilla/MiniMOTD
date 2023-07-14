@@ -26,6 +26,7 @@ package xyz.jpenilla.minimotd.bukkit;
 import io.papermc.lib.PaperLib;
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
@@ -42,6 +43,7 @@ import xyz.jpenilla.minimotd.common.util.UpdateChecker;
 
 public final class MiniMOTDPlugin extends JavaPlugin implements MiniMOTDPlatform<CachedServerIcon> {
   private static final boolean PAPER_PING_EVENT_EXISTS = findClass("com.destroystokyo.paper.event.server.PaperServerListPingEvent") != null;
+  private static final boolean MODERN_PAPER = findClass("io.papermc.paper.plugin.configuration.PluginMeta") != null;
 
   private Logger logger;
   private MiniMOTD<CachedServerIcon> miniMOTD;
@@ -52,6 +54,20 @@ public final class MiniMOTDPlugin extends JavaPlugin implements MiniMOTDPlatform
     this.logger = LoggerFactory.getLogger(this.getName());
     this.miniMOTD = new MiniMOTD<>(this);
     this.audiences = BukkitAudiences.create(this);
+
+    if (MODERN_PAPER) {
+      this.logger.warn(String.join("\n", Arrays.asList(
+        "",
+        "====================================================",
+        "You are using an unoptimized version of MiniMOTD for your server.",
+        "",
+        "MiniMOTD has an exclusive version for Paper 1.19.4 and higher",
+        "with performance improvements and use of native functions.",
+        "",
+        "Download MiniMOTD Paper from https://hangar.papermc.io/jmp/MiniMOTD",
+        "===================================================="
+      )));
+    }
 
     if (PAPER_PING_EVENT_EXISTS) {
       this.getServer().getPluginManager().registerEvents(new PaperPingListener(this.miniMOTD), this);
