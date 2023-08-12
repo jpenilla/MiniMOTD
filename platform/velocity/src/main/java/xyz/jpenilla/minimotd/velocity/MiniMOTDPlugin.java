@@ -128,6 +128,10 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
     ));
   }
 
+  public @NonNull ProxyServer getProxy() {
+    return this.server;
+  }
+
   @Override
   public @NonNull Path dataDirectory() {
     return this.dataDirectory;

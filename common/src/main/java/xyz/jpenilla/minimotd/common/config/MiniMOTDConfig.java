@@ -47,6 +47,9 @@ public final class MiniMOTDConfig {
     this.motds.addAll(Arrays.asList(defaults));
   }
 
+  @Comment("The list of server names that affect player counts")
+  private final List<String> targetServers = new ArrayList<>();
+
   @Comment("The list of MOTDs to display\n"
     + "\n"
     + " - Supported placeholders: <online_players>, <max_players>\n"
@@ -155,6 +158,10 @@ public final class MiniMOTDConfig {
 
     }
 
+  }
+
+  public List<String> targetServers() {
+    return this.targetServers;
   }
 
   public boolean iconEnabled() {

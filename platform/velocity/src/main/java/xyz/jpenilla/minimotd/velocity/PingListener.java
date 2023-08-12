@@ -27,8 +27,13 @@ import com.google.inject.Inject;
 import com.velocitypowered.api.event.EventTask;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.api.util.Favicon;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
@@ -50,10 +55,32 @@ public final class PingListener {
   }
 
   private void handle(final ProxyPingEvent event) {
-    final MiniMOTDConfig config = this.miniMOTD.configManager().resolveConfig(event.getConnection().getVirtualHost().orElse(null));
+    final MiniMOTDConfig config = this.miniMOTD.configManager()
+        .resolveConfig(event.getConnection().getVirtualHost().orElse(null));
     final ServerPing.Builder pong = event.getPing().asBuilder();
 
-    final PingResponse<Favicon> response = this.miniMOTD.createMOTD(config, pong.getOnlinePlayers(), pong.getMaximumPlayers());
+    final List<String> targetServers = config.targetServers();
+    Integer playersCount = 0;
+    if (targetServers.isEmpty()) {
+      playersCount = pong.getOnlinePlayers();
+
+    } else {
+      final MiniMOTDPlugin plugin = (MiniMOTDPlugin) this.miniMOTD.platform();
+      final List<RegisteredServer> servers = new ArrayList<>();
+
+      for (final String serverName : config.targetServers()) {
+        final RegisteredServer server = plugin.getProxy().getServer(serverName).orElse(null);
+        if (server != null) {
+          servers.add(server);
+        }
+      }
+
+      playersCount = servers.stream()
+          .mapToInt(server -> server.getPlayersConnected().size())
+          .sum();
+    }
+
+    final PingResponse<Favicon> response = this.miniMOTD.createMOTD(config, playersCount, pong.getMaximumPlayers());
     response.icon(pong::favicon);
     response.motd(pong::description);
     response.playerCount().applyCount(pong::onlinePlayers, pong::maximumPlayers);
