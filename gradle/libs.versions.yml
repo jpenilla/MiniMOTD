@@ -5,7 +5,7 @@ metadata:
 
 plugins:
   net.kyori.blossom: 2.0.1
-  org.spongepowered.gradle.plugin: 2.1.1
+  org.spongepowered.gradle.plugin: 2.2.0
   net.minecrell.plugin-yml.bungee: 0.5.3
   xyz.jpenilla.run-paper: &run-task 2.1.0
   xyz.jpenilla.run-velocity: *run-task
