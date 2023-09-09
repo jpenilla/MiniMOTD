@@ -10,7 +10,6 @@ dependencies {
   implementation(libs.indraCommon)
   implementation(libs.indraLicenser)
   implementation(libs.shadow)
-  implementation(libs.testLogger)
   implementation(libs.minotaur)
   implementation(libs.hangarPublishPlugin)
 

@@ -1,12 +1,9 @@
-import com.adarshr.gradle.testlogger.theme.ThemeType
-
 plugins {
   id("java-library")
   id("net.kyori.indra")
   id("net.kyori.indra.git")
   id("net.kyori.indra.checkstyle")
   id("net.kyori.indra.license-header")
-  id("com.adarshr.test-logger")
 }
 
 version = (version as String)
@@ -21,24 +18,22 @@ indra {
   mitLicense()
 }
 
-testlogger {
-  theme = ThemeType.MOCHA_PARALLEL
-  showPassed = false
-}
-
 dependencies {
   testImplementation(libs.jupiterEngine)
 }
 
 tasks {
-  tasks {
-    withType<JavaCompile> {
-      options.compilerArgs.add("-Xlint:-processing")
+  withType<JavaCompile> {
+    options.compilerArgs.add("-Xlint:-processing")
+  }
+  sequenceOf(javadocJar, javadoc).forEach {
+    it.configure {
+      onlyIf { false }
     }
-    sequenceOf(javadocJar, javadoc).forEach {
-      it.configure {
-        onlyIf { false }
-      }
+  }
+  test {
+    testLogging {
+      events("passed")
     }
   }
 }

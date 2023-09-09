@@ -36,7 +36,6 @@ import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
-import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.util.Favicon;
@@ -47,19 +46,10 @@ import org.bstats.velocity.Metrics;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import xyz.jpenilla.minimotd.common.CommandHandler;
-import xyz.jpenilla.minimotd.common.Constants;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
 import xyz.jpenilla.minimotd.common.util.UpdateChecker;
 
-@Plugin(
-  id = "${project.name}",
-  name = Constants.PluginMetadata.NAME,
-  version = Constants.PluginMetadata.VERSION,
-  description = "${description}",
-  url = "${url}",
-  authors = {"jmp"}
-)
 public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
   private static final Set<Class<?>> LISTENER_CLASSES = ImmutableSet.of(
     PingListener.class

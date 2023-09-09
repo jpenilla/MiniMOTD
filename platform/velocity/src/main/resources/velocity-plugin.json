@@ -1,0 +1,12 @@
+{
+  "id": "minimotd-velocity",
+  "name": "MiniMOTD",
+  "version": "$version",
+  "description": "$description",
+  "url": "$url",
+  "authors": [
+    "jmp"
+  ],
+  "dependencies": [],
+  "main": "xyz.jpenilla.minimotd.velocity.MiniMOTDPlugin"
+}
