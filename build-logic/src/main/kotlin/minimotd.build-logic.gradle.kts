@@ -10,7 +10,7 @@ fun jar(platform: String) = project(":minimotd-$platform")
 
 hangarPublish.publications.register("plugin") {
   version.set(project.version as String)
-  namespace("jmp", "MiniMOTD")
+  id.set("MiniMOTD")
   channel.set("Release")
   changelog.set(releaseNotes)
   apiKey.set(providers.environmentVariable("HANGAR_UPLOAD_KEY"))

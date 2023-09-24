@@ -40,6 +40,6 @@ abstract class ServerHandshakePacketListenerImplMixin {
 
   @Inject(method = "handleIntention", at = @At("HEAD"))
   public void injectHandleIntention(final ClientIntentionPacket packet, final CallbackInfo ci) {
-    ((ConnectionAccess) this.connection).protocolVersion(packet.getProtocolVersion());
+    ((ConnectionAccess) this.connection).protocolVersion(packet.protocolVersion());
   }
 }

@@ -1,6 +1,5 @@
 import org.spongepowered.gradle.plugin.config.PluginLoaders
 import org.spongepowered.plugin.metadata.model.PluginDependency
-import java.util.Locale
 
 plugins {
   id("minimotd.shadow-platform")
@@ -53,6 +52,6 @@ modrinth {
     "1.17.1",
     "1.18.2",
     "1.19.4",
-    "1.20.1"
+    "1.20.2"
   )
 }
