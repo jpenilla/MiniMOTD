@@ -163,7 +163,7 @@ dependencies:
     version: { ref: indra }
   indraLicenser:
     group: net.kyori
-    name: indra-licenser-cadix
+    name: indra-licenser-spotless
     version: { ref: indra }
   shadow:
     group: com.github.johnrengelman

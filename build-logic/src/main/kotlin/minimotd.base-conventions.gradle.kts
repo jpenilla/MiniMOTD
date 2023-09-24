@@ -3,7 +3,7 @@ plugins {
   id("net.kyori.indra")
   id("net.kyori.indra.git")
   id("net.kyori.indra.checkstyle")
-  id("net.kyori.indra.license-header")
+  id("net.kyori.indra.licenser.spotless")
 }
 
 version = (version as String)
@@ -20,6 +20,7 @@ indra {
 
 dependencies {
   testImplementation(libs.jupiterEngine)
+  testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks {
