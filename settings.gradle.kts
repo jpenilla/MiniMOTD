@@ -25,7 +25,7 @@ pluginManagement {
 }
 
 plugins {
-  id("quiet-fabric-loom") version "1.3-SNAPSHOT"
+  id("quiet-fabric-loom") version "1.4-SNAPSHOT"
 }
 
 rootProject.name = "MiniMOTD"
