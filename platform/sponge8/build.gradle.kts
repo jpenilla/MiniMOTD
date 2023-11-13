@@ -3,7 +3,7 @@ import org.spongepowered.plugin.metadata.model.PluginDependency
 
 plugins {
   id("minimotd.shadow-platform")
-  id("org.spongepowered.gradle.plugin")
+  alias(libs.plugins.sponge.gradle.plugin)
 }
 
 dependencies {

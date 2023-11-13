@@ -1,6 +1,6 @@
 plugins {
   id("minimotd.shadow-platform")
-  id("xyz.jpenilla.run-velocity")
+  alias(libs.plugins.run.velocity)
 }
 
 dependencies {

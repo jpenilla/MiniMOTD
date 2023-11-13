@@ -1,7 +1,7 @@
 plugins {
   id("minimotd.shadow-platform")
-  id("net.minecrell.plugin-yml.bungee")
-  id("xyz.jpenilla.run-waterfall")
+  alias(libs.plugins.plugin.yml.bungee)
+  alias(libs.plugins.run.waterfall)
 }
 
 dependencies {

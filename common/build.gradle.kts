@@ -1,5 +1,5 @@
 plugins {
-  id("net.kyori.blossom")
+  alias(libs.plugins.blossom)
   id("minimotd.base-conventions")
 }
 

@@ -1,6 +1,6 @@
 plugins {
   id("minimotd.shadow-platform")
-  id("xyz.jpenilla.run-paper")
+  alias(libs.plugins.run.paper)
 }
 
 dependencies {
