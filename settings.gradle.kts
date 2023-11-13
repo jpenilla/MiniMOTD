@@ -26,7 +26,7 @@ pluginManagement {
 
 plugins {
   id("ca.stellardrift.polyglot-version-catalogs") version "6.1.0"
-  id("quiet-fabric-loom") version "1.3-SNAPSHOT"
+  id("quiet-fabric-loom") version "1.4.201"
 }
 
 rootProject.name = "MiniMOTD"
