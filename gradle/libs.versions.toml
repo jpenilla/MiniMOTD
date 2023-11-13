@@ -1,5 +1,5 @@
 [plugins]
-blossom = { id = "net.kyori.blossom", version = "2.0.1" }
+blossom = { id = "net.kyori.blossom", version = "2.1.0" }
 sponge-gradle-plugin = { id = "org.spongepowered.gradle.plugin", version = "2.2.0" }
 run-paper = { id = "xyz.jpenilla.run-paper", version.ref = "run-task" }
 run-velocity = { id = "xyz.jpenilla.run-velocity", version.ref = "run-task" }
