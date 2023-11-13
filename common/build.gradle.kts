@@ -22,7 +22,6 @@ dependencies {
   compileOnlyApi(libs.checkerQual)
   compileOnlyApi(libs.gson)
   testImplementation(libs.gson)
-  compileOnlyApi(libs.guava)
 }
 
 sourceSets.main {

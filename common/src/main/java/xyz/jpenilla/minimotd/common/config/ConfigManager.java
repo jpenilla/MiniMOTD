@@ -23,11 +23,12 @@
  */
 package xyz.jpenilla.minimotd.common.config;
 
-import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,10 +110,10 @@ public final class ConfigManager {
   }
 
   private void createDefaultExtraConfigs(final @NonNull Path extraConfigsDir) throws ConfigurateException {
-    final List<Pair<Path, MiniMOTDConfig.MOTD>> defaults = ImmutableList.of(
+    final List<Pair<Path, MiniMOTDConfig.MOTD>> defaults = Collections.unmodifiableList(Arrays.asList(
       pair(extraConfigsDir.resolve("skyblock.conf"), new MiniMOTDConfig.MOTD("<green><italic>Skyblock</green>", "<bold><rainbow>MiniMOTD Skyblock Server")),
       pair(extraConfigsDir.resolve("survival.conf"), new MiniMOTDConfig.MOTD("<gradient:blue:red>Survival Mode Hardcore", "<green><bold>MiniMOTD Survival Server"))
-    );
+    ));
     for (final Pair<Path, MiniMOTDConfig.MOTD> pair : defaults) {
       final ConfigLoader<MiniMOTDConfig> loader = new ConfigLoader<>(
         MiniMOTDConfig.class,

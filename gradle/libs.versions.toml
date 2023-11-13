@@ -19,7 +19,6 @@ configurate = "4.1.2"
 checkerQual = "3.38.0"
 slf4j = "1.7.32"
 gson = "2.8.0"
-guava = "21.0"
 bstats = "3.0.2"
 paperApi = "1.16.5-R0.1-SNAPSHOT"
 paperlib = "1.0.8-SNAPSHOT"
@@ -50,7 +49,6 @@ slf4jApi = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
 slf4jJdk14 = { group = "org.slf4j", name = "slf4j-jdk14", version.ref = "slf4j" }
 
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
-guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 
 bstatsBukkit = { group = "org.bstats", name = "bstats-bukkit", version.ref = "bstats" }
 bstatsBungeecord = { group = "org.bstats", name = "bstats-bungeecord", version.ref = "bstats" }

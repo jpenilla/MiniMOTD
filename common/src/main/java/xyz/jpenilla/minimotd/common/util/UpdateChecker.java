@@ -23,14 +23,14 @@
  */
 package xyz.jpenilla.minimotd.common.util;
 
-import com.google.common.base.Charsets;
-import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -45,7 +45,7 @@ public final class UpdateChecker {
   public @NonNull List<String> checkVersion() {
     final JsonArray result;
     final String url = String.format("https://api.github.com/repos/%s/%s/releases", Constants.PluginMetadata.GITHUB_USER, Constants.PluginMetadata.GITHUB_REPO);
-    try (final InputStream is = new URL(url).openStream(); InputStreamReader reader = new InputStreamReader(is, Charsets.UTF_8)) {
+    try (final InputStream is = new URL(url).openStream(); InputStreamReader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
       result = this.parser.parse(reader).getAsJsonArray();
     } catch (final IOException ex) {
       return Collections.singletonList("Cannot look for updates: " + ex.getMessage());
@@ -58,13 +58,13 @@ public final class UpdateChecker {
       return Collections.emptyList(); // Up to date, do nothing
     }
     if (currentVersion.contains("SNAPSHOT")) {
-      return ImmutableList.of(
+      return Arrays.asList(
         "This server is running a development build of " + Constants.PluginMetadata.NAME + "! (" + currentVersion + ")",
         "The latest official release is " + versionList.get(0)
       );
     }
     final int versionsBehind = versionList.indexOf(currentVersion);
-    return ImmutableList.of(
+    return Arrays.asList(
       "There is an update available for " + Constants.PluginMetadata.NAME + "!",
       "This server is running version " + currentVersion + ", which is " + (versionsBehind == -1 ? "UNKNOWN" : versionsBehind) + " versions outdated.",
       "Download the latest version, " + versionList.get(0) + " from GitHub at the link below:",
