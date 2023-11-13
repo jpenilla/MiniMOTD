@@ -1,6 +1,5 @@
 plugins {
   id("minimotd.shadow-platform")
-  alias(libs.plugins.plugin.yml.bungee)
   alias(libs.plugins.run.waterfall)
 }
 
@@ -21,12 +20,16 @@ tasks {
   runWaterfall {
     waterfallVersion("1.20")
   }
-}
-
-bungee {
-  name = rootProject.name
-  main = "xyz.jpenilla.minimotd.bungee.MiniMOTDPlugin"
-  author = "jmp"
+  processResources {
+    val props = mapOf(
+      "version" to project.version,
+      "description" to project.description
+    )
+    inputs.properties(props)
+    filesMatching("bungee.yml") {
+      expand(props)
+    }
+  }
 }
 
 modrinth {
