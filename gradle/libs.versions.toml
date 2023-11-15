@@ -7,7 +7,7 @@ run-waterfall = { id = "xyz.jpenilla.run-waterfall", version.ref = "run-task" }
 
 [versions]
 run-task = "2.2.0"
-minotaur = "2.7.5"
+mod-publish-plugin = "0.4.5"
 hangarPublishPlugin = "0.1.0"
 indra = "3.1.3"
 shadow = "8.1.1"
@@ -73,7 +73,7 @@ jupiterEngine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", ve
 indraCommon = { group = "net.kyori", name = "indra-common", version.ref = "indra" }
 indraLicenser = { group = "net.kyori", name = "indra-licenser-spotless", version.ref = "indra" }
 shadow = { group = "com.github.johnrengelman", name = "shadow", version.ref = "shadow" }
-minotaur = { group = "com.modrinth.minotaur", name = "Minotaur", version.ref = "minotaur" }
+mod-publish-plugin = { module = "me.modmuss50:mod-publish-plugin", version.ref = "mod-publish-plugin" }
 hangarPublishPlugin = { group = "io.papermc", name = "hangar-publish-plugin", version.ref = "hangarPublishPlugin" }
 
 [bundles]

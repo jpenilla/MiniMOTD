@@ -31,6 +31,7 @@ tasks {
   }
 }
 
-modrinth {
-  gameVersions.addAll(minecraftVersion)
+publishMods.modrinth {
+  modLoaders.add("velocity")
+  minecraftVersions.addAll(minecraftVersion)
 }

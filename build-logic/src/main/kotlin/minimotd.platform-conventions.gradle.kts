@@ -1,4 +1,4 @@
-import com.modrinth.minotaur.ModrinthExtension
+import me.modmuss50.mpp.ModPublishExtension
 
 plugins {
   id("minimotd.base-conventions")
@@ -20,13 +20,15 @@ tasks {
 }
 
 if (name != "minimotd-bukkit-bungeecord") {
-  plugins.apply("com.modrinth.minotaur")
+  plugins.apply("me.modmuss50.mod-publish-plugin")
 
-  the<ModrinthExtension>().apply {
-    projectId.set("16vhQOQN")
-    versionType.set("release")
-    file.set(platformExtension.jarTask.flatMap { it.archiveFile })
-    changelog.set(releaseNotes)
-    token.set(providers.environmentVariable("MODRINTH_TOKEN"))
+  extensions.configure(ModPublishExtension::class) {
+    modrinth {
+      projectId.set("16vhQOQN")
+      type = STABLE
+      file.set(platformExtension.jarTask.flatMap { it.archiveFile })
+      changelog.set(releaseNotes)
+      accessToken.set(providers.environmentVariable("MODRINTH_TOKEN"))
+    }
   }
 }

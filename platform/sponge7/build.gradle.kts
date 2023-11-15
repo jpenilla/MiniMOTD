@@ -30,7 +30,7 @@ tasks {
   }
 }
 
-modrinth {
-  loaders.add("sponge")
-  gameVersions.add("1.12.2")
+publishMods.modrinth {
+  modLoaders.add("sponge")
+  minecraftVersions.add("1.12.2")
 }

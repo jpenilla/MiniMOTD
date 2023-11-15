@@ -39,7 +39,7 @@ tasks {
 
 runPaper.folia.registerTask()
 
-modrinth {
-  loaders.set(listOf("paper", "folia"))
-  gameVersions.addAll(bukkitVersions)
+publishMods.modrinth {
+  modLoaders.addAll("paper", "folia")
+  minecraftVersions.addAll(bukkitVersions)
 }
