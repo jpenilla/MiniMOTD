@@ -6,7 +6,7 @@ run-velocity = { id = "xyz.jpenilla.run-velocity", version.ref = "run-task" }
 run-waterfall = { id = "xyz.jpenilla.run-waterfall", version.ref = "run-task" }
 
 [versions]
-run-task = "2.2.0"
+run-task = "2.2.2"
 mod-publish-plugin = "0.4.5"
 hangarPublishPlugin = "0.1.0"
 indra = "3.1.3"
