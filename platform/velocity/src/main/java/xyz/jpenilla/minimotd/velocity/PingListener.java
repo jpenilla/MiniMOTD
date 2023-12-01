@@ -27,8 +27,13 @@ import com.google.inject.Inject;
 import com.velocitypowered.api.event.EventTask;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
+import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.api.util.Favicon;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
@@ -38,10 +43,12 @@ import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
 @DefaultQualifier(NonNull.class)
 public final class PingListener {
   private final MiniMOTD<Favicon> miniMOTD;
+  private final @NonNull ProxyServer server;
 
   @Inject
-  private PingListener(final MiniMOTD<Favicon> miniMOTD) {
+  private PingListener(final MiniMOTD<Favicon> miniMOTD, final @NonNull ProxyServer server) {
     this.miniMOTD = miniMOTD;
+    this.server = server;
   }
 
   @Subscribe
@@ -52,7 +59,21 @@ public final class PingListener {
   private void handle(final ProxyPingEvent event) {
     final MiniMOTDConfig config = this.miniMOTD.configManager().resolveConfig(event.getConnection().getVirtualHost().orElse(null));
     final ServerPing.Builder pong = event.getPing().asBuilder();
-
+    final List<String> serverFilter = config.serverFilter();
+    if (!serverFilter.isEmpty()) {
+      final Set<ServerPing.SamplePlayer> players = new HashSet<>();
+      for (final String serverName : serverFilter) {
+        this.server.getServer(serverName).ifPresent(rs ->
+          players.addAll(rs.getPlayersConnected().stream().map(p -> new ServerPing.SamplePlayer(
+            p.getGameProfile().getName(),
+            p.getUniqueId()
+          )).collect(Collectors.toList()))
+        );
+      }
+      pong.onlinePlayers(players.size());
+      pong.clearSamplePlayers();
+      pong.samplePlayers(players.toArray(new ServerPing.SamplePlayer[0]));
+    }
     final PingResponse<Favicon> response = this.miniMOTD.createMOTD(config, pong.getOnlinePlayers(), pong.getMaximumPlayers());
     response.icon(pong::favicon);
     response.motd(pong::description);

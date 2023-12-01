@@ -115,6 +115,12 @@ public final class MiniMOTDConfig {
     @Comment("Settings for the fake player count feature")
     private FakePlayers fakePlayers = new FakePlayers();
 
+    @Comment("The list of servers to filter players by\n"
+      + "\n"
+      + " - List of Velocity servers to get players from to include in the ping player list and count.\n"
+      + " - No filtering if the list is empty (count / list players from all servers).")
+    private final List<String> serverFilter = new ArrayList<>();
+
     @Comment("Changes the Max Players to be X more than the online players\n"
       + "ex: x=3 -> 16/19 players online.")
     private JustXMore justXMoreSettings = new JustXMore();
@@ -163,6 +169,10 @@ public final class MiniMOTDConfig {
 
   public @NonNull List<MOTD> motds() {
     return this.motds;
+  }
+
+  public List<String> serverFilter() {
+    return this.playerCountSettings.serverFilter;
   }
 
   public boolean motdEnabled() {
