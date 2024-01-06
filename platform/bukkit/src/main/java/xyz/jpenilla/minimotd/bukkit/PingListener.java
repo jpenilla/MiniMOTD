@@ -1,7 +1,7 @@
 /*
  * This file is part of MiniMOTD, licensed under the MIT License.
  *
- * Copyright (c) 2020-2023 Jason Penilla
+ * Copyright (c) 2020-2024 Jason Penilla
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
