@@ -27,7 +27,7 @@ tasks {
   withType<JavaCompile> {
     options.compilerArgs.add("-Xlint:-processing")
   }
-  sequenceOf(javadocJar, javadoc).forEach {
+  listOf(javadocJar, javadoc).forEach {
     it.configure {
       onlyIf { false }
     }

@@ -2,18 +2,18 @@ import net.kyori.indra.git.IndraGitExtension
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
-import org.gradle.kotlin.dsl.the
+import org.gradle.kotlin.dsl.getByType
 
 fun Project.lastCommitHash(): String =
-  the<IndraGitExtension>().commit()?.name?.substring(0, 7) ?: "unknown"
+  extensions.getByType<IndraGitExtension>().commit()?.name?.substring(0, 7) ?: "unknown"
 
 val Project.libs: LibrariesForLibs
-  get() = the()
+  get() = extensions.getByType()
 
 val Project.releaseNotes: Provider<String>
   get() = providers.environmentVariable("RELEASE_NOTES")
 
-val Project.minecraftVersion
+val Project.minecraftVersion: String
   get() = libs.versions.minecraft.get()
 
 val bukkitVersions = listOf(
@@ -30,5 +30,5 @@ val bukkitVersions = listOf(
   "1.17.1",
   "1.18.2",
   "1.19.4",
-  "1.20.2"
+  "1.20.4"
 )

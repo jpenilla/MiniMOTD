@@ -1,12 +1,10 @@
-import io.papermc.hangarpublishplugin.model.Platforms
-
 plugins {
   base
   id("io.papermc.hangar-publish-plugin")
 }
 
 fun jar(platform: String) = project(":minimotd-$platform")
-  .the<MiniMOTDPlatformExtension>().jarTask.flatMap { it.archiveFile }
+  .extensions.getByType<MiniMOTDPlatformExtension>().jarTask.flatMap { it.archiveFile }
 
 hangarPublish.publications.register("plugin") {
   version.set(project.version as String)
@@ -15,7 +13,7 @@ hangarPublish.publications.register("plugin") {
   changelog.set(releaseNotes)
   apiKey.set(providers.environmentVariable("HANGAR_UPLOAD_KEY"))
   platforms {
-    register(Platforms.PAPER) {
+    paper {
       jar.set(jar("bukkit"))
       val vers = bukkitVersions.toMutableList()
       vers -= "1.8.8"
@@ -23,11 +21,11 @@ hangarPublish.publications.register("plugin") {
       vers += "1.8"
       platformVersions.addAll(vers)
     }
-    register(Platforms.VELOCITY) {
+    velocity {
       jar.set(jar("velocity"))
       platformVersions.addAll("3.2")
     }
-    register(Platforms.WATERFALL) {
+    waterfall {
       jar.set(jar("bungeecord"))
       platformVersions.addAll("1.20")
     }
