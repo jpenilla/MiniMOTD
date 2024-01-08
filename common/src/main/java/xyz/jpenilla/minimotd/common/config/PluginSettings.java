@@ -64,8 +64,36 @@ public final class PluginSettings {
       return this.virtualHostTestMode;
     }
 
-    public @Nullable String findConfigStringForHost(final @NonNull String host) {
-      return this.virtualHostConfigs.get(host.toLowerCase(Locale.ENGLISH));
+    public @Nullable String findConfigStringForHost(@NonNull String host) {
+      host = host.toLowerCase(Locale.ENGLISH);
+
+      final @Nullable String exactMatch = this.virtualHostConfigs.get(host);
+      if (exactMatch != null) {
+        return exactMatch;
+      }
+
+      configs:
+      for (final Map.Entry<String, String> e : this.virtualHostConfigs.entrySet()) {
+        final String key = e.getKey();
+        final String configName = e.getValue();
+        if (!key.contains("*")) {
+          continue;
+        }
+        final String[] splitKey = key.split("\\.");
+        final String[] splitHost = host.split("\\.");
+        if (splitKey.length != splitHost.length) {
+          continue;
+        }
+        for (int i = 0; i < splitHost.length; i++) {
+          final String keyPart = splitKey[i];
+          if (!keyPart.equals(splitHost[i]) && !keyPart.equals("*")) {
+            continue configs;
+          }
+        }
+        return configName;
+      }
+
+      return null;
     }
   }
 
