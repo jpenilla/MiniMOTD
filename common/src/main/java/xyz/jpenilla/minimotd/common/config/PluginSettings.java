@@ -67,8 +67,8 @@ public final class PluginSettings {
       return this.virtualHostTestMode;
     }
 
-    public @Nullable String findConfigStringForHost(@NonNull String host) {
-      host = host.toLowerCase(Locale.ENGLISH);
+    public @Nullable String findConfigStringForHost(@NonNull String host, int port) {
+      host = processTcpShieldHostname(host).toLowerCase(Locale.ENGLISH) + ':' + port;
 
       final @Nullable String exactMatch = this.virtualHostConfigs.get(host);
       if (exactMatch != null) {
@@ -97,6 +97,17 @@ public final class PluginSettings {
       }
 
       return null;
+    }
+
+    private static String processTcpShieldHostname(final String hostname) {
+      if (hostname.contains("///")) {
+        final String[] split = hostname.split("///");
+        if (split.length == 4) {
+          // <actual hostname>///<user-ip>:<user-port>///<unix timestamp>///<signature>
+          return split[0];
+        }
+      }
+      return hostname;
     }
   }
 
