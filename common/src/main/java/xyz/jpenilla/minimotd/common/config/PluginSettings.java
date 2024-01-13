@@ -24,6 +24,7 @@
 package xyz.jpenilla.minimotd.common.config;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
@@ -54,8 +55,10 @@ public final class PluginSettings {
     @Comment("Here you can assign configs in the 'extra-configs' folder to specific virtual hosts\n"
       + "Either use the name of the config in 'extra-configs', or use \"default\" to use the configuration in main.conf\n"
       + "\n"
-      + "Format is \"hostname:port\"=\"configName|default\"")
-    private final Map<String, String> virtualHostConfigs = new HashMap<>();
+      + "Format is \"hostname:port\"=\"configName|default\"\n"
+      + "Parts of domains can be substituted for wildcards, i.e. \"*.mydomain.com:25565\". Wildcard-containing configs are\n"
+      + "checked in the order they are declared if there are no exact matches.")
+    private final Map<String, String> virtualHostConfigs = new LinkedHashMap<>();
 
     private transient @MonotonicNonNull Map<String[], String> splitVirtualHostConfigs;
 
