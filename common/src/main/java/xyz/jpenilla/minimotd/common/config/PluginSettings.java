@@ -67,7 +67,7 @@ public final class PluginSettings {
       return this.virtualHostTestMode;
     }
 
-    public @Nullable String findConfigStringForHost(@NonNull String host, int port) {
+    public @Nullable String findConfigStringForHost(@NonNull String host, final int port) {
       host = processTcpShieldHostname(host).toLowerCase(Locale.ENGLISH) + ':' + port;
 
       final @Nullable String exactMatch = this.virtualHostConfigs.get(host);
