@@ -125,9 +125,9 @@ public final class MiniMOTDConfig {
     private boolean allowExceedingMaximum = false;
 
     @Comment("The list of server names that affect player counts.\n"
-      + "Only applicable when running the plugin on a proxy (Velocity or Waterfall/Bungeecord)\n"
-      + "When set to an empty list or '*', the default count determined by the proxy will be used.")
-    private final List<String> servers = new ArrayList<>(Collections.singletonList("*"));
+      + "Only applicable when running the plugin on a proxy (Velocity or Waterfall/Bungeecord).\n"
+      + "When set to an empty list, the default count determined by the proxy will be used.")
+    private final List<String> servers = new ArrayList<>();
 
     @ConfigSerializable
     public static final class JustXMore {

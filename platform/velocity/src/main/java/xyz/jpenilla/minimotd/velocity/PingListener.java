@@ -61,7 +61,7 @@ public final class PingListener {
 
     final List<String> targetServers = config.targetServers();
     int playersCount = 0;
-    if (targetServers.isEmpty() || targetServers.size() == 1 && targetServers.get(0).equals("*")) {
+    if (targetServers.isEmpty()) {
       playersCount = pong.getOnlinePlayers();
     } else {
       for (final String serverName : targetServers) {
