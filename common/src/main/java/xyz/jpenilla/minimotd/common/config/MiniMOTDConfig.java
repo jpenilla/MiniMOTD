@@ -25,6 +25,7 @@ package xyz.jpenilla.minimotd.common.config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -46,9 +47,6 @@ public final class MiniMOTDConfig {
   public MiniMOTDConfig(final @NonNull MOTD @NonNull ... defaults) {
     this.motds.addAll(Arrays.asList(defaults));
   }
-
-  @Comment("The list of server names that affect player counts")
-  private final List<String> targetServers = new ArrayList<>();
 
   @Comment("The list of MOTDs to display\n"
     + "\n"
@@ -126,6 +124,11 @@ public final class MiniMOTDConfig {
       + "If false, the online player count will be capped at the maximum player count")
     private boolean allowExceedingMaximum = false;
 
+    @Comment("The list of server names that affect player counts.\n"
+      + "Only applicable when running the plugin on a proxy (Velocity or Waterfall/Bungeecord)\n"
+      + "When set to an empty list or '*', the default count determined by the proxy will be used.")
+    private final List<String> servers = new ArrayList<>(Collections.singletonList("*"));
+
     @ConfigSerializable
     public static final class JustXMore {
 
@@ -161,7 +164,7 @@ public final class MiniMOTDConfig {
   }
 
   public List<String> targetServers() {
-    return this.targetServers;
+    return this.playerCountSettings.servers;
   }
 
   public boolean iconEnabled() {
