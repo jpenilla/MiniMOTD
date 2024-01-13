@@ -141,11 +141,10 @@ public final class ConfigManager {
     if (address == null) {
       return this.mainConfig();
     }
-    final String hostString = address.getHostString() + ":" + address.getPort();
-    final String configString = this.pluginSettings().proxySettings().findConfigStringForHost(hostString);
+    final String configString = this.pluginSettings().proxySettings().findConfigStringForHost(address.getHostString(), address.getPort());
 
     if (this.pluginSettings().proxySettings().virtualHostTestMode()) {
-      this.miniMOTD.platform().logger().info("[virtual-host-debug] Virtual Host: '{}', Selected Config: '{}'", hostString, configString == null ? "default" : configString);
+      this.miniMOTD.platform().logger().info("[virtual-host-debug] Virtual Host: '{}:{}', Selected Config: '{}'", address.getHostString(), address.getPort(), configString == null ? "default" : configString);
     }
 
     if (configString == null) {

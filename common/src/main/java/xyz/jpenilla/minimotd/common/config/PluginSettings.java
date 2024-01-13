@@ -23,9 +23,10 @@
  */
 package xyz.jpenilla.minimotd.common.config;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -50,11 +51,19 @@ public final class PluginSettings {
       this.virtualHostConfigs.put("skyblock.example.com:25565", "skyblock");
     }
 
+    public ProxySettings(final Map<String, String> virtualHostConfigs) {
+      this.virtualHostConfigs.putAll(virtualHostConfigs);
+    }
+
     @Comment("Here you can assign configs in the 'extra-configs' folder to specific virtual hosts\n"
       + "Either use the name of the config in 'extra-configs', or use \"default\" to use the configuration in main.conf\n"
       + "\n"
-      + "Format is \"hostname:port\"=\"configName|default\"")
-    private final Map<String, String> virtualHostConfigs = new HashMap<>();
+      + "Format is \"hostname:port\"=\"configName|default\"\n"
+      + "Parts of domains can be substituted for wildcards, i.e. \"*.mydomain.com:25565\". Wildcard-containing configs are\n"
+      + "checked in the order they are declared if there are no exact matches.")
+    private final Map<String, String> virtualHostConfigs = new LinkedHashMap<>();
+
+    private transient @MonotonicNonNull Map<String[], String> splitVirtualHostConfigs;
 
     @Comment("Set whether to enable virtual host testing mode.\n"
       + "When enabled, MiniMOTD will print virtual host debug info to the console on each server ping.")
@@ -64,8 +73,61 @@ public final class PluginSettings {
       return this.virtualHostTestMode;
     }
 
-    public @Nullable String findConfigStringForHost(final @NonNull String host) {
-      return this.virtualHostConfigs.get(host.toLowerCase(Locale.ENGLISH));
+    public @Nullable String findConfigStringForHost(@NonNull String host, final int port) {
+      host = processTcpShieldHostname(host).toLowerCase(Locale.ENGLISH) + ':' + port;
+
+      final @Nullable String exactMatch = this.virtualHostConfigs.get(host);
+      if (exactMatch != null) {
+        return exactMatch;
+      }
+
+      if (this.splitVirtualHostConfigs.isEmpty()) {
+        return null;
+      }
+
+      final String[] splitHost = host.split("\\.");
+
+      configs:
+      for (final Map.Entry<String[], String> e : this.splitVirtualHostConfigs.entrySet()) {
+        final String[] splitKey = e.getKey();
+        if (splitKey.length != splitHost.length) {
+          continue;
+        }
+        for (int i = 0; i < splitHost.length; i++) {
+          final String keyPart = splitKey[i];
+          if (!keyPart.equals(splitHost[i]) && !keyPart.equals("*")) {
+            continue configs;
+          }
+        }
+        return e.getValue();
+      }
+
+      return null;
+    }
+
+    private static String processTcpShieldHostname(final String hostname) {
+      if (hostname.contains("///")) {
+        final String[] split = hostname.split("///");
+        if (split.length == 4) {
+          // <actual hostname>///<user-ip>:<user-port>///<unix timestamp>///<signature>
+          return split[0];
+        }
+      }
+      return hostname;
+    }
+
+    public void processVirtualHosts() {
+      final Map<String, String> virtualHosts = new LinkedHashMap<>(this.virtualHostConfigs);
+      this.virtualHostConfigs.clear();
+      virtualHosts.forEach((host, config) -> this.virtualHostConfigs.put(host.toLowerCase(Locale.ENGLISH), config));
+
+      this.splitVirtualHostConfigs = new LinkedHashMap<>();
+      this.virtualHostConfigs.forEach((host, config) -> {
+        if (!host.contains("*")) {
+          return;
+        }
+        this.splitVirtualHostConfigs.put(host.split("\\."), config);
+      });
     }
   }
 
@@ -78,9 +140,7 @@ public final class PluginSettings {
   }
 
   @PostProcessor
-  private void lowercaseVirtualHosts() {
-    final Map<String, String> virtualHosts = new HashMap<>(this.proxySettings.virtualHostConfigs);
-    this.proxySettings.virtualHostConfigs.clear();
-    virtualHosts.forEach((host, config) -> this.proxySettings.virtualHostConfigs.put(host.toLowerCase(Locale.ENGLISH), config));
+  private void processVirtualHosts() {
+    this.proxySettings.processVirtualHosts();
   }
 }
