@@ -23,7 +23,6 @@
  */
 package xyz.jpenilla.minimotd.common.config;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -50,6 +49,10 @@ public final class PluginSettings {
       this.virtualHostConfigs.put("minigames.example.com:25565", "default");
       this.virtualHostConfigs.put("survival.example.com:25565", "survival");
       this.virtualHostConfigs.put("skyblock.example.com:25565", "skyblock");
+    }
+
+    public ProxySettings(final Map<String, String> virtualHostConfigs) {
+      this.virtualHostConfigs.putAll(virtualHostConfigs);
     }
 
     @Comment("Here you can assign configs in the 'extra-configs' folder to specific virtual hosts\n"
@@ -112,6 +115,20 @@ public final class PluginSettings {
       }
       return hostname;
     }
+
+    public void processVirtualHosts() {
+      final Map<String, String> virtualHosts = new LinkedHashMap<>(this.virtualHostConfigs);
+      this.virtualHostConfigs.clear();
+      virtualHosts.forEach((host, config) -> this.virtualHostConfigs.put(host.toLowerCase(Locale.ENGLISH), config));
+
+      this.splitVirtualHostConfigs = new LinkedHashMap<>();
+      this.virtualHostConfigs.forEach((host, config) -> {
+        if (!host.contains("*")) {
+          return;
+        }
+        this.splitVirtualHostConfigs.put(host.split("\\."), config);
+      });
+    }
   }
 
   public @NonNull ProxySettings proxySettings() {
@@ -124,16 +141,6 @@ public final class PluginSettings {
 
   @PostProcessor
   private void processVirtualHosts() {
-    final Map<String, String> virtualHosts = new HashMap<>(this.proxySettings.virtualHostConfigs);
-    this.proxySettings.virtualHostConfigs.clear();
-    virtualHosts.forEach((host, config) -> this.proxySettings.virtualHostConfigs.put(host.toLowerCase(Locale.ENGLISH), config));
-
-    this.proxySettings.splitVirtualHostConfigs = new HashMap<>();
-    this.proxySettings.virtualHostConfigs.forEach((host, config) -> {
-      if (!host.contains("*")) {
-        return;
-      }
-      this.proxySettings.splitVirtualHostConfigs.put(host.split("\\."), config);
-    });
+    this.proxySettings.processVirtualHosts();
   }
 }
