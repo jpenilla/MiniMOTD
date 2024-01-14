@@ -29,7 +29,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
-import xyz.jpenilla.minimotd.common.util.Components;
 
 import static net.kyori.adventure.text.Component.space;
 import static net.kyori.adventure.text.Component.text;
@@ -77,7 +76,7 @@ public final class CommandHandler {
       this.miniMOTD.reload();
     } catch (final Exception ex) {
       this.miniMOTD.logger().warn("Failed to reload MiniMOTD. Ensure there are no errors in your config files.", ex);
-      audience.sendMessage(Components.ofChildren(
+      audience.sendMessage(Component.textOfChildren(
         Constants.COMMAND_PREFIX,
         space(),
         text("Failed to reload MiniMOTD. Ensure there are no errors in your config files. See console for more details.", RED)
@@ -85,7 +84,7 @@ public final class CommandHandler {
       return;
     }
 
-    audience.sendMessage(Components.ofChildren(
+    audience.sendMessage(Component.textOfChildren(
       Constants.COMMAND_PREFIX,
       space(),
       text("Done reloading configuration.", GREEN)

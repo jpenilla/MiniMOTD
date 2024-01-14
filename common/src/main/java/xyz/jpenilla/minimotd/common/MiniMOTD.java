@@ -35,7 +35,6 @@ import org.checkerframework.framework.qual.DefaultQualifier;
 import org.slf4j.Logger;
 import xyz.jpenilla.minimotd.common.config.ConfigManager;
 import xyz.jpenilla.minimotd.common.config.MOTDConfig;
-import xyz.jpenilla.minimotd.common.util.Components;
 
 import static net.kyori.adventure.text.Component.newline;
 
@@ -91,7 +90,7 @@ public final class MiniMOTD<I> {
       }
       final int index = config.motds().size() == 1 ? 0 : ThreadLocalRandom.current().nextInt(config.motds().size());
       final MOTDConfig.MOTD motdConfig = config.motds().get(index);
-      final Component motd = Components.ofChildren(
+      final Component motd = Component.textOfChildren(
         parse(motdConfig.line1(), count),
         newline(),
         parse(motdConfig.line2(), count)

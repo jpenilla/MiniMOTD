@@ -41,14 +41,14 @@ class ComponentColorDownsamplerTest {
 
   @Test
   void testColorDownsampling() {
-    final Component fullColor = Components.ofChildren(
+    final Component fullColor = Component.textOfChildren(
       text("Green ", GREEN),
       text("Orange Yellow ", ORANGE_YELLOW),
       text("Pink ", PINK),
       text("Blue ", BLUE),
       text("Lime Green", LIME_GREEN)
     );
-    final Component expectedDownsample = Components.ofChildren(
+    final Component expectedDownsample = Component.textOfChildren(
       text("Green ", nearestTo(GREEN)),
       text("Orange Yellow ", nearestTo(ORANGE_YELLOW)),
       text("Pink ", nearestTo(PINK)),
