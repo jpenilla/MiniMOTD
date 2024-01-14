@@ -31,7 +31,10 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.api.util.Favicon;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
@@ -64,12 +67,18 @@ public final class PingListener {
     if (targetServers.isEmpty()) {
       playersCount = pong.getOnlinePlayers();
     } else {
+      final Set<ServerPing.SamplePlayer> players = new HashSet<>();
       for (final String serverName : targetServers) {
         final @Nullable RegisteredServer server = this.proxy.getServer(serverName).orElse(null);
         if (server != null) {
           playersCount += server.getPlayersConnected().size();
+          players.addAll(server.getPlayersConnected().stream()
+            .map(p -> new ServerPing.SamplePlayer(p.getGameProfile().getName(), p.getUniqueId()))
+            .collect(Collectors.toList()));
         }
       }
+      pong.clearSamplePlayers();
+      pong.samplePlayers(players.toArray(new ServerPing.SamplePlayer[0]));
     }
 
     final PingResponse<Favicon> response = this.miniMOTD.createMOTD(config, playersCount, pong.getMaximumPlayers());

@@ -123,9 +123,9 @@ public final class MOTDConfig {
       + "If false, the online player count will be capped at the maximum player count")
     private boolean allowExceedingMaximum = false;
 
-    @Comment("The list of server names that affect player counts.\n"
+    @Comment("The list of server names that affect player counts/listing.\n"
       + "Only applicable when running the plugin on a proxy (Velocity or Waterfall/Bungeecord).\n"
-      + "When set to an empty list, the default count determined by the proxy will be used.")
+      + "When set to an empty list, the default count & list as determined by the proxy will be used.")
     private final List<String> servers = new ArrayList<>();
 
     @ConfigSerializable
