@@ -34,7 +34,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import org.slf4j.Logger;
 import xyz.jpenilla.minimotd.common.config.ConfigManager;
-import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
+import xyz.jpenilla.minimotd.common.config.MOTDConfig;
 import xyz.jpenilla.minimotd.common.util.Components;
 
 import static net.kyori.adventure.text.Component.newline;
@@ -77,7 +77,7 @@ public final class MiniMOTD<I> {
     return this.configManager;
   }
 
-  public PingResponse<I> createMOTD(final MiniMOTDConfig config, final int onlinePlayers, final int maxPlayers) {
+  public PingResponse<I> createMOTD(final MOTDConfig config, final int onlinePlayers, final int maxPlayers) {
     final PingResponse.PlayerCount count = config.modifyPlayerCount(onlinePlayers, maxPlayers);
     final PingResponse.Builder<I> response = PingResponse.<I>builder()
       .playerCount(count)
@@ -90,7 +90,7 @@ public final class MiniMOTD<I> {
         throw new IllegalStateException("MOTD is enabled, but there are no MOTDs in the config file?");
       }
       final int index = config.motds().size() == 1 ? 0 : ThreadLocalRandom.current().nextInt(config.motds().size());
-      final MiniMOTDConfig.MOTD motdConfig = config.motds().get(index);
+      final MOTDConfig.MOTD motdConfig = config.motds().get(index);
       final Component motd = Components.ofChildren(
         parse(motdConfig.line1(), count),
         newline(),

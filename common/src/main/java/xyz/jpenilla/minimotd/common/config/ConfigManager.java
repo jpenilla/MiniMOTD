@@ -46,18 +46,18 @@ public final class ConfigManager {
 
   private final MiniMOTD<?> miniMOTD;
 
-  private final ConfigLoader<MiniMOTDConfig> mainConfigLoader;
-  private MiniMOTDConfig mainConfig;
+  private final ConfigLoader<MOTDConfig> mainConfigLoader;
+  private MOTDConfig mainConfig;
 
   private final ConfigLoader<PluginSettings> pluginSettingsLoader;
   private PluginSettings pluginSettings;
 
-  private final Map<String, MiniMOTDConfig> extraConfigs = new HashMap<>();
+  private final Map<String, MOTDConfig> extraConfigs = new HashMap<>();
 
   public ConfigManager(final @NonNull MiniMOTD<?> miniMOTD) {
     this.miniMOTD = miniMOTD;
     this.mainConfigLoader = new ConfigLoader<>(
-      MiniMOTDConfig.class,
+      MOTDConfig.class,
       this.miniMOTD.dataDirectory().resolve("main.conf"),
       options -> options.header("MiniMOTD Main Configuration")
     );
@@ -94,12 +94,12 @@ public final class ConfigManager {
             continue;
           }
           final String name = path.getFileName().toString().replace(".conf", "");
-          final ConfigLoader<MiniMOTDConfig> loader = new ConfigLoader<>(
-            MiniMOTDConfig.class,
+          final ConfigLoader<MOTDConfig> loader = new ConfigLoader<>(
+            MOTDConfig.class,
             path,
             options -> options.header(String.format("Extra MiniMOTD config '%s'", name))
           );
-          final MiniMOTDConfig config = loader.load();
+          final MOTDConfig config = loader.load();
           loader.save(config);
           this.extraConfigs.put(name, config);
         }
@@ -110,20 +110,20 @@ public final class ConfigManager {
   }
 
   private void createDefaultExtraConfigs(final @NonNull Path extraConfigsDir) throws ConfigurateException {
-    final List<Pair<Path, MiniMOTDConfig.MOTD>> defaults = Collections.unmodifiableList(Arrays.asList(
-      pair(extraConfigsDir.resolve("skyblock.conf"), new MiniMOTDConfig.MOTD("<green><italic>Skyblock</green>", "<bold><rainbow>MiniMOTD Skyblock Server")),
-      pair(extraConfigsDir.resolve("survival.conf"), new MiniMOTDConfig.MOTD("<gradient:blue:red>Survival Mode Hardcore", "<green><bold>MiniMOTD Survival Server"))
+    final List<Pair<Path, MOTDConfig.MOTD>> defaults = Collections.unmodifiableList(Arrays.asList(
+      pair(extraConfigsDir.resolve("skyblock.conf"), new MOTDConfig.MOTD("<green><italic>Skyblock</green>", "<bold><rainbow>MiniMOTD Skyblock Server")),
+      pair(extraConfigsDir.resolve("survival.conf"), new MOTDConfig.MOTD("<gradient:blue:red>Survival Mode Hardcore", "<green><bold>MiniMOTD Survival Server"))
     ));
-    for (final Pair<Path, MiniMOTDConfig.MOTD> pair : defaults) {
-      final ConfigLoader<MiniMOTDConfig> loader = new ConfigLoader<>(
-        MiniMOTDConfig.class,
+    for (final Pair<Path, MOTDConfig.MOTD> pair : defaults) {
+      final ConfigLoader<MOTDConfig> loader = new ConfigLoader<>(
+        MOTDConfig.class,
         pair.left()
       );
-      loader.save(new MiniMOTDConfig(pair.right()));
+      loader.save(new MOTDConfig(pair.right()));
     }
   }
 
-  public @NonNull MiniMOTDConfig mainConfig() {
+  public @NonNull MOTDConfig mainConfig() {
     if (this.mainConfig == null) {
       throw new IllegalStateException("Config has not yet been loaded");
     }
@@ -137,7 +137,7 @@ public final class ConfigManager {
     return this.pluginSettings;
   }
 
-  public @NonNull MiniMOTDConfig resolveConfig(final @Nullable InetSocketAddress address) {
+  public @NonNull MOTDConfig resolveConfig(final @Nullable InetSocketAddress address) {
     if (address == null) {
       return this.mainConfig();
     }
@@ -153,11 +153,11 @@ public final class ConfigManager {
     return this.resolveConfig(configString);
   }
 
-  public @NonNull MiniMOTDConfig resolveConfig(final @NonNull String name) {
+  public @NonNull MOTDConfig resolveConfig(final @NonNull String name) {
     if ("default".equals(name)) {
       return this.mainConfig();
     }
-    final MiniMOTDConfig cfg = this.extraConfigs.get(name);
+    final MOTDConfig cfg = this.extraConfigs.get(name);
     if (cfg != null) {
       return cfg;
     }

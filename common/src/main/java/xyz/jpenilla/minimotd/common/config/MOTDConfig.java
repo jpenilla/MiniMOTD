@@ -34,16 +34,16 @@ import xyz.jpenilla.minimotd.common.PingResponse;
 import static xyz.jpenilla.minimotd.common.PingResponse.PlayerCount.playerCount;
 
 @ConfigSerializable
-public final class MiniMOTDConfig {
+public final class MOTDConfig {
 
-  public MiniMOTDConfig() {
+  public MOTDConfig() {
     this(
       new MOTD(),
       new MOTD("<blue>Another <bold><red>MOTD", "<italic><underlined><gradient:red:green>much wow")
     );
   }
 
-  public MiniMOTDConfig(final @NonNull MOTD @NonNull ... defaults) {
+  public MOTDConfig(final @NonNull MOTD @NonNull ... defaults) {
     this.motds.addAll(Arrays.asList(defaults));
   }
 

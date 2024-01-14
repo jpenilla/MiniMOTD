@@ -38,7 +38,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import xyz.jpenilla.minimotd.common.Constants;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.PingResponse;
-import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
+import xyz.jpenilla.minimotd.common.config.MOTDConfig;
 import xyz.jpenilla.minimotd.common.util.ComponentColorDownsampler;
 import xyz.jpenilla.minimotd.fabric.MiniMOTDFabric;
 import xyz.jpenilla.minimotd.fabric.access.ConnectionAccess;
@@ -58,7 +58,7 @@ abstract class ServerStatusPacketListenerImplMixin {
     final ServerStatus vanillaStatus = Objects.requireNonNull(minecraftServer.getStatus(), "vanillaStatus");
 
     final MiniMOTD<ServerStatus.Favicon> miniMOTD = miniMOTDFabric.miniMOTD();
-    final MiniMOTDConfig config = miniMOTD.configManager().mainConfig();
+    final MOTDConfig config = miniMOTD.configManager().mainConfig();
 
     final PingResponse<ServerStatus.Favicon> response = miniMOTD.createMOTD(
       config,

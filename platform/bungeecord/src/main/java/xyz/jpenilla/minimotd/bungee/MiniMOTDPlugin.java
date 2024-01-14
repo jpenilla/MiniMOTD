@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
 import xyz.jpenilla.minimotd.common.PingResponse;
-import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
+import xyz.jpenilla.minimotd.common.config.MOTDConfig;
 import xyz.jpenilla.minimotd.common.util.UpdateChecker;
 
 public final class MiniMOTDPlugin extends Plugin implements MiniMOTDPlatform<Favicon> {
@@ -116,7 +116,7 @@ public final class MiniMOTDPlugin extends Plugin implements MiniMOTDPlatform<Fav
   }
 
   private void preload() {
-    final MiniMOTDConfig cfg = this.miniMOTD.configManager().mainConfig();
+    final MOTDConfig cfg = this.miniMOTD.configManager().mainConfig();
     final PingResponse<Favicon> mini = this.miniMOTD.createMOTD(cfg, 0, 0);
     mini.motd(motd -> BungeeComponentSerializer.get().serialize(motd));
   }

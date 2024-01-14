@@ -37,7 +37,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.PingResponse;
-import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
+import xyz.jpenilla.minimotd.common.config.MOTDConfig;
 
 @DefaultQualifier(NonNull.class)
 public final class PingListener {
@@ -56,7 +56,7 @@ public final class PingListener {
   }
 
   private void handle(final ProxyPingEvent event) {
-    final MiniMOTDConfig config = this.miniMOTD.configManager().resolveConfig(event.getConnection().getVirtualHost().orElse(null));
+    final MOTDConfig config = this.miniMOTD.configManager().resolveConfig(event.getConnection().getVirtualHost().orElse(null));
     final ServerPing.Builder pong = event.getPing().asBuilder();
 
     final List<String> targetServers = config.targetServers();

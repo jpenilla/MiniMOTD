@@ -33,7 +33,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.minimotd.common.Constants;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.PingResponse;
-import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
+import xyz.jpenilla.minimotd.common.config.MOTDConfig;
 
 public final class PaperPingListener implements Listener {
   private final LegacyComponentSerializer unusualHexSerializer = LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build();
@@ -45,7 +45,7 @@ public final class PaperPingListener implements Listener {
 
   @EventHandler
   public void handlePing(final @NonNull PaperServerListPingEvent event) {
-    final MiniMOTDConfig cfg = this.miniMOTD.configManager().mainConfig();
+    final MOTDConfig cfg = this.miniMOTD.configManager().mainConfig();
 
     final PingResponse<CachedServerIcon> response = this.miniMOTD.createMOTD(cfg, event.getNumPlayers(), event.getMaxPlayers());
 

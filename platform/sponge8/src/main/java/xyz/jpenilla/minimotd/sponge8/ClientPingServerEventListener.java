@@ -33,7 +33,7 @@ import org.spongepowered.api.network.status.Favicon;
 import xyz.jpenilla.minimotd.common.Constants;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.PingResponse;
-import xyz.jpenilla.minimotd.common.config.MiniMOTDConfig;
+import xyz.jpenilla.minimotd.common.config.MOTDConfig;
 import xyz.jpenilla.minimotd.common.util.ComponentColorDownsampler;
 
 final class ClientPingServerEventListener implements EventListener<ClientPingServerEvent> {
@@ -72,7 +72,7 @@ final class ClientPingServerEventListener implements EventListener<ClientPingSer
       }
     }
 
-    final MiniMOTDConfig config = this.miniMOTD.configManager().mainConfig();
+    final MOTDConfig config = this.miniMOTD.configManager().mainConfig();
 
     final PingResponse<Favicon> mini = this.miniMOTD.createMOTD(config, players.online(), players.max());
     mini.playerCount().applyCount(players::setOnline, players::setMax);
