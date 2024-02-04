@@ -27,7 +27,7 @@ fabricLoader = "0.15.3"
 minecraft = "1.20.4"
 spongeApi7 = "7.2.0"
 velocityApi = "3.2.0-SNAPSHOT"
-jupiterEngine = "5.10.1"
+jupiterEngine = "5.10.2"
 
 [libraries]
 adventureBom = { group = "net.kyori", name = "adventure-bom", version.ref = "adventure" }
