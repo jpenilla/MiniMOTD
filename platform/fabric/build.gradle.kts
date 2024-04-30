@@ -1,7 +1,7 @@
 plugins {
   id("quiet-fabric-loom")
   id("minimotd.platform-conventions")
-  id("com.github.johnrengelman.shadow")
+  id("io.github.goooler.shadow")
 }
 
 val shade: Configuration by configurations.creating

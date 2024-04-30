@@ -6,11 +6,11 @@ run-velocity = { id = "xyz.jpenilla.run-velocity", version.ref = "run-task" }
 run-waterfall = { id = "xyz.jpenilla.run-waterfall", version.ref = "run-task" }
 
 [versions]
-run-task = "2.2.2"
+run-task = "2.2.4"
 mod-publish-plugin = "0.5.1"
 hangarPublishPlugin = "0.1.2"
 indra = "3.1.3"
-shadow = "8.1.1"
+shadow = "8.1.7"
 adventure = "4.16.0"
 adventurePlatform = "4.3.2"
 adventurePlatformFabric = "5.12.0"
@@ -72,7 +72,7 @@ jupiterEngine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", ve
 # build-logic
 indraCommon = { group = "net.kyori", name = "indra-common", version.ref = "indra" }
 indraLicenser = { group = "net.kyori", name = "indra-licenser-spotless", version.ref = "indra" }
-shadow = { group = "com.github.johnrengelman", name = "shadow", version.ref = "shadow" }
+shadow = { group = "io.github.goooler.shadow", name = "shadow-gradle-plugin", version.ref = "shadow" }
 mod-publish-plugin = { module = "me.modmuss50:mod-publish-plugin", version.ref = "mod-publish-plugin" }
 hangarPublishPlugin = { group = "io.papermc", name = "hangar-publish-plugin", version.ref = "hangarPublishPlugin" }
 
