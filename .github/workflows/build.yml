@@ -17,3 +17,4 @@ jobs:
       modrinth-publish: true
       hangar-publish: true
       loom: true
+      jdk-version: 21
