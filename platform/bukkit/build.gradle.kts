@@ -23,6 +23,9 @@ tasks {
     commonRelocation("net.kyori")
     commonRelocation("org.bstats")
     commonRelocation("io.papermc.lib")
+    manifest {
+      attributes("paperweight-mappings-namespace" to "mojang")
+    }
   }
   processResources {
     val props = mapOf(
