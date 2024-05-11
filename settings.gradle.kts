@@ -2,7 +2,12 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 dependencyResolutionManagement {
   repositories {
-    mavenCentral()
+    mavenCentral {
+      mavenContent { releasesOnly() }
+    }
+    maven("https://oss.sonatype.org/content/repositories/snapshots/") {
+      mavenContent { snapshotsOnly() }
+    }
     maven("https://s01.oss.sonatype.org/content/repositories/snapshots/") {
       mavenContent { snapshotsOnly() }
     }
