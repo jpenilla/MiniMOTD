@@ -25,7 +25,7 @@ waterfallApi = "1.16-R0.5-SNAPSHOT"
 fabricApi = "0.100.3+1.21"
 fabricLoader = "0.15.11"
 minecraft = "1.21"
-spongeApi7 = "7.2.0"
+spongeApi7 = "7.4.0"
 velocityApi = "3.3.0-SNAPSHOT"
 jupiterEngine = "5.10.2"
 
