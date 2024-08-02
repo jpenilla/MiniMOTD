@@ -1,0 +1,38 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+license = "MIT"
+issueTrackerURL = "${github_url}/issues/"
+showAsResourcePack = false
+
+[[mods]]
+modId = "minimotd"
+version = "${version}"
+displayName = "MiniMOTD"
+displayURL = "${github_url}"
+authors = "jmp"
+description = "${description}"
+displayTest = "IGNORE_ALL_VERSION"
+
+[[dependencies.minimotd]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.0,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.minimotd]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21,1.22)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.minimotd]]
+modId = "adventure_platform_neoforge"
+type = "required"
+versionRange = "*"
+ordering = "AFTER"
+side = "BOTH"
+
+[[mixins]]
+config = "minimotd-neoforge.mixins.json"

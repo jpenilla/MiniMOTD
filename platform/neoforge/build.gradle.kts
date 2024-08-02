@@ -9,16 +9,15 @@ val shade: Configuration by configurations.creating
 dependencies {
   minecraft(libs.minecraft)
   mappings(loom.officialMojangMappings())
-  modImplementation(libs.fabricLoader)
-  modImplementation(libs.fabricApi)
+  neoForge(libs.neoforge)
 
   shade(implementation(projects.minimotdCommon) {
     exclude("net.kyori")
     exclude("com.google.errorprone")
   })
 
-  modImplementation(libs.adventurePlatformFabric)
-  include(libs.adventurePlatformFabric)
+  modImplementation(libs.adventurePlatformNeoforge)
+  include(libs.adventurePlatformNeoforge)
 }
 
 miniMOTDPlatform {
@@ -42,20 +41,18 @@ tasks {
   }
   processResources {
     val replacements = mapOf(
-      "modid" to project.name,
-      "name" to rootProject.name,
       "version" to project.version.toString(),
       "description" to project.description.toString(),
       "github_url" to Constants.GITHUB_URL
     )
     inputs.properties(replacements)
-    filesMatching("fabric.mod.json") {
+    filesMatching("META-INF/neoforge.mods.toml") {
       expand(replacements)
     }
   }
 }
 
 publishMods.modrinth {
-  modLoaders.add("fabric")
+  modLoaders.add("neoforge")
   minecraftVersions.addAll(minecraftVersion)
 }
