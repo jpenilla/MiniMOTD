@@ -18,9 +18,35 @@ indra {
   mitLicense()
 }
 
+repositories {
+  mavenCentral {
+    mavenContent { releasesOnly() }
+  }
+  maven("https://oss.sonatype.org/content/repositories/snapshots/") {
+    mavenContent { snapshotsOnly() }
+  }
+  maven("https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+    mavenContent { snapshotsOnly() }
+  }
+  maven("https://repo.papermc.io/repository/maven-public/")
+  maven("https://repo.spongepowered.org/repository/maven-public/")
+  maven("https://repo.jpenilla.xyz/snapshots/") {
+    mavenContent { snapshotsOnly() }
+  }
+  mavenLocal {
+    mavenContent {
+      snapshotsOnly()
+      includeGroup("net.kyori")
+    }
+  }
+}
+
 dependencies {
   testImplementation(libs.jupiterEngine)
-  testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+  // TODO: work around archloom issue?
+  if (project.name != "minimotd-neoforge" && project.name != "minimotd-fabric") {
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+  }
 }
 
 tasks {
