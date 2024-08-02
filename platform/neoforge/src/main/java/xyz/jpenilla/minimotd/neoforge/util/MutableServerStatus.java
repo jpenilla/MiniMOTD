@@ -38,6 +38,7 @@ public final class MutableServerStatus {
   private Optional<ServerStatus.Version> version;
   private Optional<ServerStatus.Favicon> favicon;
   private boolean enforcesSecureChat;
+  private boolean isModded; // NeoForge addition
 
   public MutableServerStatus(final ServerStatus status) {
     this.description = status.description();
@@ -45,10 +46,11 @@ public final class MutableServerStatus {
     this.version = status.version();
     this.favicon = status.favicon();
     this.enforcesSecureChat = status.enforcesSecureChat();
+    this.isModded = status.isModded(); // NeoForge addition
   }
 
   public ServerStatus toServerStatus() {
-    return new ServerStatus(this.description, this.players, this.version, this.favicon, this.enforcesSecureChat);
+    return new ServerStatus(this.description, this.players, this.version, this.favicon, this.enforcesSecureChat, this.isModded);
   }
 
   public Component description() {
