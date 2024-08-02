@@ -1,36 +1,18 @@
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
-dependencyResolutionManagement {
-  repositories {
-    mavenCentral {
-      mavenContent { releasesOnly() }
-    }
-    maven("https://oss.sonatype.org/content/repositories/snapshots/") {
-      mavenContent { snapshotsOnly() }
-    }
-    maven("https://s01.oss.sonatype.org/content/repositories/snapshots/") {
-      mavenContent { snapshotsOnly() }
-    }
-    maven("https://repo.papermc.io/repository/maven-public/")
-    maven("https://repo.spongepowered.org/repository/maven-public/")
-    maven("https://repo.jpenilla.xyz/snapshots/") {
-      mavenContent { snapshotsOnly() }
-    }
-  }
-  repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-}
-
 pluginManagement {
   repositories {
     gradlePluginPortal()
     maven("https://maven.fabricmc.net/")
+    maven("https://maven.neoforged.net/releases/")
+    maven("https://maven.architectury.dev/")
     maven("https://repo.jpenilla.xyz/snapshots/")
   }
   includeBuild("gradle/build-logic")
 }
 
 plugins {
-  id("quiet-fabric-loom") version "1.7-SNAPSHOT"
+  id("xyz.jpenilla.quiet-architectury-loom") version "1.7-SNAPSHOT" apply false
   id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
 }
 
@@ -53,6 +35,7 @@ sequenceOf(
   "bungeecord",
   "velocity",
   "fabric",
+  "neoforge",
 ).forEach(::platform)
 
 dist("bukkit-bungeecord")

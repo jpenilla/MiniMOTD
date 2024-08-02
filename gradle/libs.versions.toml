@@ -37,6 +37,7 @@ adventureTextSerializerGson = { group = "net.kyori", name = "adventure-text-seri
 adventurePlatformBungeecord = { group = "net.kyori", name = "adventure-platform-bungeecord", version.ref = "adventurePlatform" }
 adventurePlatformBukkit = { group = "net.kyori", name = "adventure-platform-bukkit", version.ref = "adventurePlatform" }
 adventurePlatformFabric = { group = "net.kyori", name = "adventure-platform-fabric", version.ref = "adventurePlatformFabric" }
+adventurePlatformNeoforge = { group = "net.kyori", name = "adventure-platform-neoforge", version = "6.0.0-SNAPSHOT" }
 adventurePlatformSpongeApi = { group = "net.kyori", name = "adventure-platform-spongeapi", version.ref = "adventurePlatform" }
 minimessage = { group = "net.kyori", name = "adventure-text-minimessage" }
 
@@ -62,6 +63,8 @@ waterfallApi = { group = "io.github.waterfallmc", name = "waterfall-api", versio
 fabricApi = { group = "net.fabricmc.fabric-api", name = "fabric-api", version.ref = "fabricApi" }
 fabricLoader = { group = "net.fabricmc", name = "fabric-loader", version.ref = "fabricLoader" }
 minecraft = { group = "com.mojang", name = "minecraft", version.ref = "minecraft" }
+
+neoforge = { module = "net.neoforged:neoforge", version = "21.0.148" }
 
 spongeApi7 = { group = "org.spongepowered", name = "spongeapi", version.ref = "spongeApi7" }
 
