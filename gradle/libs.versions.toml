@@ -13,7 +13,7 @@ indra = "3.1.3"
 shadow = "8.1.8"
 adventure = "4.17.0"
 adventurePlatform = "4.3.3"
-adventurePlatformFabric = "5.14.0"
+adventurePlatformFabric = "5.14.1"
 configurate = "4.1.2"
 checkerQual = "3.45.0"
 slf4j = "1.7.32"
@@ -37,7 +37,7 @@ adventureTextSerializerGson = { group = "net.kyori", name = "adventure-text-seri
 adventurePlatformBungeecord = { group = "net.kyori", name = "adventure-platform-bungeecord", version.ref = "adventurePlatform" }
 adventurePlatformBukkit = { group = "net.kyori", name = "adventure-platform-bukkit", version.ref = "adventurePlatform" }
 adventurePlatformFabric = { group = "net.kyori", name = "adventure-platform-fabric", version.ref = "adventurePlatformFabric" }
-adventurePlatformNeoforge = { group = "net.kyori", name = "adventure-platform-neoforge", version = "6.0.0-SNAPSHOT" }
+adventurePlatformNeoforge = { group = "net.kyori", name = "adventure-platform-neoforge", version = "6.0.0" }
 adventurePlatformSpongeApi = { group = "net.kyori", name = "adventure-platform-spongeapi", version.ref = "adventurePlatform" }
 minimessage = { group = "net.kyori", name = "adventure-text-minimessage" }
 

@@ -33,12 +33,6 @@ repositories {
   maven("https://repo.jpenilla.xyz/snapshots/") {
     mavenContent { snapshotsOnly() }
   }
-  mavenLocal {
-    mavenContent {
-      snapshotsOnly()
-      includeGroup("net.kyori")
-    }
-  }
 }
 
 dependencies {
