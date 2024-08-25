@@ -14,7 +14,8 @@
   - MiniMOTD is compatible with Spigot, however many features will not work. It is recommended to use Paper for full compatibility.
 - [Sponge API 8](https://www.spongepowered.org/)
 - [Sponge API 7](https://www.spongepowered.org/)
-- [Fabric](https://fabricmc.net/) (requires [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api))
+- [Fabric](https://fabricmc.net/) (requires [Fabric API](https://modrinth.com/mod/fabric-api))
+- [NeoForge](https://neoforged.net/)
 
 #### Proxy Platforms
 - [Velocity](https://velocitypowered.com/)
