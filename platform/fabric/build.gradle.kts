@@ -1,7 +1,7 @@
 plugins {
   id("xyz.jpenilla.quiet-architectury-loom")
   id("minimotd.platform-conventions")
-  id("io.github.goooler.shadow")
+  id("com.gradleup.shadow")
 }
 
 val shade: Configuration by configurations.creating

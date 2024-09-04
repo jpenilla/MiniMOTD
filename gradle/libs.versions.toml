@@ -10,7 +10,7 @@ run-task = "2.3.0"
 mod-publish-plugin = "0.7.2"
 hangarPublishPlugin = "0.1.2"
 indra = "3.1.3"
-shadow = "8.1.8"
+shadow = "8.3.0"
 adventure = "4.17.0"
 adventurePlatform = "4.3.4"
 adventurePlatformFabric = "5.14.1"
@@ -75,7 +75,7 @@ jupiterEngine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", ve
 # build-logic
 indraCommon = { group = "net.kyori", name = "indra-common", version.ref = "indra" }
 indraLicenser = { group = "net.kyori", name = "indra-licenser-spotless", version.ref = "indra" }
-shadow = { group = "io.github.goooler.shadow", name = "shadow-gradle-plugin", version.ref = "shadow" }
+shadow = { group = "com.gradleup.shadow", name = "shadow-gradle-plugin", version.ref = "shadow" }
 mod-publish-plugin = { module = "me.modmuss50:mod-publish-plugin", version.ref = "mod-publish-plugin" }
 hangarPublishPlugin = { group = "io.papermc", name = "hangar-publish-plugin", version.ref = "hangarPublishPlugin" }
 
