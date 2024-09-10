@@ -25,6 +25,9 @@ package xyz.jpenilla.minimotd.bukkit;
 
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
 import io.papermc.lib.PaperLib;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -36,6 +39,18 @@ import xyz.jpenilla.minimotd.common.PingResponse;
 import xyz.jpenilla.minimotd.common.config.MOTDConfig;
 
 public final class PaperPingListener implements Listener {
+  private static final Method WORK_AROUND_PAPER_BUG;
+
+  static {
+    Method paperWorkaround;
+    try {
+      paperWorkaround = PaperServerListPingEvent.class.getMethod("getListedPlayers");
+    } catch (final NoSuchMethodException e) {
+      paperWorkaround = null;
+    }
+    WORK_AROUND_PAPER_BUG = paperWorkaround;
+  }
+
   private final LegacyComponentSerializer unusualHexSerializer = LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build();
   private final MiniMOTD<CachedServerIcon> miniMOTD;
 
@@ -60,7 +75,17 @@ public final class PaperPingListener implements Listener {
     response.icon(event::setServerIcon);
 
     if (response.disablePlayerListHover()) {
-      event.getPlayerSample().clear();
+      if (WORK_AROUND_PAPER_BUG != null) {
+        // Newer Paper replaces getPlayerSample with getListedPlayers,
+        // the old method is supposed to still work, but it just silently does nothing...
+        try {
+          ((List) WORK_AROUND_PAPER_BUG.invoke(event)).clear();
+        } catch (final IllegalAccessException | InvocationTargetException e) {
+          throw new RuntimeException("Failed to invoke " + WORK_AROUND_PAPER_BUG.getName(), e);
+        }
+      } else {
+        event.getPlayerSample().clear();
+      }
     }
     if (response.hidePlayerCount()) {
       event.setHidePlayers(true);
