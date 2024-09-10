@@ -77,7 +77,7 @@ public final class PaperPingListener implements Listener {
     if (response.disablePlayerListHover()) {
       if (WORK_AROUND_PAPER_BUG != null) {
         // Newer Paper replaces getPlayerSample with getListedPlayers,
-        // the old method is supposed to still work, but it just silently does nothing...
+        // the old method is supposed to still work, but it just silently does nothing on 1.20.6 (fixed in 1.21.1)
         try {
           ((List) WORK_AROUND_PAPER_BUG.invoke(event)).clear();
         } catch (final IllegalAccessException | InvocationTargetException e) {
