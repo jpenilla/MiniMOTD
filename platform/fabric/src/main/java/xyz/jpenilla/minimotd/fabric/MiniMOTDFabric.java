@@ -34,7 +34,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.kyori.adventure.platform.fabric.FabricServerAudiences;
+import net.kyori.adventure.platform.modcommon.MinecraftServerAudiences;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.protocol.status.ServerStatus;
 import net.minecraft.server.MinecraftServer;
@@ -57,7 +57,7 @@ public final class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<Se
   private final MiniMOTD<ServerStatus.Favicon> miniMOTD = new MiniMOTD<>(this);
 
   private MinecraftServer server;
-  private FabricServerAudiences audiences;
+  private MinecraftServerAudiences audiences;
 
   public MiniMOTDFabric() {
     if (instance != null) {
@@ -75,7 +75,7 @@ public final class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<Se
     this.registerCommand();
     ServerLifecycleEvents.SERVER_STARTING.register(minecraftServer -> {
       this.server = minecraftServer;
-      this.audiences = FabricServerAudiences.of(minecraftServer);
+      this.audiences = MinecraftServerAudiences.of(minecraftServer);
     });
     ServerLifecycleEvents.SERVER_STARTED.register(minecraftServer -> {
       if (this.miniMOTD.configManager().pluginSettings().updateChecker()) {
@@ -114,7 +114,7 @@ public final class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<Se
     ));
   }
 
-  public @NonNull FabricServerAudiences audiences() {
+  public @NonNull MinecraftServerAudiences audiences() {
     return this.audiences;
   }
 
