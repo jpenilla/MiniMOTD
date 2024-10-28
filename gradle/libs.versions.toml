@@ -37,7 +37,7 @@ adventureTextSerializerGson = { group = "net.kyori", name = "adventure-text-seri
 adventurePlatformBungeecord = { group = "net.kyori", name = "adventure-platform-bungeecord", version.ref = "adventurePlatform" }
 adventurePlatformBukkit = { group = "net.kyori", name = "adventure-platform-bukkit", version.ref = "adventurePlatform" }
 adventurePlatformFabric = { group = "net.kyori", name = "adventure-platform-fabric", version.ref = "adventurePlatformFabric" }
-adventurePlatformNeoforge = { group = "net.kyori", name = "adventure-platform-neoforge", version = "6.0.0" }
+adventurePlatformNeoforge = { group = "net.kyori", name = "adventure-platform-neoforge", version = "6.1.0" }
 adventurePlatformSpongeApi = { group = "net.kyori", name = "adventure-platform-spongeapi", version.ref = "adventurePlatform" }
 minimessage = { group = "net.kyori", name = "adventure-text-minimessage" }
 
