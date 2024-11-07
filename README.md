@@ -1,4 +1,4 @@
-![MiniMOTD logo](https://i.imgur.com/CXWwjOJ.png)
+![MiniMOTD logo](resources/minimotd-logo.png)
 
 [![build](https://img.shields.io/github/checks-status/jpenilla/MiniMOTD/master?label=build)](https://github.com/jpenilla/MiniMOTD/actions) [![latest release](https://img.shields.io/github/v/release/jpenilla/MiniMOTD)](https://github.com/jpenilla/MiniMOTD/releases)
 
@@ -14,18 +14,24 @@
   - MiniMOTD is compatible with Spigot, however many features will not work. It is recommended to use Paper for full compatibility.
 - [Sponge API 8](https://www.spongepowered.org/)
 - [Sponge API 7](https://www.spongepowered.org/)
-- [Fabric](https://fabricmc.net/) (Minecraft 1.21.1, requires [Fabric API](https://modrinth.com/mod/fabric-api))
-- [NeoForge](https://neoforged.net/) (Minecraft 1.21.1)
+- [Fabric](https://fabricmc.net/) (requires [Fabric API](https://modrinth.com/mod/fabric-api))
+- [NeoForge](https://neoforged.net/)
 
 #### Proxy Platforms
 - [Velocity](https://velocitypowered.com/)
 - [Waterfall](https://papermc.io/downloads#Waterfall) / Bungeecord
 
 #### Downloads
-Downloads can be obtained from [GitHub releases](https://github.com/jpenilla/MiniMOTD/releases). There is a separate jar for each platform, as well as a universal jar for all platforms. Paper and Spigot share the same jar, as do Waterfall and Bungeecord.
+Downloads can be obtained from any of:
+ - [Modrinth](https://modrinth.com/plugin/minimotd)
+ - [Hangar](https://hangar.papermc.io/jmp/MiniMOTD)
+ - [GitHub releases](https://github.com/jpenilla/MiniMOTD/releases)
+
+There is a separate jar for each platform. Paper and Spigot share the same jar, as do Waterfall and Bungeecord.
+The `bukkit-bungeecord` jar is merged from the Paper/Spigot and Waterfall/Bungeecord jars for distribution on Spigot's site.
 
 #### Configuration
 See the [wiki](https://github.com/jpenilla/MiniMOTD/wiki) for configuration details
 
 #### Screenshots
-![demo motd image](https://i.ibb.co/1LRCV8b/minimotd-demo.png)
+![demo motd image](resources/minimotd-demo.png)

@@ -23,7 +23,7 @@ side = "BOTH"
 [[dependencies.minimotd]]
 modId = "minecraft"
 type = "required"
-versionRange = "[1.21,1.21.2)"
+versionRange = "[1.21.3]"
 ordering = "NONE"
 side = "BOTH"
 

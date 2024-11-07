@@ -69,9 +69,9 @@ abstract class ServerStatusPacketListenerImplMixin {
     final MutableServerStatus modifiedStatus = new MutableServerStatus(vanillaStatus);
     response.motd(motd -> {
       if (((ConnectionAccess) this.connection).protocolVersion() >= Constants.MINECRAFT_1_16_PROTOCOL_VERSION) {
-        modifiedStatus.description(miniMOTDFabric.audiences().toNative(motd));
+        modifiedStatus.description(miniMOTDFabric.audiences().asNative(motd));
       } else {
-        modifiedStatus.description(miniMOTDFabric.audiences().toNative(ComponentColorDownsampler.downsampler().downsample(motd)));
+        modifiedStatus.description(miniMOTDFabric.audiences().asNative(ComponentColorDownsampler.downsampler().downsample(motd)));
       }
     });
     response.icon(favicon -> modifiedStatus.favicon(Optional.of(favicon)));
