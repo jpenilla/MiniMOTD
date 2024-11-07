@@ -26,7 +26,7 @@ fabricApi = "0.107.0+1.21.3"
 fabricLoader = "0.16.7"
 minecraft = "1.21.3"
 spongeApi7 = "7.2.0"
-velocityApi = "3.3.0-SNAPSHOT"
+velocityApi = "3.4.0-SNAPSHOT"
 jupiterEngine = "5.11.3"
 
 [libraries]

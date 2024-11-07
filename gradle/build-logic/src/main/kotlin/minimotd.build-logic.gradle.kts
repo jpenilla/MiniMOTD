@@ -23,11 +23,11 @@ hangarPublish.publications.register("plugin") {
     }
     velocity {
       jar.set(jar("velocity"))
-      platformVersions.addAll("3.2")
+      platformVersions.addAll("3.4")
     }
     waterfall {
       jar.set(jar("bungeecord"))
-      platformVersions.addAll("1.20")
+      platformVersions.addAll("1.21")
     }
   }
 }
