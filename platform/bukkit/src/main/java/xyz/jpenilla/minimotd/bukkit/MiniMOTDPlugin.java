@@ -51,6 +51,7 @@ public final class MiniMOTDPlugin extends JavaPlugin implements MiniMOTDPlatform
   public void onEnable() {
     this.logger = LoggerFactory.getLogger(this.getName());
     this.miniMOTD = new MiniMOTD<>(this);
+    this.miniMOTD.configManager().loadExtraConfigs();
     this.audiences = BukkitAudiences.create(this);
 
     if (PAPER_PING_EVENT_EXISTS) {
@@ -121,6 +122,11 @@ public final class MiniMOTDPlugin extends JavaPlugin implements MiniMOTDPlatform
     this.logger.warn(" ");
     this.logger.warn(" Get Paper from https://papermc.io/downloads");
     this.logger.warn("======================================================");
+  }
+
+  @Override
+  public void onReload() {
+    this.miniMOTD.configManager().loadExtraConfigs();
   }
 
   private static @Nullable Class<?> findClass(final @NonNull String className) {
