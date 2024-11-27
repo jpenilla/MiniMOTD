@@ -57,4 +57,8 @@ tasks {
       events("passed")
     }
   }
+  withType(AbstractArchiveTask::class).configureEach {
+    isReproducibleFileOrder = true
+    isPreserveFileTimestamps = false
+  }
 }
