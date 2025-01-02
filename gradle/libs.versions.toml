@@ -22,9 +22,9 @@ bstats = "3.1.0"
 paperApi = "1.16.5-R0.1-SNAPSHOT"
 paperlib = "1.0.8"
 waterfallApi = "1.16-R0.5-SNAPSHOT"
-fabricApi = "0.110.0+1.21.3"
+fabricApi = "0.114.0+1.21.4"
 fabricLoader = "0.16.9"
-minecraft = "1.21.3"
+minecraft = "1.21.4"
 spongeApi7 = "7.2.0"
 velocityApi = "3.4.0-SNAPSHOT"
 jupiterEngine = "5.11.4"
@@ -64,7 +64,7 @@ fabricApi = { group = "net.fabricmc.fabric-api", name = "fabric-api", version.re
 fabricLoader = { group = "net.fabricmc", name = "fabric-loader", version.ref = "fabricLoader" }
 minecraft = { group = "com.mojang", name = "minecraft", version.ref = "minecraft" }
 
-neoforge = { module = "net.neoforged:neoforge", version = "21.3.52-beta" }
+neoforge = { module = "net.neoforged:neoforge", version = "21.4.47-beta" }
 
 spongeApi7 = { group = "org.spongepowered", name = "spongeapi", version.ref = "spongeApi7" }
 
