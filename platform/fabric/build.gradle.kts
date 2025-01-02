@@ -1,5 +1,5 @@
 plugins {
-  id("xyz.jpenilla.quiet-architectury-loom")
+  id("quiet-fabric-loom")
   id("minimotd.platform-conventions")
   id("com.gradleup.shadow")
 }

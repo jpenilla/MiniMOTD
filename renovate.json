@@ -4,7 +4,7 @@
     "config:base"
   ],
   "ignoreDeps": [
-    "xyz.jpenilla.quiet-architectury-loom",
+    "quiet-fabric-loom",
     "com.mojang:minecraft",
     "com.google.code.gson:gson"
   ],

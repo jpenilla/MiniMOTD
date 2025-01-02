@@ -1,27 +1,25 @@
 plugins {
-  id("xyz.jpenilla.quiet-architectury-loom")
+  id("net.neoforged.moddev")
   id("minimotd.platform-conventions")
   id("com.gradleup.shadow")
+}
+
+neoForge {
+  enable {
+    version = libs.versions.neoforge.get()
+  }
 }
 
 val shade: Configuration by configurations.creating
 
 dependencies {
-  minecraft(libs.minecraft)
-  mappings(loom.officialMojangMappings())
-  neoForge(libs.neoforge)
-
   shade(implementation(projects.minimotdCommon) {
     exclude("net.kyori")
     exclude("com.google.errorprone")
   })
 
-  modImplementation(libs.adventurePlatformNeoforge)
-  include(libs.adventurePlatformNeoforge)
-}
-
-miniMOTDPlatform {
-  jarTask.set(tasks.remapJar)
+  implementation(libs.adventurePlatformNeoforge)
+  jarJar(libs.adventurePlatformNeoforge)
 }
 
 indra {
@@ -36,9 +34,6 @@ tasks {
     commonConfiguration()
     commonRelocation("io.leangen.geantyref")
   }
-  remapJar {
-    archiveFileName.set("${project.name}-mc$minecraftVersion-${project.version}.jar")
-  }
   processResources {
     val replacements = mapOf(
       "version" to project.version.toString(),
@@ -50,6 +45,17 @@ tasks {
       expand(replacements)
     }
   }
+}
+
+val productionJar = tasks.register<Zip>("productionJar") {
+  archiveFileName = "${project.name}-mc$minecraftVersion-${project.version}.jar"
+  destinationDirectory = layout.buildDirectory.dir("libs")
+  from(zipTree(tasks.shadowJar.flatMap { it.archiveFile }))
+  from(tasks.jarJar.flatMap { it.outputDirectory })
+}
+
+miniMOTDPlatform {
+  jarTask.set(productionJar)
 }
 
 publishMods.modrinth {

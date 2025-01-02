@@ -28,6 +28,7 @@ minecraft = "1.21.4"
 spongeApi7 = "7.2.0"
 velocityApi = "3.4.0-SNAPSHOT"
 jupiterEngine = "5.11.4"
+neoforge = "21.4.47-beta"
 
 [libraries]
 adventureBom = { group = "net.kyori", name = "adventure-bom", version.ref = "adventure" }
@@ -64,7 +65,8 @@ fabricApi = { group = "net.fabricmc.fabric-api", name = "fabric-api", version.re
 fabricLoader = { group = "net.fabricmc", name = "fabric-loader", version.ref = "fabricLoader" }
 minecraft = { group = "com.mojang", name = "minecraft", version.ref = "minecraft" }
 
-neoforge = { module = "net.neoforged:neoforge", version = "21.4.47-beta" }
+# for renovate
+zNeoforge = { module = "net.neoforged:neoforge", version.ref = "neoforge" }
 
 spongeApi7 = { group = "org.spongepowered", name = "spongeapi", version.ref = "spongeApi7" }
 
