@@ -1,6 +1,7 @@
 import net.kyori.indra.git.IndraGitExtension
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.Project
+import org.gradle.api.attributes.Attribute
 import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.getByType
 
@@ -33,3 +34,5 @@ val bukkitVersions = listOf(
   "1.20.6",
   "1.21.4",
 )
+
+val productionJarAttribute = Attribute.of("minimotd.productionJar", String::class.java)

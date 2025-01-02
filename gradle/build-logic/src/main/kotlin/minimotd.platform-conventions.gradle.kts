@@ -32,3 +32,10 @@ if (name != "minimotd-bukkit-bungeecord") {
     }
   }
 }
+
+configurations.consumable("productionJar") {
+  outgoing {
+    artifact(platformExtension.jarTask)
+  }
+  attributes.attribute(productionJarAttribute, "true")
+}

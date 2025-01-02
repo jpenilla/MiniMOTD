@@ -9,17 +9,26 @@ tasks.jar {
 val platforms = setOf(
   projects.minimotdBukkit,
   projects.minimotdBungeecord,
-).map { it.dependencyProject }
+)
+
+val platformsConfig = configurations.register("platforms") {
+  attributes.attribute(productionJarAttribute, "true")
+  isCanBeConsumed = false
+  isCanBeResolved = true
+}
+
+dependencies {
+  for (platform in platforms) {
+    platformsConfig.name(platform)
+  }
+}
 
 val dist = tasks.register<Jar>("bukkitAndBungeeJar") {
   artifacts.add("archives", this)
   archiveClassifier.set(null as String?)
   duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
-  for (platform in platforms) {
-    val jarTask = platform.miniMOTDPlatform.jarTask
-    from(zipTree(jarTask.flatMap { it.archiveFile }))
-  }
+  from(platformsConfig.flatMap { it.elements }.map { it.map { e -> zipTree(e) } })
 }
 
 miniMOTDPlatform {
