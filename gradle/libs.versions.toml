@@ -27,7 +27,7 @@ fabricLoader = "0.16.10"
 minecraft = "1.21.4"
 spongeApi7 = "7.2.0"
 velocityApi = "3.4.0-SNAPSHOT"
-jupiterEngine = "5.12.0"
+jupiterEngine = "5.12.1"
 neoforge = "21.4.95-beta"
 
 [libraries]
