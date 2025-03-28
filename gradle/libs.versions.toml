@@ -28,7 +28,7 @@ minecraft = "1.21.4"
 spongeApi7 = "7.2.0"
 velocityApi = "3.4.0-SNAPSHOT"
 jupiterEngine = "5.12.1"
-neoforge = "21.4.95-beta"
+neoforge = "21.4.123"
 
 [libraries]
 adventureBom = { group = "net.kyori", name = "adventure-bom", version.ref = "adventure" }
