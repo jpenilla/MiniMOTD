@@ -32,7 +32,7 @@ val bukkitVersions = listOf(
   "1.18.2",
   "1.19.4",
   "1.20.6",
-  "1.21.4",
+  "1.21.5",
 )
 
 val productionJarAttribute = Attribute.of("minimotd.productionJar", String::class.java)
