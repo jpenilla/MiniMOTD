@@ -22,6 +22,13 @@ repositories {
   mavenCentral {
     mavenContent { releasesOnly() }
   }
+  maven("https://repo.jpenilla.xyz/snapshots/") {
+    mavenContent {
+      snapshotsOnly()
+      includeGroup("xyz.jpenilla")
+      includeGroup("net.kyori") // TODO adventure mod 6.4.0
+    }
+  }
   maven("https://oss.sonatype.org/content/repositories/snapshots/") {
     mavenContent { snapshotsOnly() }
   }
@@ -30,9 +37,6 @@ repositories {
   }
   maven("https://repo.papermc.io/repository/maven-public/")
   maven("https://repo.spongepowered.org/repository/maven-public/")
-  maven("https://repo.jpenilla.xyz/snapshots/") {
-    mavenContent { snapshotsOnly() }
-  }
 }
 
 dependencies {
