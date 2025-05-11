@@ -26,7 +26,6 @@ repositories {
     mavenContent {
       snapshotsOnly()
       includeGroup("xyz.jpenilla")
-      includeGroup("net.kyori") // TODO adventure mod 6.4.0 & platform 4.3.5
     }
   }
   maven("https://oss.sonatype.org/content/repositories/snapshots/") {
