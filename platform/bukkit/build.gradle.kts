@@ -3,6 +3,10 @@ plugins {
   alias(libs.plugins.run.paper)
 }
 
+repositories {
+  maven("https://repo.extendedclip.com/releases/")
+}
+
 dependencies {
   implementation(projects.minimotdCommon)
   implementation(libs.slf4jJdk14)
@@ -10,6 +14,10 @@ dependencies {
   implementation(libs.bstatsBukkit)
   implementation(libs.paperlib)
   compileOnly(libs.paperApi)
+  compileOnly("me.clip:placeholderapi:2.11.6")
+  testImplementation(libs.paperApi)
+  testImplementation("me.clip:placeholderapi:2.11.6")
+  testImplementation("org.mockito:mockito-core:5.12.0")
 }
 
 tasks {

@@ -53,6 +53,8 @@ public final class MiniMOTDPlugin extends JavaPlugin implements MiniMOTDPlatform
     this.miniMOTD = new MiniMOTD<>(this);
     this.audiences = BukkitAudiences.create(this);
 
+    PlaceholderApiResolver.register();
+
     if (PAPER_PING_EVENT_EXISTS) {
       this.getServer().getPluginManager().registerEvents(new PaperPingListener(this.miniMOTD), this);
     } else {

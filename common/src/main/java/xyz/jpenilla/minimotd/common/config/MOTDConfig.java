@@ -49,8 +49,9 @@ public final class MOTDConfig {
 
   @Comment("The list of MOTDs to display\n"
     + "\n"
-    + " - Supported placeholders: <online_players>, <max_players>\n"
-    + " - Putting more than one will cause one to be randomly chosen each refresh")
+    + " - Supported built-in placeholders: <online_players>, <max_players>\n"
+    + " - Putting more than one will cause one to be randomly chosen each refresh\n"
+    + " - PlaceholderAPI placeholders in the regular %placeholder% format (not needing a player) are also supported, but require the PlaceholderAPI plugin to be installed")
   private final List<MOTD> motds = new ArrayList<>();
 
   @Comment("Enable MOTD-related features")

@@ -35,6 +35,7 @@ import org.checkerframework.framework.qual.DefaultQualifier;
 import org.slf4j.Logger;
 import xyz.jpenilla.minimotd.common.config.ConfigManager;
 import xyz.jpenilla.minimotd.common.config.MOTDConfig;
+import xyz.jpenilla.minimotd.common.util.PlaceholderUtil;
 
 import static net.kyori.adventure.text.Component.newline;
 
@@ -46,7 +47,6 @@ public final class MiniMOTD<I> {
 
   public MiniMOTD(final MiniMOTDPlatform<I> platform) {
     this.platform = platform;
-
     try {
       this.iconManager = new IconManager<>(this);
       this.configManager = new ConfigManager(this);
@@ -77,6 +77,10 @@ public final class MiniMOTD<I> {
   }
 
   public PingResponse<I> createMOTD(final MOTDConfig config, final int onlinePlayers, final int maxPlayers) {
+    return this.createMOTD(config, onlinePlayers, maxPlayers, null);
+  }
+
+  public PingResponse<I> createMOTD(final MOTDConfig config, final int onlinePlayers, final int maxPlayers, final @Nullable Object player) {
     final PingResponse.PlayerCount count = config.modifyPlayerCount(onlinePlayers, maxPlayers);
     final PingResponse.Builder<I> response = PingResponse.<I>builder()
       .playerCount(count)
@@ -91,9 +95,9 @@ public final class MiniMOTD<I> {
       final int index = config.motds().size() == 1 ? 0 : ThreadLocalRandom.current().nextInt(config.motds().size());
       final MOTDConfig.MOTD motdConfig = config.motds().get(index);
       final Component motd = Component.textOfChildren(
-        parse(motdConfig.line1(), count),
+        parse(motdConfig.line1(), count, player),
         newline(),
-        parse(motdConfig.line2(), count)
+        parse(motdConfig.line2(), count, player)
       );
       response.motd(motd);
       iconString = motdConfig.icon();
@@ -106,12 +110,17 @@ public final class MiniMOTD<I> {
     return response.build();
   }
 
-  private static Component parse(final String input, final PingResponse.PlayerCount count) {
+  private static Component parse(final String input, final PingResponse.PlayerCount count, final @Nullable Object player) {
     final String online = Integer.toString(count.onlinePlayers());
     final String max = Integer.toString(count.maxPlayers());
+    String processed = replacePlayerCount(input, online, max);
+    processed = PlaceholderUtil.parse(processed, player);
     return MiniMessage.miniMessage().deserialize(
-      replacePlayerCount(input, online, max),
-      TagResolver.resolver(Placeholder.unparsed("online_players", online), Placeholder.unparsed("max_players", max))
+      processed,
+      TagResolver.resolver(
+        Placeholder.unparsed("online_players", online),
+        Placeholder.unparsed("max_players", max)
+      )
     );
   }
 
