@@ -25,7 +25,7 @@
   "depends": {
     "fabricloader": ">=0.16.14",
     "fabric-api": "*",
-    "minecraft": "1.21.7",
+    "minecraft": "1.21.8",
     "adventure-platform-fabric": "*"
   }
 }

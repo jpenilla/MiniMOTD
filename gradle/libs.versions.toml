@@ -22,13 +22,13 @@ bstats = "3.1.0"
 paperApi = "1.16.5-R0.1-SNAPSHOT"
 paperlib = "1.0.8"
 waterfallApi = "1.16-R0.5-SNAPSHOT"
-fabricApi = "0.129.0+1.21.7"
+fabricApi = "0.129.0+1.21.8"
 fabricLoader = "0.16.14"
-minecraft = "1.21.7"
+minecraft = "1.21.8"
 spongeApi7 = "7.2.0"
 velocityApi = "3.4.0-SNAPSHOT"
 jupiterEngine = "5.13.3"
-neoforge = "21.7.17-beta"
+neoforge = "21.8.1-beta"
 
 [libraries]
 adventureBom = { group = "net.kyori", name = "adventure-bom", version.ref = "adventure" }
