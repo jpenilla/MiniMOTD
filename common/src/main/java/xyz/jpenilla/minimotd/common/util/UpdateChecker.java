@@ -67,8 +67,8 @@ public final class UpdateChecker {
     return Arrays.asList(
       "There is an update available for " + Constants.PluginMetadata.NAME + "!",
       "This server is running version " + currentVersion + ", which is " + (versionsBehind == -1 ? "UNKNOWN" : versionsBehind) + " versions outdated.",
-      "Download the latest version, " + versionList.get(0) + " from GitHub at the link below:",
-      versionMap.get(versionList.get(0))
+      "Download the latest version, " + versionList.get(0) + " from Modrinth at the link below:",
+      "https://modrinth.com/plugin/minimotd"
     );
   }
 }
