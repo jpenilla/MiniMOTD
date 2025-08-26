@@ -9,6 +9,7 @@ fun ShadowJar.platformRelocation(platform: String, pkg: String) {
 }
 
 fun ShadowJar.commonConfiguration() {
+  mergeServiceFiles()
   commonRelocation("org.spongepowered.configurate")
   commonRelocation("com.typesafe.config")
   dependencies {
