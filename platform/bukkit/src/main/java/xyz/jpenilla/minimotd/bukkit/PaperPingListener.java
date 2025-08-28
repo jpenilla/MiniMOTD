@@ -60,7 +60,7 @@ public final class PaperPingListener implements Listener {
 
   @EventHandler
   public void handlePing(final @NonNull PaperServerListPingEvent event) {
-    final MOTDConfig cfg = this.miniMOTD.configManager().mainConfig();
+    final MOTDConfig cfg = this.miniMOTD.configManager().resolveConfig(event.getClient().getVirtualHost());
 
     final PingResponse<CachedServerIcon> response = this.miniMOTD.createMOTD(cfg, event.getNumPlayers(), event.getMaxPlayers());
 
