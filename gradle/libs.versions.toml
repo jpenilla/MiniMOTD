@@ -1,12 +1,6 @@
-[plugins]
-blossom = { id = "net.kyori.blossom", version = "2.1.0" }
-sponge-gradle-plugin = { id = "org.spongepowered.gradle.plugin", version = "2.3.0" }
-run-paper = { id = "xyz.jpenilla.run-paper", version.ref = "run-task" }
-run-velocity = { id = "xyz.jpenilla.run-velocity", version.ref = "run-task" }
-run-waterfall = { id = "xyz.jpenilla.run-waterfall", version.ref = "run-task" }
-
 [versions]
-run-task = "2.3.1"
+run-task = "3.0.0-beta.1"
+resource-factory = "1.3.0"
 mod-publish-plugin = "0.8.4"
 hangarPublishPlugin = "0.1.3"
 indra = "3.2.0"
@@ -19,7 +13,8 @@ checkerQual = "3.49.5"
 slf4j = "1.7.32"
 gson = "2.8.0"
 bstats = "3.1.0"
-paperApi = "1.16.5-R0.1-SNAPSHOT"
+paperApiLegacy = "1.16.5-R0.1-SNAPSHOT"
+paperApi = "1.21.8-R0.1-SNAPSHOT"
 paperlib = "1.0.8"
 waterfallApi = "1.16-R0.5-SNAPSHOT"
 fabricApi = "0.131.0+1.21.8"
@@ -29,6 +24,15 @@ spongeApi7 = "7.2.0"
 velocityApi = "3.4.0-SNAPSHOT"
 jupiterEngine = "5.13.4"
 neoforge = "21.8.29"
+
+[plugins]
+blossom = { id = "net.kyori.blossom", version = "2.1.0" }
+sponge-gradle-plugin = { id = "org.spongepowered.gradle.plugin", version = "2.3.0" }
+run-paper = { id = "xyz.jpenilla.run-paper", version.ref = "run-task" }
+run-velocity = { id = "xyz.jpenilla.run-velocity" }
+run-waterfall = { id = "xyz.jpenilla.run-waterfall" }
+resource-factory-bukkit = { id = "xyz.jpenilla.resource-factory-bukkit-convention", version.ref = "resource-factory" }
+resource-factory-paper = { id = "xyz.jpenilla.resource-factory-paper-convention", version.ref = "resource-factory" }
 
 [libraries]
 adventureBom = { group = "net.kyori", name = "adventure-bom", version.ref = "adventure" }
@@ -41,6 +45,8 @@ adventurePlatformFabric = { group = "net.kyori", name = "adventure-platform-fabr
 adventurePlatformNeoforge = { group = "net.kyori", name = "adventure-platform-neoforge", version.ref = "adventurePlatformMod" }
 adventurePlatformSpongeApi = { group = "net.kyori", name = "adventure-platform-spongeapi", version.ref = "adventurePlatform" }
 minimessage = { group = "net.kyori", name = "adventure-text-minimessage" }
+
+brigadier = "com.mojang:brigadier:1.3.10"
 
 configurateHocon = { group = "org.spongepowered", name = "configurate-hocon", version.ref = "configurate" }
 
@@ -56,7 +62,8 @@ bstatsBungeecord = { group = "org.bstats", name = "bstats-bungeecord", version.r
 bstatsVelocity = { group = "org.bstats", name = "bstats-velocity", version.ref = "bstats" }
 bstatsSponge = { group = "org.bstats", name = "bstats-sponge", version.ref = "bstats" }
 
-paperApi = { group = "com.destroystokyo.paper", name = "paper-api", version.ref = "paperApi" }
+paperApiLegacy = { group = "com.destroystokyo.paper", name = "paper-api", version.ref = "paperApiLegacy" }
+paperApi = { group = "io.papermc.paper", name = "paper-api", version.ref = "paperApi" }
 paperlib = { group = "io.papermc", name = "paperlib", version.ref = "paperlib" }
 
 waterfallApi = { group = "io.github.waterfallmc", name = "waterfall-api", version.ref = "waterfallApi" }

@@ -23,15 +23,13 @@
  */
 package xyz.jpenilla.minimotd.neoforge;
 
-import com.mojang.brigadier.Command;
-import com.mojang.brigadier.context.CommandContext;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
 import javax.imageio.ImageIO;
 import net.kyori.adventure.platform.modcommon.MinecraftServerAudiences;
-import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 import net.minecraft.network.protocol.status.ServerStatus;
 import net.minecraft.server.MinecraftServer;
 import net.neoforged.fml.common.Mod;
@@ -46,10 +44,9 @@ import org.slf4j.LoggerFactory;
 import xyz.jpenilla.minimotd.common.CommandHandler;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
+import xyz.jpenilla.minimotd.common.util.BrigadierUtil;
 import xyz.jpenilla.minimotd.common.util.UpdateChecker;
 import xyz.jpenilla.minimotd.neoforge.access.ServerStatusFaviconAccess;
-
-import static net.minecraft.commands.Commands.literal;
 
 @Mod("minimotd")
 public final class MiniMOTDNeoForge implements MiniMOTDPlatform<ServerStatus.Favicon> {
@@ -90,28 +87,13 @@ public final class MiniMOTDNeoForge implements MiniMOTDPlatform<ServerStatus.Fav
   }
 
   private void registerCommand() {
-    final class WrappingExecutor implements Command<CommandSourceStack> {
-      private final CommandHandler.Executor handler;
-
-      WrappingExecutor(final CommandHandler.@NonNull Executor handler) {
-        this.handler = handler;
-      }
-
-      @Override
-      public int run(final @NonNull CommandContext<CommandSourceStack> context) {
-        this.handler.execute(MiniMOTDNeoForge.this.audiences().audience(context.getSource()));
-        return Command.SINGLE_SUCCESS;
-      }
-    }
-
-    final CommandHandler handler = new CommandHandler(this.miniMOTD);
     NeoForge.EVENT_BUS.addListener((RegisterCommandsEvent event) -> {
       event.getDispatcher().register(
-        literal("minimotd")
-          .requires(source -> source.hasPermission(4))
-          .then(literal("reload").executes(new WrappingExecutor(handler::reload)))
-          .then(literal("about").executes(new WrappingExecutor(handler::about)))
-          .then(literal("help").executes(new WrappingExecutor(handler::help)))
+        BrigadierUtil.buildTree(
+          new CommandHandler(this.miniMOTD),
+          sourceStack -> this.audiences().audience(sourceStack),
+          sourceStack -> sourceStack.hasPermission(Commands.LEVEL_ADMINS)
+        )
       );
     });
   }

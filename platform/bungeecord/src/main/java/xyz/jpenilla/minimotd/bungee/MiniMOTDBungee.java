@@ -43,7 +43,7 @@ import xyz.jpenilla.minimotd.common.PingResponse;
 import xyz.jpenilla.minimotd.common.config.MOTDConfig;
 import xyz.jpenilla.minimotd.common.util.UpdateChecker;
 
-public final class MiniMOTDPlugin extends Plugin implements MiniMOTDPlatform<Favicon> {
+public final class MiniMOTDBungee extends Plugin implements MiniMOTDPlatform<Favicon> {
   private Logger logger;
   private BungeeAudiences audiences;
   private MiniMOTD<Favicon> miniMOTD;

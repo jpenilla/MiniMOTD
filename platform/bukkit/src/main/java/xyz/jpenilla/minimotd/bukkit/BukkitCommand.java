@@ -39,10 +39,10 @@ import static net.kyori.adventure.text.event.ClickEvent.runCommand;
 import static net.kyori.adventure.text.format.NamedTextColor.RED;
 
 final class BukkitCommand implements CommandExecutor, TabCompleter {
-  private final MiniMOTDPlugin plugin;
+  private final MiniMOTDBukkit plugin;
   private final CommandHandler handler;
 
-  BukkitCommand(final @NonNull MiniMOTDPlugin plugin) {
+  BukkitCommand(final @NonNull MiniMOTDBukkit plugin) {
     this.plugin = plugin;
     this.handler = new CommandHandler(plugin.miniMOTD());
   }

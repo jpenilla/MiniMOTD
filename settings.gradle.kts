@@ -28,11 +28,11 @@ fun setup(name: String, dir: String) {
 }
 
 fun platform(name: String) = setup("minimotd-$name", "platform/$name")
-fun dist(name: String) = setup("minimotd-$name", "dist/$name")
 
 setup("minimotd-common", "common")
 
 sequenceOf(
+  "paper",
   "bukkit",
   "sponge8",
   "sponge7",
@@ -41,5 +41,3 @@ sequenceOf(
   "fabric",
   "neoforge",
 ).forEach(::platform)
-
-dist("bukkit-bungeecord")

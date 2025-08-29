@@ -34,10 +34,10 @@ import static net.kyori.adventure.text.event.ClickEvent.runCommand;
 import static net.kyori.adventure.text.format.NamedTextColor.RED;
 
 final class BungeeCommand extends Command {
-  private final MiniMOTDPlugin plugin;
+  private final MiniMOTDBungee plugin;
   private final CommandHandler handler;
 
-  BungeeCommand(final @NonNull MiniMOTDPlugin plugin) {
+  BungeeCommand(final @NonNull MiniMOTDBungee plugin) {
     super("minimotd");
     this.plugin = plugin;
     this.handler = new CommandHandler(plugin.miniMOTD());

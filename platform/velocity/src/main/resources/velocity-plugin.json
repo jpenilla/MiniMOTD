@@ -8,5 +8,5 @@
     "jmp"
   ],
   "dependencies": [],
-  "main": "xyz.jpenilla.minimotd.velocity.MiniMOTDPlugin"
+  "main": "xyz.jpenilla.minimotd.velocity.MiniMOTDVelocity"
 }
