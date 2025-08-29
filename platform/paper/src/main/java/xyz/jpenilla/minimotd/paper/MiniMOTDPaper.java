@@ -66,7 +66,7 @@ public final class MiniMOTDPaper extends JavaPlugin implements MiniMOTDPlatform<
         sourceStack -> Objects.requireNonNullElse(sourceStack.getExecutor(), sourceStack.getSender()),
         sourceStack -> sourceStack.getSender().hasPermission("minimotd.admin")
       ).build(),
-      "",
+      "MiniMOTD Command",
       List.of()
     ));
 
