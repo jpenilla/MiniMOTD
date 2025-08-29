@@ -32,7 +32,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import net.kyori.adventure.platform.spongeapi.SpongeAudiences;
 import org.bstats.sponge.Metrics;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;

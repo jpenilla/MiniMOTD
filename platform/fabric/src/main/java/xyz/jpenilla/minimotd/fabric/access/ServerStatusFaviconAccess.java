@@ -23,7 +23,7 @@
  */
 package xyz.jpenilla.minimotd.fabric.access;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface ServerStatusFaviconAccess {
   @Nullable String cachedEncodedIcon();

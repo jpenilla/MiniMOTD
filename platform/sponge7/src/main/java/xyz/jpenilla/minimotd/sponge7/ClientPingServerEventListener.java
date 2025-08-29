@@ -25,7 +25,7 @@ package xyz.jpenilla.minimotd.sponge7;
 
 import com.google.inject.Inject;
 import net.kyori.adventure.text.serializer.spongeapi.SpongeComponentSerializer;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.spongepowered.api.event.EventListener;
 import org.spongepowered.api.event.server.ClientPingServerEvent;
 import org.spongepowered.api.network.status.Favicon;

@@ -26,13 +26,12 @@ package xyz.jpenilla.minimotd.common;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 import net.kyori.adventure.text.Component;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.framework.qual.DefaultQualifier;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import static java.util.Objects.requireNonNull;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public final class PingResponse<I> {
   private final @Nullable I icon;
   private final @Nullable Component motd;

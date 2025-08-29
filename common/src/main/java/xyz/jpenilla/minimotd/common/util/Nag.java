@@ -26,7 +26,7 @@ package xyz.jpenilla.minimotd.common.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class Nag {
   private static final String EQUALS_LINE = "====================================================";

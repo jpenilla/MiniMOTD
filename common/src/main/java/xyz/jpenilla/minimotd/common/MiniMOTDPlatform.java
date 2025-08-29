@@ -25,7 +25,7 @@ package xyz.jpenilla.minimotd.common;
 
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 
 public interface MiniMOTDPlatform<I> {

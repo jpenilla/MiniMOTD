@@ -19,7 +19,7 @@ dependencies {
   }
   api(libs.minimessage)
   compileOnlyApi(libs.slf4jApi)
-  compileOnlyApi(libs.checkerQual)
+  compileOnlyApi(libs.jspecify)
   compileOnlyApi(libs.gson)
   testImplementation(libs.gson)
   compileOnly(libs.brigadier)

@@ -29,7 +29,7 @@ import com.google.inject.Injector;
 import com.google.inject.TypeLiteral;
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Sponge;

@@ -26,7 +26,7 @@ package xyz.jpenilla.minimotd.bungee;
 import net.kyori.adventure.audience.Audience;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 import xyz.jpenilla.minimotd.common.CommandHandler;
 
 import static net.kyori.adventure.text.Component.text;

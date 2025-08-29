@@ -9,7 +9,6 @@ adventure = "4.24.0"
 adventurePlatform = "4.4.1"
 adventurePlatformMod = "6.6.0"
 configurate = "4.2.0"
-checkerQual = "3.49.5"
 slf4j = "1.7.32"
 gson = "2.8.0"
 bstats = "3.1.0"
@@ -50,7 +49,7 @@ brigadier = "com.mojang:brigadier:1.3.10"
 
 configurateHocon = { group = "org.spongepowered", name = "configurate-hocon", version.ref = "configurate" }
 
-checkerQual = { group = "org.checkerframework", name = "checker-qual", version.ref = "checkerQual" }
+jspecify = "org.jspecify:jspecify:1.0.0"
 
 slf4jApi = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
 slf4jJdk14 = { group = "org.slf4j", name = "slf4j-jdk14", version.ref = "slf4j" }

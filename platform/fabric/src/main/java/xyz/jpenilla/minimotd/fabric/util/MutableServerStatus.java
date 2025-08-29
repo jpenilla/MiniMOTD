@@ -27,11 +27,10 @@ import java.util.Objects;
 import java.util.Optional;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.status.ServerStatus;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.framework.qual.DefaultQualifier;
+import org.jspecify.annotations.NullMarked;
 
 @SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "unused"})
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public final class MutableServerStatus {
   private Component description;
   private Optional<ServerStatus.Players> players;

@@ -29,8 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.framework.qual.DefaultQualifier;
+import org.jspecify.annotations.NullMarked;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationOptions;
@@ -39,7 +38,7 @@ import org.spongepowered.configurate.objectmapping.ObjectMapper;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public final class ConfigLoader<C> {
   private static final TypeSerializerCollection SERIALIZERS;
 
@@ -94,13 +93,13 @@ public final class ConfigLoader<C> {
   }
 
   public ConfigLoader(
-    final @NonNull Class<C> configClass,
-    final @NonNull Path configPath
+    final Class<C> configClass,
+    final Path configPath
   ) {
     this(configClass, configPath, options -> options);
   }
 
-  public @NonNull C load() throws ConfigurateException {
+  public C load() throws ConfigurateException {
     final CommentedConfigurationNode node = this.loader.load();
     final C config = this.mapper.load(node);
     for (final Consumer<C> processor : this.postProcess) {
@@ -109,7 +108,7 @@ public final class ConfigLoader<C> {
     return config;
   }
 
-  public void save(final @NonNull C config) throws ConfigurateException {
+  public void save(final C config) throws ConfigurateException {
     final CommentedConfigurationNode node = this.loader.createNode();
     this.mapper.save(config, node);
     this.loader.save(node);

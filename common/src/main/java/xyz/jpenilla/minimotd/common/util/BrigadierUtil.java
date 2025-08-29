@@ -29,9 +29,10 @@ import com.mojang.brigadier.context.CommandContext;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import net.kyori.adventure.audience.Audience;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NullMarked;
 import xyz.jpenilla.minimotd.common.CommandHandler;
 
+@NullMarked
 public final class BrigadierUtil {
   private BrigadierUtil() {
   }
@@ -44,12 +45,12 @@ public final class BrigadierUtil {
     final class WrappingExecutor implements Command<S> {
       private final CommandHandler.Executor handler;
 
-      WrappingExecutor(final CommandHandler.@NonNull Executor handler) {
+      WrappingExecutor(final CommandHandler.Executor handler) {
         this.handler = handler;
       }
 
       @Override
-      public int run(final @NonNull CommandContext<S> context) {
+      public int run(final CommandContext<S> context) {
         this.handler.execute(audienceExtractor.apply(context.getSource()));
         return Command.SINGLE_SUCCESS;
       }

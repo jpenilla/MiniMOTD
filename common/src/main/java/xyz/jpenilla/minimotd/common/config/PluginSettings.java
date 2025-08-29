@@ -26,9 +26,9 @@ package xyz.jpenilla.minimotd.common.config;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import java.util.Objects;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
@@ -63,7 +63,7 @@ public final class PluginSettings {
       + "checked in the order they are declared if there are no exact matches.")
     private final Map<String, String> virtualHostConfigs = new LinkedHashMap<>();
 
-    private transient @MonotonicNonNull Map<String[], String> splitVirtualHostConfigs;
+    private transient @Nullable Map<String[], String> splitVirtualHostConfigs;
 
     @Comment("Set whether to enable virtual host testing mode.\n"
       + "When enabled, MiniMOTD will print virtual host debug info to the console on each server ping.")
@@ -74,6 +74,7 @@ public final class PluginSettings {
     }
 
     public @Nullable String findConfigStringForHost(@NonNull String host, final int port) {
+      Objects.requireNonNull(this.splitVirtualHostConfigs, "processVirtualHosts must be called first");
       host = processTcpShieldHostname(host).toLowerCase(Locale.ENGLISH) + ':' + port;
 
       final @Nullable String exactMatch = this.virtualHostConfigs.get(host);

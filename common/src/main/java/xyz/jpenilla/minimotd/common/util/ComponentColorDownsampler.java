@@ -25,7 +25,7 @@ package xyz.jpenilla.minimotd.common.util;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 
 public interface ComponentColorDownsampler {
   static @NonNull ComponentColorDownsampler downsampler() {

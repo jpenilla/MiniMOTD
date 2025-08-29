@@ -25,7 +25,7 @@ package xyz.jpenilla.minimotd.sponge8;
 
 import com.google.inject.Inject;
 import java.lang.reflect.Method;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.spongepowered.api.MinecraftVersion;
 import org.spongepowered.api.event.EventListener;
 import org.spongepowered.api.event.server.ClientPingServerEvent;

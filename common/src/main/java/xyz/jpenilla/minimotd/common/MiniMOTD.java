@@ -29,16 +29,14 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.framework.qual.DefaultQualifier;
+import org.jspecify.annotations.NullMarked;
 import org.slf4j.Logger;
 import xyz.jpenilla.minimotd.common.config.ConfigManager;
 import xyz.jpenilla.minimotd.common.config.MOTDConfig;
 
 import static net.kyori.adventure.text.Component.newline;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public final class MiniMOTD<I> {
   private final ConfigManager configManager;
   private final IconManager<I> iconManager;
@@ -83,7 +81,7 @@ public final class MiniMOTD<I> {
       .disablePlayerListHover(config.disablePlayerListHover())
       .hidePlayerCount(config.hidePlayerCount());
 
-    @Nullable String iconString = null;
+    String iconString = null;
     if (config.motdEnabled()) {
       if (config.motds().isEmpty()) {
         throw new IllegalStateException("MOTD is enabled, but there are no MOTDs in the config file?");

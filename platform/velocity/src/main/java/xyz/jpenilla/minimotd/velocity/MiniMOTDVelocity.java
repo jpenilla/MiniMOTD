@@ -39,7 +39,7 @@ import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 import java.util.Set;
 import org.bstats.velocity.Metrics;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import xyz.jpenilla.minimotd.common.CommandHandler;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
