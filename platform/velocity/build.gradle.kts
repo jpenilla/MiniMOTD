@@ -1,6 +1,7 @@
 plugins {
   id("minimotd.shadow-platform")
   alias(libs.plugins.run.velocity)
+  alias(libs.plugins.resource.factory.velocity)
 }
 
 dependencies {
@@ -20,17 +21,15 @@ tasks {
   runVelocity {
     velocityVersion(libs.versions.velocityApi.get())
   }
-  processResources {
-    val props = mapOf(
-      "description" to project.description as String,
-      "url" to Constants.GITHUB_URL,
-      "version" to project.version,
-    )
-    inputs.properties(props)
-    filesMatching("velocity-plugin.json") {
-      expand(props)
-    }
-  }
+}
+
+velocityPluginJson {
+  name = "MiniMOTD"
+  id = "minimotd-velocity"
+  url = Constants.GITHUB_URL
+  authors = listOf("jmp")
+  main = "xyz.jpenilla.minimotd.velocity.MiniMOTDVelocity"
+  dependency("miniplaceholders", true)
 }
 
 publishMods.modrinth {

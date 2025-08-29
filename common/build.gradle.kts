@@ -9,6 +9,10 @@ tasks.jar {
   }
 }
 
+java {
+  disableAutoTargetJvm()
+}
+
 dependencies {
   api(libs.configurateHocon)
   api(platform(libs.adventureBom))
@@ -23,6 +27,7 @@ dependencies {
   compileOnlyApi(libs.gson)
   testImplementation(libs.gson)
   compileOnly(libs.brigadier)
+  compileOnly(libs.miniplaceholders)
 }
 
 sourceSets.main {

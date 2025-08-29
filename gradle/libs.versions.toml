@@ -32,6 +32,7 @@ run-velocity = { id = "xyz.jpenilla.run-velocity" }
 run-waterfall = { id = "xyz.jpenilla.run-waterfall" }
 resource-factory-bukkit = { id = "xyz.jpenilla.resource-factory-bukkit-convention", version.ref = "resource-factory" }
 resource-factory-paper = { id = "xyz.jpenilla.resource-factory-paper-convention", version.ref = "resource-factory" }
+resource-factory-velocity = { id = "xyz.jpenilla.resource-factory-velocity-convention", version.ref = "resource-factory" }
 
 [libraries]
 adventureBom = { group = "net.kyori", name = "adventure-bom", version.ref = "adventure" }
@@ -44,6 +45,7 @@ adventurePlatformFabric = { group = "net.kyori", name = "adventure-platform-fabr
 adventurePlatformNeoforge = { group = "net.kyori", name = "adventure-platform-neoforge", version.ref = "adventurePlatformMod" }
 adventurePlatformSpongeApi = { group = "net.kyori", name = "adventure-platform-spongeapi", version.ref = "adventurePlatform" }
 minimessage = { group = "net.kyori", name = "adventure-text-minimessage" }
+miniplaceholders = "io.github.miniplaceholders:miniplaceholders-api:3.0.1"
 
 brigadier = "com.mojang:brigadier:1.3.10"
 

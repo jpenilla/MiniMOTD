@@ -1,3 +1,5 @@
+import xyz.jpenilla.resourcefactory.paper.PaperPluginYaml.Load
+
 plugins {
   id("minimotd.shadow-platform")
   alias(libs.plugins.run.paper)
@@ -46,6 +48,11 @@ paperPluginYaml {
   authors = listOf("jmp")
   website = Constants.GITHUB_URL
   apiVersion = "1.21.8"
+  dependencies.server.register("MiniPlaceholders") {
+    required = false
+    load = Load.BEFORE
+    joinClasspath = true
+  }
 }
 
 runPaper.folia.registerTask()

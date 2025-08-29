@@ -33,6 +33,7 @@ import org.jspecify.annotations.NullMarked;
 import org.slf4j.Logger;
 import xyz.jpenilla.minimotd.common.config.ConfigManager;
 import xyz.jpenilla.minimotd.common.config.MOTDConfig;
+import xyz.jpenilla.minimotd.common.util.MiniPlaceholdersUtil;
 
 import static net.kyori.adventure.text.Component.newline;
 
@@ -109,7 +110,11 @@ public final class MiniMOTD<I> {
     final String max = Integer.toString(count.maxPlayers());
     return MiniMessage.miniMessage().deserialize(
       replacePlayerCount(input, online, max),
-      TagResolver.resolver(Placeholder.unparsed("online_players", online), Placeholder.unparsed("max_players", max))
+      TagResolver.resolver(
+        Placeholder.unparsed("online_players", online),
+        Placeholder.unparsed("max_players", max),
+        MiniPlaceholdersUtil.tagResolver()
+      )
     );
   }
 
