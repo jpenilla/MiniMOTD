@@ -39,7 +39,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.CachedServerIcon;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import xyz.jpenilla.minimotd.common.CommandHandler;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
@@ -48,13 +47,11 @@ import xyz.jpenilla.minimotd.common.util.UpdateChecker;
 
 public final class MiniMOTDPaper extends JavaPlugin implements MiniMOTDPlatform<CachedServerIcon>, Listener {
 
-  private Logger logger;
   private MiniMOTD<CachedServerIcon> miniMOTD;
 
   @Override
   public void onEnable() {
     this.getServer().getPluginManager().registerEvents(this, this);
-    this.logger = LoggerFactory.getLogger(this.getName());
     this.miniMOTD = new MiniMOTD<>(this);
 
     this.getServer().getPluginManager().registerEvents(new PingListener(this.miniMOTD), this);
@@ -79,9 +76,9 @@ public final class MiniMOTDPaper extends JavaPlugin implements MiniMOTDPlatform<
     if (!this.miniMOTD.configManager().pluginSettings().updateChecker()) {
       return;
     }
-    CompletableFuture.runAsync(() -> new UpdateChecker().checkVersion().forEach(this.logger::info)).whenComplete(($, thr) -> {
+    CompletableFuture.runAsync(() -> new UpdateChecker().checkVersion().forEach(this.getComponentLogger()::info)).whenComplete(($, thr) -> {
       if (thr != null) {
-        this.logger.warn("Exception checking for updates", thr);
+        this.getComponentLogger().warn("Exception checking for updates", thr);
       }
     });
   }
@@ -93,7 +90,7 @@ public final class MiniMOTDPaper extends JavaPlugin implements MiniMOTDPlatform<
 
   @Override
   public @NonNull Logger logger() {
-    return this.logger;
+    return this.getComponentLogger();
   }
 
   @Override
