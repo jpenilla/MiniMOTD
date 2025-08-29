@@ -51,9 +51,9 @@ public final class MiniMOTDPaper extends JavaPlugin implements MiniMOTDPlatform<
 
   @Override
   public void onEnable() {
-    this.getServer().getPluginManager().registerEvents(this, this);
     this.miniMOTD = new MiniMOTD<>(this);
 
+    this.getServer().getPluginManager().registerEvents(this, this);
     this.getServer().getPluginManager().registerEvents(new PingListener(this.miniMOTD), this);
 
     this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> event.registrar().register(
