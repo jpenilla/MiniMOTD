@@ -60,4 +60,5 @@ runPaper.folia.registerTask()
 publishMods.modrinth {
   modLoaders.addAll("paper", "folia")
   minecraftVersions = paperVersions
+  optional("miniplaceholders")
 }

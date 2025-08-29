@@ -35,4 +35,5 @@ velocityPluginJson {
 publishMods.modrinth {
   modLoaders.add("velocity")
   minecraftVersions.addAll(minecraftVersion)
+  optional("miniplaceholders")
 }

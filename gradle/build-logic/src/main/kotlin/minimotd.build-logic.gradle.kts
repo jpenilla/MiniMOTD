@@ -16,10 +16,16 @@ hangarPublish.publications.register("plugin") {
     paper {
       jar.set(jar("paper"))
       platformVersions = paperVersions
+      dependencies.hangar("MiniPlaceholders") {
+        required = false
+      }
     }
     velocity {
       jar.set(jar("velocity"))
       platformVersions.addAll("3.4")
+      dependencies.hangar("MiniPlaceholders") {
+        required = false
+      }
     }
     waterfall {
       jar.set(jar("bungeecord"))

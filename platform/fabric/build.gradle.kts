@@ -58,4 +58,5 @@ tasks {
 publishMods.modrinth {
   modLoaders.add("fabric")
   minecraftVersions.addAll(minecraftVersion)
+  optional("miniplaceholders")
 }

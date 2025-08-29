@@ -61,4 +61,5 @@ miniMOTDPlatform {
 publishMods.modrinth {
   modLoaders.add("neoforge")
   minecraftVersions.addAll(minecraftVersion)
+  optional("miniplaceholders")
 }

@@ -61,4 +61,5 @@ publishMods.modrinth {
     "1.20.6",
     "1.21.8",
   )
+  optional("miniplaceholders")
 }
