@@ -36,6 +36,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.kyori.adventure.platform.modcommon.MinecraftServerAudiences;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 import net.minecraft.network.protocol.status.ServerStatus;
 import net.minecraft.server.MinecraftServer;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -44,10 +45,9 @@ import org.slf4j.LoggerFactory;
 import xyz.jpenilla.minimotd.common.CommandHandler;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
+import xyz.jpenilla.minimotd.common.util.BrigadierUtil;
 import xyz.jpenilla.minimotd.common.util.UpdateChecker;
 import xyz.jpenilla.minimotd.fabric.access.ServerStatusFaviconAccess;
-
-import static net.minecraft.commands.Commands.literal;
 
 public final class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<ServerStatus.Favicon> {
   private static MiniMOTDFabric instance = null;
@@ -104,13 +104,12 @@ public final class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<Se
       }
     }
 
-    final CommandHandler handler = new CommandHandler(this.miniMOTD);
     CommandRegistrationCallback.EVENT.register((dispatcher, commandBuildContext, commandSelection) -> dispatcher.register(
-      literal("minimotd")
-        .requires(source -> source.hasPermission(4))
-        .then(literal("reload").executes(new WrappingExecutor(handler::reload)))
-        .then(literal("about").executes(new WrappingExecutor(handler::about)))
-        .then(literal("help").executes(new WrappingExecutor(handler::help)))
+      BrigadierUtil.buildTree(
+        new CommandHandler(this.miniMOTD),
+        sourceStack -> this.audiences().audience(sourceStack),
+        sourceStack -> sourceStack.hasPermission(Commands.LEVEL_ADMINS)
+      )
     ));
   }
 

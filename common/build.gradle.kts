@@ -22,6 +22,7 @@ dependencies {
   compileOnlyApi(libs.checkerQual)
   compileOnlyApi(libs.gson)
   testImplementation(libs.gson)
+  compileOnly(libs.brigadier)
 }
 
 sourceSets.main {

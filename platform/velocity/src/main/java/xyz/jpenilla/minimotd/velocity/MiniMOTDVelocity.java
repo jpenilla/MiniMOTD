@@ -28,12 +28,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.TypeLiteral;
-import com.mojang.brigadier.Command;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.context.CommandContext;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandManager;
-import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
@@ -48,9 +44,10 @@ import org.slf4j.Logger;
 import xyz.jpenilla.minimotd.common.CommandHandler;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
+import xyz.jpenilla.minimotd.common.util.BrigadierUtil;
 import xyz.jpenilla.minimotd.common.util.UpdateChecker;
 
-public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
+public final class MiniMOTDVelocity implements MiniMOTDPlatform<Favicon> {
   private static final Set<Class<?>> LISTENER_CLASSES = ImmutableSet.of(
     PingListener.class
   );
@@ -64,7 +61,7 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
   private final Injector injector;
 
   @Inject
-  public MiniMOTDPlugin(
+  public MiniMOTDVelocity(
     final @NonNull ProxyServer server,
     final @NonNull Logger logger,
     final @NonNull CommandManager commandManager,
@@ -83,7 +80,7 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
       @Override
       protected void configure() {
         this.bind(new TypeLiteral<MiniMOTD<Favicon>>() {
-        }).toInstance(MiniMOTDPlugin.this.miniMOTD);
+        }).toInstance(MiniMOTDVelocity.this.miniMOTD);
       }
     });
   }
@@ -104,28 +101,16 @@ public final class MiniMOTDPlugin implements MiniMOTDPlatform<Favicon> {
   }
 
   private void registerCommand() {
-    final class WrappingExecutor implements Command<CommandSource> {
-      private final CommandHandler.Executor handler;
-
-      WrappingExecutor(final CommandHandler.@NonNull Executor handler) {
-        this.handler = handler;
-      }
-
-      @Override
-      public int run(final @NonNull CommandContext<CommandSource> context) {
-        this.handler.execute(context.getSource());
-        return Command.SINGLE_SUCCESS;
-      }
-    }
-
-    final CommandHandler handler = new CommandHandler(this.miniMOTD);
-    this.commandManager.register(this.commandManager.metaBuilder("minimotd").build(), new BrigadierCommand(
-      LiteralArgumentBuilder.<CommandSource>literal("minimotd")
-        .requires(source -> source.hasPermission("minimotd.admin"))
-        .then(LiteralArgumentBuilder.<CommandSource>literal("help").executes(new WrappingExecutor(handler::help)))
-        .then(LiteralArgumentBuilder.<CommandSource>literal("about").executes(new WrappingExecutor(handler::about)))
-        .then(LiteralArgumentBuilder.<CommandSource>literal("reload").executes(new WrappingExecutor(handler::reload)))
-    ));
+    this.commandManager.register(
+      this.commandManager.metaBuilder("minimotd").plugin(this).build(),
+      new BrigadierCommand(
+        BrigadierUtil.buildTree(
+          new CommandHandler(this.miniMOTD),
+          source -> source,
+          source -> source.hasPermission("minimotd.admin")
+        )
+      )
+    );
   }
 
   @Override

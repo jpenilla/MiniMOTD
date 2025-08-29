@@ -1,5 +1,5 @@
 name: MiniMOTD
-main: xyz.jpenilla.minimotd.bungee.MiniMOTDPlugin
+main: xyz.jpenilla.minimotd.bungee.MiniMOTDBungee
 version: $version
 author: jmp
 description: $description

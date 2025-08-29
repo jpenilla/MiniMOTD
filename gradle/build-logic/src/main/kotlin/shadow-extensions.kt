@@ -4,10 +4,6 @@ fun ShadowJar.commonRelocation(pkg: String) {
   relocate(pkg, "${Constants.RELOCATION_BASE_PACKAGE}.$pkg")
 }
 
-fun ShadowJar.platformRelocation(platform: String, pkg: String) {
-  relocate(pkg, "${Constants.RELOCATION_BASE_PACKAGE}.platform_$platform.$pkg")
-}
-
 fun ShadowJar.commonConfiguration() {
   mergeServiceFiles()
   commonRelocation("org.spongepowered.configurate")

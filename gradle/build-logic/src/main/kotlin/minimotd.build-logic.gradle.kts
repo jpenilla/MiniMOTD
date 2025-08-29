@@ -14,12 +14,8 @@ hangarPublish.publications.register("plugin") {
   apiKey.set(providers.environmentVariable("HANGAR_UPLOAD_KEY"))
   platforms {
     paper {
-      jar.set(jar("bukkit"))
-      val vers = bukkitVersions.toMutableList()
-      vers -= "1.8.8"
-      vers -= "1.8.9"
-      vers += "1.8"
-      platformVersions.addAll(vers)
+      jar.set(jar("paper"))
+      platformVersions = paperVersions
     }
     velocity {
       jar.set(jar("velocity"))

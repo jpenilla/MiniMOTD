@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.CachedServerIcon;
@@ -38,9 +39,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.MiniMOTDPlatform;
+import xyz.jpenilla.minimotd.common.util.Nag;
 import xyz.jpenilla.minimotd.common.util.UpdateChecker;
 
-public final class MiniMOTDPlugin extends JavaPlugin implements MiniMOTDPlatform<CachedServerIcon> {
+public final class MiniMOTDBukkit extends JavaPlugin implements MiniMOTDPlatform<CachedServerIcon> {
   private static final boolean PAPER_PING_EVENT_EXISTS = findClass("com.destroystokyo.paper.event.server.PaperServerListPingEvent") != null;
 
   private Logger logger;
@@ -50,6 +52,21 @@ public final class MiniMOTDPlugin extends JavaPlugin implements MiniMOTDPlatform
   @Override
   public void onEnable() {
     this.logger = LoggerFactory.getLogger(this.getName());
+
+    if (PaperLib.getMinecraftVersion() > 21 || PaperLib.getMinecraftVersion() == 21 && PaperLib.getMinecraftPatchVersion() > 7) {
+      new Nag.Slf4J(this.logger).lines(
+        "You are using the incorrect MiniMOTD build for your server software.",
+        "This build is for Spigot/Paper 1.8.8 through 1.21.7.",
+        "Builds for Paper 1.21.8+ are available on Modrinth (https://modrinth.com/plugin/minimotd)",
+        "and Hangar (https://hangar.papermc.io/jmp/MiniMOTD).",
+        "When downloading be sure to check the supported versions/platforms",
+        "field on the versions page, and/or make the correct selections in",
+        "the download menu."
+      ).error(true).logBanner();
+      this.getServer().getPluginManager().disablePlugin(this);
+      return;
+    }
+
     this.miniMOTD = new MiniMOTD<>(this);
     this.audiences = BukkitAudiences.create(this);
 
@@ -70,6 +87,7 @@ public final class MiniMOTDPlugin extends JavaPlugin implements MiniMOTDPlatform
     }
 
     final Metrics metrics = new Metrics(this, 8132);
+    metrics.addCustomChart(new SimplePie("variant", () -> "bukkit"));
 
     if (this.miniMOTD.configManager().pluginSettings().updateChecker()) {
       try {
