@@ -1,5 +1,5 @@
 [versions]
-run-task = "3.0.0-beta.1"
+run-task = "3.0.0-SNAPSHOT"
 resource-factory = "1.3.0"
 mod-publish-plugin = "0.8.4"
 hangarPublishPlugin = "0.1.3"
