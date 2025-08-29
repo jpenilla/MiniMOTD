@@ -10,8 +10,7 @@
 - RGB colors are only able to be sent by proxies and 1.16+ servers, and can only be seen by 1.16+ clients.
 
 #### Server Platforms
-- [Paper](https://papermc.io/) / Spigot
-  - MiniMOTD is compatible with Spigot, however many features will not work. It is recommended to use Paper for full compatibility.
+- [Paper](https://papermc.io/)
 - [Sponge API 8](https://www.spongepowered.org/)
 - [Sponge API 7](https://www.spongepowered.org/)
 - [Fabric](https://fabricmc.net/) (requires [Fabric API](https://modrinth.com/mod/fabric-api))
@@ -27,8 +26,9 @@ Downloads can be obtained from any of:
  - [Hangar](https://hangar.papermc.io/jmp/MiniMOTD)
  - [GitHub releases](https://github.com/jpenilla/MiniMOTD/releases)
 
-There is a separate jar for each platform. Paper and Spigot share the same jar, as do Waterfall and Bungeecord.
-The `bukkit-bungeecord` jar is merged from the Paper/Spigot and Waterfall/Bungeecord jars for distribution on Spigot's site.
+There is a separate jar for each platform. Waterfall and Bungeecord share the same jar.
+There are two distributions for Bukkit-based servers: one for Paper >=1.21.8 only (`-paper` jar),
+and one for all other supported versions (1.8.8 - 1.21.7, Spigot and Paper) (`-bukkit` jar).
 
 #### Configuration
 See the [wiki](https://github.com/jpenilla/MiniMOTD/wiki) for configuration details
