@@ -54,6 +54,11 @@ public final class UpdateChecker {
     result.forEach(element -> versionMap.put(element.getAsJsonObject().get("tag_name").getAsString(), element.getAsJsonObject().get("html_url").getAsString()));
     final List<String> versionList = new LinkedList<>(versionMap.keySet());
     final String currentVersion = "v" + Constants.PluginMetadata.VERSION;
+    if (versionList.isEmpty()) { // Sometimes version check will fail and get an empty list
+      return Collections.singletonList(
+        "Failed to check version, if this plugin work incorrectly, please check for updates manually at https://github.com/jpenilla/MiniMOTD/releases"
+      );
+    }
     if (versionList.get(0).equals(currentVersion)) {
       return Collections.emptyList(); // Up to date, do nothing
     }
