@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.gradle.api.file.DuplicatesStrategy
 
 fun ShadowJar.commonRelocation(pkg: String) {
   relocate(pkg, "${Constants.RELOCATION_BASE_PACKAGE}.$pkg")

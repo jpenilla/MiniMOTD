@@ -59,7 +59,7 @@ publishMods.modrinth {
     "1.18.2",
     "1.19.4",
     "1.20.6",
-    "1.21.8",
+    "1.21.10",
   )
   optional("miniplaceholders")
 }
