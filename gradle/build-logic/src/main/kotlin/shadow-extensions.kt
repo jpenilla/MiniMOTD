@@ -6,6 +6,11 @@ fun ShadowJar.commonRelocation(pkg: String) {
 
 fun ShadowJar.commonConfiguration() {
   mergeServiceFiles()
+  // Needed for mergeServiceFiles to work properly in Shadow 9+
+  filesMatching("META-INF/services/**") {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+  }
+
   commonRelocation("org.spongepowered.configurate")
   commonRelocation("com.typesafe.config")
   dependencies {
