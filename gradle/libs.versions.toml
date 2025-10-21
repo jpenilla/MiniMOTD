@@ -44,7 +44,7 @@ adventurePlatformFabric = { group = "net.kyori", name = "adventure-platform-fabr
 adventurePlatformNeoforge = { group = "net.kyori", name = "adventure-platform-neoforge", version.ref = "adventurePlatformMod" }
 adventurePlatformSpongeApi = { group = "net.kyori", name = "adventure-platform-spongeapi", version.ref = "adventurePlatform" }
 minimessage = { group = "net.kyori", name = "adventure-text-minimessage" }
-miniplaceholders = "io.github.miniplaceholders:miniplaceholders-api:3.0.1"
+miniplaceholders = "io.github.miniplaceholders:miniplaceholders-api:3.1.0"
 
 brigadier = "com.mojang:brigadier:1.3.10"
 
