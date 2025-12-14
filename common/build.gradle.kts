@@ -9,10 +9,6 @@ tasks.jar {
   }
 }
 
-java {
-  disableAutoTargetJvm()
-}
-
 dependencies {
   api(libs.configurateHocon)
   api(platform(libs.adventureBom))

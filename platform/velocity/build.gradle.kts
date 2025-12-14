@@ -10,8 +10,6 @@ dependencies {
   compileOnly(libs.velocityApi)
 }
 
-java.disableAutoTargetJvm()
-
 tasks {
   shadowJar {
     configureForNativeAdventurePlatform()

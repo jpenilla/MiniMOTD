@@ -18,6 +18,8 @@ indra {
   mitLicense()
 }
 
+java.disableAutoTargetJvm()
+
 repositories {
   mavenCentral {
     mavenContent { releasesOnly() }
