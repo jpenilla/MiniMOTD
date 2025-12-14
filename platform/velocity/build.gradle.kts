@@ -10,6 +10,12 @@ dependencies {
   compileOnly(libs.velocityApi)
 }
 
+indra {
+  javaVersions {
+    target(21)
+  }
+}
+
 tasks {
   shadowJar {
     configureForNativeAdventurePlatform()
