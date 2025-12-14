@@ -55,11 +55,16 @@ publishMods.modrinth {
   modLoaders.add("sponge")
   minecraftVersions.addAll(
     "1.16.5",
-    "1.17.1",
     "1.18.2",
     "1.19.4",
     "1.20.6",
+    "1.21.1",
+    "1.21.3",
+    "1.21.4",
+    "1.21.5",
+    "1.21.8",
     "1.21.10",
+    "1.21.11",
   )
   optional("miniplaceholders")
 }

@@ -47,6 +47,7 @@ val paperVersions = listOf(
   "1.21.8",
   "1.21.9",
   "1.21.10",
+  "1.21.11",
 )
 
 val productionJarAttribute = Attribute.of("minimotd.productionJar", String::class.java)

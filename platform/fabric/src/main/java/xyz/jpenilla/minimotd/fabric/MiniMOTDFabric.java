@@ -108,7 +108,7 @@ public final class MiniMOTDFabric implements ModInitializer, MiniMOTDPlatform<Se
       BrigadierUtil.buildTree(
         new CommandHandler(this.miniMOTD),
         sourceStack -> this.audiences().audience(sourceStack),
-        sourceStack -> sourceStack.hasPermission(Commands.LEVEL_ADMINS)
+        Commands.hasPermission(Commands.LEVEL_ADMINS)
       )
     ));
   }

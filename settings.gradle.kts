@@ -7,16 +7,14 @@ pluginManagement {
     maven("https://maven.neoforged.net/releases/") {
       mavenContent { releasesOnly() }
     }
-    maven("https://repo.jpenilla.xyz/snapshots/") {
-      mavenContent { snapshotsOnly() }
-    }
+    maven("https://repo.jpenilla.xyz/snapshots/")
   }
   includeBuild("gradle/build-logic")
 }
 
 plugins {
   id("net.neoforged.moddev.repositories") version "2.0.124" apply false
-  id("quiet-fabric-loom") version "1.11-SNAPSHOT" apply false
+  id("quiet-fabric-loom") version "1.13-SNAPSHOT" apply false
   id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 

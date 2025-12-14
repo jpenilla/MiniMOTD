@@ -23,9 +23,9 @@
     "minimotd-fabric.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.16.14",
+    "fabricloader": ">=0.18.2",
     "fabric-api": "*",
-    "minecraft": "1.21.10",
+    "minecraft": ">=1.21.11",
     "adventure-platform-fabric": "*"
   }
 }
