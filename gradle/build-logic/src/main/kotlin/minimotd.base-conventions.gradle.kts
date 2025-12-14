@@ -36,11 +36,8 @@ repositories {
 }
 
 dependencies {
-  testImplementation(libs.jupiterEngine)
-  // TODO: work around archloom issue?
-  if (project.name != "minimotd-neoforge" && project.name != "minimotd-fabric") {
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-  }
+  testImplementation(libs.junitJupiter)
+  testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks {

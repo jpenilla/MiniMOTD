@@ -21,7 +21,6 @@ fabricLoader = "0.18.2"
 minecraft = "1.21.10"
 spongeApi7 = "7.2.0"
 velocityApi = "3.4.0-SNAPSHOT"
-jupiterEngine = "5.14.0"
 neoforge = "21.10.1-beta"
 
 [plugins]
@@ -80,7 +79,7 @@ spongeApi7 = { group = "org.spongepowered", name = "spongeapi", version.ref = "s
 
 velocityApi = { group = "com.velocitypowered", name = "velocity-api", version.ref = "velocityApi" }
 
-jupiterEngine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "jupiterEngine" }
+junitJupiter = "org.junit.jupiter:junit-jupiter:6.0.1"
 
 # build-logic
 indraCommon = { group = "net.kyori", name = "indra-common", version.ref = "indra" }
