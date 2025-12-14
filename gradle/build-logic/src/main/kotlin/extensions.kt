@@ -6,7 +6,7 @@ import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.getByType
 
 fun Project.lastCommitHash(): String =
-  extensions.getByType<IndraGitExtension>().commit()?.name?.substring(0, 7) ?: "unknown"
+  extensions.getByType<IndraGitExtension>().commit().orNull?.name?.substring(0, 7) ?: "unknown"
 
 val Project.libs: LibrariesForLibs
   get() = extensions.getByType()
