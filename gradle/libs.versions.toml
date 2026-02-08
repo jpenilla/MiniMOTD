@@ -21,7 +21,7 @@ fabricLoader = "0.18.4"
 minecraft = "1.21.11"
 spongeApi7 = "7.2.0"
 velocityApi = "3.4.0"
-neoforge = "21.11.6-beta"
+neoforge = "21.11.38-beta"
 
 [plugins]
 blossom = { id = "net.kyori.blossom", version = "2.2.0" }
