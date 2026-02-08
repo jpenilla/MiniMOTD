@@ -20,7 +20,7 @@ fabricApi = "0.139.5+1.21.11"
 fabricLoader = "0.18.4"
 minecraft = "1.21.11"
 spongeApi7 = "7.2.0"
-velocityApi = "3.4.0-SNAPSHOT"
+velocityApi = "3.4.0"
 neoforge = "21.11.6-beta"
 
 [plugins]
