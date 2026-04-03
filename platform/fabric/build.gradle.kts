@@ -1,5 +1,5 @@
 plugins {
-  id("quiet-fabric-loom")
+  id("xyz.jpenilla.quiet-fabric-loom")
   id("minimotd.platform-conventions")
   id("com.gradleup.shadow")
 }
@@ -8,21 +8,20 @@ val shade: Configuration by configurations.creating
 
 dependencies {
   minecraft(libs.minecraft)
-  mappings(loom.officialMojangMappings())
-  modImplementation(libs.fabricLoader)
-  modImplementation(libs.fabricApi)
+  implementation(libs.fabricLoader)
+  implementation(libs.fabricApi)
 
   shade(implementation(projects.minimotdCommon) {
     exclude("net.kyori")
     exclude("com.google.errorprone")
   })
 
-  modImplementation(libs.adventurePlatformFabric)
+  implementation(libs.adventurePlatformFabric)
   include(libs.adventurePlatformFabric)
 }
 
 miniMOTDPlatform {
-  jarTask.set(tasks.remapJar)
+  jarTask.set(tasks.shadowJar)
 }
 
 indra {
@@ -33,12 +32,10 @@ indra {
 
 tasks {
   shadowJar {
+    archiveFileName.set("${project.name}-mc$minecraftVersion-${project.version}.jar")
     configurations = listOf(shade)
     commonConfiguration()
     commonRelocation("io.leangen.geantyref")
-  }
-  remapJar {
-    archiveFileName.set("${project.name}-mc$minecraftVersion-${project.version}.jar")
   }
   processResources {
     val replacements = mapOf(
