@@ -79,7 +79,7 @@ spongeApi7 = { group = "org.spongepowered", name = "spongeapi", version.ref = "s
 
 velocityApi = { group = "com.velocitypowered", name = "velocity-api", version.ref = "velocityApi" }
 
-junitJupiter = "org.junit.jupiter:junit-jupiter:6.0.2"
+junitJupiter = "org.junit.jupiter:junit-jupiter:6.0.3"
 
 # build-logic
 indraCommon = { group = "net.kyori", name = "indra-common", version.ref = "indra" }
