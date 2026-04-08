@@ -19,7 +19,7 @@ waterfallApi = "1.16-R0.5-SNAPSHOT"
 fabricApi = "0.145.3+26.1.1"
 fabricLoader = "0.18.6"
 minecraft = "26.1.1"
-spongeApi7 = "7.2.0"
+spongeApi7 = "17.0.0"
 velocityApi = "3.4.0"
 neoforge = "26.1.1.1-beta"
 
