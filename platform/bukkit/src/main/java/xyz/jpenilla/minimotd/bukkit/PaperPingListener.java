@@ -36,7 +36,7 @@ import org.jspecify.annotations.NonNull;
 import xyz.jpenilla.minimotd.common.Constants;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.PingResponse;
-import xyz.jpenilla.minimotd.common.config.MOTDConfig;
+import xyz.jpenilla.minimotd.common.config.MOTDSettings;
 
 public final class PaperPingListener implements Listener {
   private static final Method WORK_AROUND_PAPER_BUG;
@@ -60,9 +60,9 @@ public final class PaperPingListener implements Listener {
 
   @EventHandler
   public void handlePing(final @NonNull PaperServerListPingEvent event) {
-    final MOTDConfig cfg = this.miniMOTD.configManager().mainConfig();
+    final MOTDSettings motdSettings = this.miniMOTD.configManager().motdSettings();
 
-    final PingResponse<CachedServerIcon> response = this.miniMOTD.createMOTD(cfg, event.getNumPlayers(), event.getMaxPlayers());
+    final PingResponse<CachedServerIcon> response = this.miniMOTD.createMOTD(motdSettings, event.getNumPlayers(), event.getMaxPlayers());
 
     response.playerCount().applyCount(event::setNumPlayers, event::setMaxPlayers);
     response.motd(motd -> {

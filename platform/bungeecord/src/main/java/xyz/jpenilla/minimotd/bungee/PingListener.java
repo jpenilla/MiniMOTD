@@ -35,7 +35,7 @@ import org.jspecify.annotations.NonNull;
 import xyz.jpenilla.minimotd.common.Constants;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.PingResponse;
-import xyz.jpenilla.minimotd.common.config.MOTDConfig;
+import xyz.jpenilla.minimotd.common.config.MOTDSettings;
 
 public final class PingListener implements Listener {
   private final MiniMOTD<Favicon> miniMOTD;
@@ -52,8 +52,8 @@ public final class PingListener implements Listener {
     }
 
     final ServerPing.Players players = response.getPlayers();
-    final MOTDConfig cfg = this.miniMOTD.configManager().resolveConfig(e.getConnection().getVirtualHost());
-    final PingResponse<Favicon> mini = this.miniMOTD.createMOTD(cfg, players.getOnline(), players.getMax());
+    final MOTDSettings motdSettings = this.miniMOTD.configManager().resolveConfig(e.getConnection().getVirtualHost());
+    final PingResponse<Favicon> mini = this.miniMOTD.createMOTD(motdSettings, players.getOnline(), players.getMax());
 
     if (mini.hidePlayerCount()) {
       response.setPlayers(null);

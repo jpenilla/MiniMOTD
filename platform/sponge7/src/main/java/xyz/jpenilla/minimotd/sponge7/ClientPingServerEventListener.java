@@ -31,7 +31,7 @@ import org.spongepowered.api.event.server.ClientPingServerEvent;
 import org.spongepowered.api.network.status.Favicon;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.PingResponse;
-import xyz.jpenilla.minimotd.common.config.MOTDConfig;
+import xyz.jpenilla.minimotd.common.config.MOTDSettings;
 
 final class ClientPingServerEventListener implements EventListener<ClientPingServerEvent> {
   private final MiniMOTD<Favicon> miniMOTD;
@@ -58,9 +58,9 @@ final class ClientPingServerEventListener implements EventListener<ClientPingSer
       }
     }
 
-    final MOTDConfig config = this.miniMOTD.configManager().mainConfig();
+    final MOTDSettings motdSettings = this.miniMOTD.configManager().motdSettings();
 
-    final PingResponse<Favicon> mini = this.miniMOTD.createMOTD(config, players.getOnline(), players.getMax());
+    final PingResponse<Favicon> mini = this.miniMOTD.createMOTD(motdSettings, players.getOnline(), players.getMax());
     mini.playerCount().applyCount(players::setOnline, players::setMax);
     mini.motd(motd -> response.setDescription(SpongeComponentSerializer.get().serialize(motd)));
     mini.icon(response::setFavicon);
