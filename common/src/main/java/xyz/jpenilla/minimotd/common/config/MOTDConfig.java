@@ -76,8 +76,7 @@ public final class MOTDConfig {
     private int priority = 1;
 
     @Comment("Time ranges when MOTD should be shown\n" +
-      " If none set - then could be shown at any time\n" +
-      " Time-zone is UTC")
+      " If none set - then could be shown at any time")
     private List<TimeRangeConfig> timeSchedule = List.of();
 
     public int getWeight() {
