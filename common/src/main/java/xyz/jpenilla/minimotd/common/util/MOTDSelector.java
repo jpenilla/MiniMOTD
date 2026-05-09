@@ -1,6 +1,5 @@
 package xyz.jpenilla.minimotd.common.util;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.Comparator;
@@ -8,7 +7,6 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
-import xyz.jpenilla.minimotd.common.config.MOTDConfig;
 import xyz.jpenilla.minimotd.common.model.MOTD;
 
 public final class MOTDSelector {

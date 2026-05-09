@@ -29,9 +29,7 @@ import org.junit.jupiter.api.Test;
 import xyz.jpenilla.minimotd.common.model.MOTD;
 import xyz.jpenilla.minimotd.common.model.timerange.TimeRange;
 
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class MOTDSelectorTest {
   private static final TimeRange ALWAYS = now -> true;
