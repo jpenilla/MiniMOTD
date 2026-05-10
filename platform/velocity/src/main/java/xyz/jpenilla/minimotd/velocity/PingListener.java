@@ -39,7 +39,7 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.PingResponse;
-import xyz.jpenilla.minimotd.common.config.MOTDConfig;
+import xyz.jpenilla.minimotd.common.config.MOTDSettings;
 
 @NullMarked
 public final class PingListener {
@@ -58,10 +58,10 @@ public final class PingListener {
   }
 
   private void handle(final ProxyPingEvent event) {
-    final MOTDConfig config = this.miniMOTD.configManager().resolveConfig(event.getConnection().getVirtualHost().orElse(null));
+    final MOTDSettings motdSettings = this.miniMOTD.configManager().resolveConfig(event.getConnection().getVirtualHost().orElse(null));
     final ServerPing.Builder pong = event.getPing().asBuilder();
 
-    final List<String> targetServers = config.targetServers();
+    final List<String> targetServers = motdSettings.getMotdConfig().targetServers();
     int playersCount = 0;
     if (targetServers.isEmpty()) {
       playersCount = pong.getOnlinePlayers();
@@ -80,7 +80,7 @@ public final class PingListener {
       pong.samplePlayers(players.toArray(new ServerPing.SamplePlayer[0]));
     }
 
-    final PingResponse<Favicon> response = this.miniMOTD.createMOTD(config, playersCount, pong.getMaximumPlayers());
+    final PingResponse<Favicon> response = this.miniMOTD.createMOTD(motdSettings, playersCount, pong.getMaximumPlayers());
     response.icon(pong::favicon);
     response.motd(pong::description);
     response.playerCount().applyCount(pong::onlinePlayers, pong::maximumPlayers);

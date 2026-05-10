@@ -27,11 +27,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jspecify.annotations.NonNull;
@@ -47,12 +43,12 @@ public final class ConfigManager {
   private final MiniMOTD<?> miniMOTD;
 
   private final ConfigLoader<MOTDConfig> mainConfigLoader;
-  private MOTDConfig mainConfig;
+  private MOTDSettings motdSettings;
 
   private final ConfigLoader<PluginSettings> pluginSettingsLoader;
   private PluginSettings pluginSettings;
 
-  private final Map<String, MOTDConfig> extraConfigs = new HashMap<>();
+  private final Map<String, MOTDSettings> extraConfigs = new HashMap<>();
 
   public ConfigManager(final @NonNull MiniMOTD<?> miniMOTD) {
     this.miniMOTD = miniMOTD;
@@ -70,8 +66,8 @@ public final class ConfigManager {
 
   public void loadConfigs() {
     try {
-      this.mainConfig = this.mainConfigLoader.load();
-      this.mainConfigLoader.save(this.mainConfig);
+      this.motdSettings = new MOTDSettings(this.mainConfigLoader.load());
+      this.mainConfigLoader.save(motdSettings.getMotdConfig());
 
       this.pluginSettings = this.pluginSettingsLoader.load();
       this.pluginSettingsLoader.save(this.pluginSettings);
@@ -99,9 +95,9 @@ public final class ConfigManager {
             path,
             options -> options.header(String.format("Extra MiniMOTD config '%s'", name))
           );
-          final MOTDConfig config = loader.load();
-          loader.save(config);
-          this.extraConfigs.put(name, config);
+          final MOTDSettings motdSettings = new MOTDSettings(loader.load());
+          loader.save(motdSettings.getMotdConfig());
+          this.extraConfigs.put(name, motdSettings);
         }
       }
     } catch (final IOException e) {
@@ -123,11 +119,11 @@ public final class ConfigManager {
     }
   }
 
-  public @NonNull MOTDConfig mainConfig() {
-    if (this.mainConfig == null) {
+  public @NonNull MOTDSettings motdSettings() {
+    if (this.motdSettings == null) {
       throw new IllegalStateException("Config has not yet been loaded");
     }
-    return this.mainConfig;
+    return this.motdSettings;
   }
 
   public @NonNull PluginSettings pluginSettings() {
@@ -137,9 +133,9 @@ public final class ConfigManager {
     return this.pluginSettings;
   }
 
-  public @NonNull MOTDConfig resolveConfig(final @Nullable InetSocketAddress address) {
+  public @NonNull MOTDSettings resolveConfig(final @Nullable InetSocketAddress address) {
     if (address == null) {
-      return this.mainConfig();
+      return this.motdSettings();
     }
     final String configString = this.pluginSettings().proxySettings().findConfigStringForHost(address.getHostString(), address.getPort());
 
@@ -148,21 +144,21 @@ public final class ConfigManager {
     }
 
     if (configString == null) {
-      return this.mainConfig();
+      return this.motdSettings();
     }
     return this.resolveConfig(configString);
   }
 
-  public @NonNull MOTDConfig resolveConfig(final @NonNull String name) {
+  public @NonNull MOTDSettings resolveConfig(final @NonNull String name) {
     if ("default".equals(name)) {
-      return this.mainConfig();
+      return this.motdSettings();
     }
-    final MOTDConfig cfg = this.extraConfigs.get(name);
+    final MOTDSettings cfg = this.extraConfigs.get(name);
     if (cfg != null) {
       return cfg;
     }
     this.miniMOTD.logger().warn("Invalid extra-config name: '{}', falling back to main.conf", name);
-    return this.mainConfig();
+    return this.motdSettings();
   }
 
 }
