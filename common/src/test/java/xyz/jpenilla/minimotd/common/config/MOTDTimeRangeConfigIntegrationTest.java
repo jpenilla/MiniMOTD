@@ -75,6 +75,14 @@ class MOTDTimeRangeConfigIntegrationTest {
   }
 
   @Test
+  void allMotdsScheduled_withoutFallback_throws(@TempDir final Path tempDir) throws IOException {
+    final Path file = copyFixture(tempDir, "motd-timerange-no-fallback.conf");
+    final MOTDConfig config = loadMotdConfig(file);
+    final IllegalStateException ex = assertThrows(IllegalStateException.class, () -> new MOTDSettings(config));
+    assertEquals("Required at least one MOTD without time range to have a fallback", ex.getMessage());
+  }
+
+  @Test
   void mixedDateTimeAndTimeOfDay_throws(@TempDir final Path tempDir) throws IOException {
     final Path file = copyFixture(tempDir, "motd-timerange-invalid-mixed.conf");
     final MOTDConfig config = loadMotdConfig(file);

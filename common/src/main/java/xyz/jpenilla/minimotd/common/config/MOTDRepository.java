@@ -25,9 +25,16 @@ public final class MOTDRepository {
       return new MOTDRepository(List.of());
     }
 
-    return new MOTDRepository(config.motds().stream()
+    final List<? extends MOTD> motds = config.motds().stream()
       .map(MOTDAdapter::new)
-      .toList());
+      .toList();
+
+    if (!motds.isEmpty() && motds.stream().noneMatch(motd -> motd.timeRanges().isEmpty())) {
+      // we have to request have at least one default MOTD until there is no algorithm which ensure that existing time ranges cover any time
+      throw new IllegalStateException("Required at least one MOTD without time range to have a fallback");
+    }
+
+    return new MOTDRepository(motds);
   }
 
   private static final class MOTDAdapter implements MOTD {
