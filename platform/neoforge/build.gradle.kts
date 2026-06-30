@@ -1,3 +1,5 @@
+import me.modmuss50.mpp.platforms.modrinth.ModrinthEnvironment
+
 plugins {
   id("net.neoforged.moddev")
   id("minimotd.platform-conventions")
@@ -59,6 +61,7 @@ miniMOTDPlatform {
 }
 
 publishMods.modrinth {
+  environment = ModrinthEnvironment.DEDICATED_SERVER_ONLY
   modLoaders.add("neoforge")
   minecraftVersions.addAll(minecraftVersion)
   optional("miniplaceholders")

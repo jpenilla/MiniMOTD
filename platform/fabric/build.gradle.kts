@@ -1,3 +1,5 @@
+import me.modmuss50.mpp.platforms.modrinth.ModrinthEnvironment
+
 plugins {
   id("xyz.jpenilla.quiet-fabric-loom")
   id("minimotd.platform-conventions")
@@ -53,6 +55,7 @@ tasks {
 }
 
 publishMods.modrinth {
+  environment = ModrinthEnvironment.DEDICATED_SERVER_ONLY
   modLoaders.add("fabric")
   minecraftVersions.addAll(minecraftVersion)
   optional("miniplaceholders")
