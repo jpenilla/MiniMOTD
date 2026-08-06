@@ -59,6 +59,10 @@ public final class MOTDConfig {
   @Comment("Enable server list icon related features")
   private boolean iconEnabled = true;
 
+  @Comment("Enable offline MOTD when all servers are offline\n"
+  + "Requires offline-config.conf file to be present")
+  private boolean useOfflineMotd = false;
+
   private PlayerCountSettings playerCountSettings = new PlayerCountSettings();
 
   @ConfigSerializable
@@ -214,5 +218,9 @@ public final class MOTDConfig {
       return playerCount(Math.min(online, max), max);
     }
     return playerCount(online, max);
+  }
+
+  public boolean useOfflineMotd() {
+    return this.useOfflineMotd;
   }
 }

@@ -54,6 +54,8 @@ public final class ConfigManager {
 
   private final Map<String, MOTDConfig> extraConfigs = new HashMap<>();
 
+  private @Nullable MOTDConfig offlineConfig = null;
+  
   public ConfigManager(final @NonNull MiniMOTD<?> miniMOTD) {
     this.miniMOTD = miniMOTD;
     this.mainConfigLoader = new ConfigLoader<>(
@@ -104,6 +106,9 @@ public final class ConfigManager {
           this.extraConfigs.put(name, config);
         }
       }
+
+      this.loadOfflineConfig();
+
     } catch (final IOException e) {
       throw new IllegalStateException("Failed to load virtual host configs", e);
     }
@@ -165,4 +170,28 @@ public final class ConfigManager {
     return this.mainConfig();
   }
 
+  public @Nullable MOTDConfig getOfflineConfig() {
+    return this.offlineConfig;
+  }
+
+  private void loadOfflineConfig() {
+    final Path offlineConfigPath = this.miniMOTD.dataDirectory().resolve("offline-config.conf");
+    if (Files.exists(offlineConfigPath)) {
+      try {
+        final ConfigLoader<MOTDConfig> loader = new ConfigLoader<>(
+          MOTDConfig.class,
+          offlineConfigPath,
+          options -> options.header("MiniMOTD Offline Configuration")
+        );
+        this.offlineConfig = loader.load();
+        loader.save(this.offlineConfig);
+        this.miniMOTD.logger().info("Loaded offline MOTD configuration");
+      } catch (final ConfigurateException e) {
+        this.miniMOTD.logger().error("Failed to load offline config", e);
+        this.offlineConfig = null;
+      }
+    } else {
+      this.offlineConfig = null;
+    }
+  }
 }
