@@ -60,27 +60,49 @@ public final class PingListener {
   private void handle(final ProxyPingEvent event) {
     final MOTDConfig config = this.miniMOTD.configManager().resolveConfig(event.getConnection().getVirtualHost().orElse(null));
     final ServerPing.Builder pong = event.getPing().asBuilder();
-
     final List<String> targetServers = config.targetServers();
+
     int playersCount = 0;
+    boolean allServersOffline = false;
     if (targetServers.isEmpty()) {
       playersCount = pong.getOnlinePlayers();
+      // See if all servers offline when no targets are specified
+      allServersOffline = this.proxy.getAllServers().stream()
+        .allMatch(server -> server.getPlayersConnected().isEmpty());
     } else {
       final Set<ServerPing.SamplePlayer> players = new HashSet<>();
+      int onlineServerCount = 0;
       for (final String serverName : targetServers) {
         final @Nullable RegisteredServer server = this.proxy.getServer(serverName).orElse(null);
         if (server != null) {
-          playersCount += server.getPlayersConnected().size();
+          final int serverPlayers = server.getPlayersConnected().size();
+          if (serverPlayers > 0) {
+            onlineServerCount++;
+          }
+          playersCount += serverPlayers;
           players.addAll(server.getPlayersConnected().stream()
             .map(p -> new ServerPing.SamplePlayer(p.getGameProfile().getName(), p.getUniqueId()))
             .collect(Collectors.toList()));
         }
       }
+      // All servers offline if 0 players and 0 online servers
+      allServersOffline = (onlineServerCount == 0 && playersCount == 0);
       pong.clearSamplePlayers();
       pong.samplePlayers(players.toArray(new ServerPing.SamplePlayer[0]));
     }
 
-    final PingResponse<Favicon> response = this.miniMOTD.createMOTD(config, playersCount, pong.getMaximumPlayers());
+    // Use offline config if true and all servers are offline
+    final MOTDConfig activeConfig;
+
+    if (allServersOffline && config.useOfflineMotd()) {
+      // Try for offline-specific config
+      final @Nullable MOTDConfig offlineConfig = this.miniMOTD.configManager().getOfflineConfig();
+      activeConfig = offlineConfig != null ? offlineConfig : config;
+    } else {
+      activeConfig = config;
+    }
+
+    final PingResponse<Favicon> response = this.miniMOTD.createMOTD(activeConfig, playersCount, pong.getMaximumPlayers());
     response.icon(pong::favicon);
     response.motd(pong::description);
     response.playerCount().applyCount(pong::onlinePlayers, pong::maximumPlayers);
