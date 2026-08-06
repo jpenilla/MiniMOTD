@@ -2,6 +2,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
   repositories {
+    maven("https://repo.fandmc.cn/repository/maven-public/")
     gradlePluginPortal()
     maven("https://maven.fabricmc.net/")
     maven("https://maven.neoforged.net/releases/") {
@@ -38,4 +39,5 @@ sequenceOf(
   "velocity",
   "fabric",
   "neoforge",
+  "fand",
 ).forEach(::platform)
