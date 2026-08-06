@@ -29,6 +29,7 @@ import java.util.List;
 import org.jspecify.annotations.NonNull;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
+import org.spongepowered.configurate.objectmapping.meta.Matches;
 import xyz.jpenilla.minimotd.common.PingResponse;
 
 import static xyz.jpenilla.minimotd.common.PingResponse.PlayerCount.playerCount;
@@ -62,7 +63,51 @@ public final class MOTDConfig {
   private PlayerCountSettings playerCountSettings = new PlayerCountSettings();
 
   @ConfigSerializable
-  public static final class MOTD {
+  public static final class MOTDScheduleSettings {
+    @Comment("Weight defines probability to be chosen on conflict.\n" +
+      " Higher value - Higher probability")
+    @Matches("[1-9][0-9]{0-5}")
+    private int weight = 1;
+
+    @Comment("MOTDs with lower priority will be ignored on conflict.\n" +
+      " Lower value - Higher priority.\n" +
+      " If few MOTDs have same priority then they will randomly compete based on `weight`")
+    @Matches("[1-9][0-9]{0-5}")
+    private int priority = 1;
+
+    @Comment("Time ranges when MOTD should be shown\n" +
+      " If none set - then could be shown at any time")
+    private List<TimeRangeConfig> timeSchedule = List.of();
+
+    public int getWeight() {
+      return weight;
+    }
+
+    public int getPriority() {
+      return priority;
+    }
+
+    public List<TimeRangeConfig> getTimeSchedule() {
+      return timeSchedule;
+    }
+  }
+
+  @ConfigSerializable
+  public static final class TimeRangeConfig {
+    private String from;
+    private String to;
+
+    public String getFrom() {
+      return from;
+    }
+
+    public String getTo() {
+      return to;
+    }
+  }
+
+  @ConfigSerializable
+  static final class MOTD {
 
     public MOTD() {
     }
@@ -82,6 +127,8 @@ public final class MOTDConfig {
       + "    ex: icon=\"myIconFile\"")
     private String icon = "random";
 
+    private MOTDScheduleSettings scheduleSettings = new MOTDScheduleSettings();
+
     public @NonNull String line1() {
       return this.line1;
     }
@@ -94,6 +141,9 @@ public final class MOTDConfig {
       return this.icon;
     }
 
+    public @NonNull MOTDScheduleSettings getScheduleSettings() {
+      return scheduleSettings;
+    }
   }
 
   @ConfigSerializable
@@ -170,7 +220,7 @@ public final class MOTDConfig {
     return this.iconEnabled;
   }
 
-  public @NonNull List<MOTD> motds() {
+  @NonNull List<MOTD> motds() {
     return this.motds;
   }
 

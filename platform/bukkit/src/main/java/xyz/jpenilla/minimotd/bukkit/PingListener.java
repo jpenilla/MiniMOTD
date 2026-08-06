@@ -32,7 +32,7 @@ import org.bukkit.util.CachedServerIcon;
 import org.jspecify.annotations.NonNull;
 import xyz.jpenilla.minimotd.common.MiniMOTD;
 import xyz.jpenilla.minimotd.common.PingResponse;
-import xyz.jpenilla.minimotd.common.config.MOTDConfig;
+import xyz.jpenilla.minimotd.common.config.MOTDSettings;
 
 public final class PingListener implements Listener {
   private final MiniMOTD<CachedServerIcon> miniMOTD;
@@ -44,9 +44,9 @@ public final class PingListener implements Listener {
 
   @EventHandler
   public void handlePing(final @NonNull ServerListPingEvent event) {
-    final MOTDConfig cfg = this.miniMOTD.configManager().mainConfig();
+    final MOTDSettings motdSettings = this.miniMOTD.configManager().motdSettings();
 
-    final PingResponse<CachedServerIcon> response = this.miniMOTD.createMOTD(cfg, event.getNumPlayers(), event.getMaxPlayers());
+    final PingResponse<CachedServerIcon> response = this.miniMOTD.createMOTD(motdSettings, event.getNumPlayers(), event.getMaxPlayers());
 
     event.setMaxPlayers(response.playerCount().maxPlayers());
     response.motd(motd -> {

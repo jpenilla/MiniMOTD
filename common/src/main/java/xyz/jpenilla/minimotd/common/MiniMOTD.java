@@ -24,7 +24,6 @@
 package xyz.jpenilla.minimotd.common;
 
 import java.nio.file.Path;
-import java.util.concurrent.ThreadLocalRandom;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -33,6 +32,10 @@ import org.jspecify.annotations.NullMarked;
 import org.slf4j.Logger;
 import xyz.jpenilla.minimotd.common.config.ConfigManager;
 import xyz.jpenilla.minimotd.common.config.MOTDConfig;
+import xyz.jpenilla.minimotd.common.config.MOTDRepository;
+import xyz.jpenilla.minimotd.common.config.MOTDSettings;
+import xyz.jpenilla.minimotd.common.model.MOTD;
+import xyz.jpenilla.minimotd.common.util.MOTDSelector;
 import xyz.jpenilla.minimotd.common.util.MiniPlaceholdersUtil;
 
 import static net.kyori.adventure.text.Component.newline;
@@ -75,7 +78,10 @@ public final class MiniMOTD<I> {
     return this.configManager;
   }
 
-  public PingResponse<I> createMOTD(final MOTDConfig config, final int onlinePlayers, final int maxPlayers) {
+  public PingResponse<I> createMOTD(final MOTDSettings motdSettings, final int onlinePlayers, final int maxPlayers) {
+    final MOTDConfig config = motdSettings.getMotdConfig();
+    final MOTDRepository motdRepository = motdSettings.getMotdRepository();
+
     final PingResponse.PlayerCount count = config.modifyPlayerCount(onlinePlayers, maxPlayers);
     final PingResponse.Builder<I> response = PingResponse.<I>builder()
       .playerCount(count)
@@ -84,18 +90,18 @@ public final class MiniMOTD<I> {
 
     String iconString = null;
     if (config.motdEnabled()) {
-      if (config.motds().isEmpty()) {
+      if (motdRepository.motds().isEmpty()) {
         throw new IllegalStateException("MOTD is enabled, but there are no MOTDs in the config file?");
       }
-      final int index = config.motds().size() == 1 ? 0 : ThreadLocalRandom.current().nextInt(config.motds().size());
-      final MOTDConfig.MOTD motdConfig = config.motds().get(index);
-      final Component motd = Component.textOfChildren(
-        parse(motdConfig.line1(), count),
+
+      final MOTD motd = MOTDSelector.select(motdRepository.motds());
+      final Component motdComponent = Component.textOfChildren(
+        parse(motd.line1(), count),
         newline(),
-        parse(motdConfig.line2(), count)
+        parse(motd.line2(), count)
       );
-      response.motd(motd);
-      iconString = motdConfig.icon();
+      response.motd(motdComponent);
+      iconString = motd.icon();
     }
 
     if (config.iconEnabled()) {
