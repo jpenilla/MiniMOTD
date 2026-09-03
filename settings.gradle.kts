@@ -13,7 +13,7 @@ pluginManagement {
 }
 
 plugins {
-  id("net.neoforged.moddev.repositories") version "2.0.143" apply false
+  id("net.neoforged.moddev.repositories") version "2.0.146" apply false
   id("xyz.jpenilla.quiet-fabric-loom") version "1.17-SNAPSHOT" apply false
   id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
