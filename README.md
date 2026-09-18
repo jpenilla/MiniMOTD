@@ -15,6 +15,7 @@
 - [Sponge API 7](https://www.spongepowered.org/)
 - [Fabric](https://fabricmc.net/) (requires [Fabric API](https://modrinth.com/mod/fabric-api))
 - [NeoForge](https://neoforged.net/)
+- [Fand](https://github.com/FandMC/Fand)
 
 #### Proxy Platforms
 - [Velocity](https://velocitypowered.com/)
